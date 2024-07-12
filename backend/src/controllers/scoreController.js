@@ -2,20 +2,18 @@
 import { Score, User } from "../index.js";
 
 export const updateScore = async (req, res) => {
-  const { userId } = req.params;
-  console.log(userId);
+  // const { userId } = req.params;
+  const userData = req.userData;
+  const userId = userData.id;
 
   try {
     const { score } = req.body;
-    console.log(score);
 
     if (!score || !userId) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Fetch the initial score from the database
     const initialScores = await Score.findOne({ user: userId });
-    console.log(initialScores);
 
     if (!initialScores) {
       return res.status(404).json({ error: "Score not found" });
@@ -38,7 +36,7 @@ export const updateScore = async (req, res) => {
 };
 
 export const getUserScore = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
 
   if (!userId) {
     res.status(400).send("User Id is required");
@@ -54,26 +52,6 @@ export const getUserScore = async (req, res) => {
     res.status(200).send(userScore);
   } catch (err) {
     console.log("Error gettingScore", err);
-    res.status(500).send("Internal Server Error");
-  }
-};
-
-export const getOverallLeaderboard = async (req, res) => {
-  try {
-    const leaderboard = await Score.aggregate([
-      {
-        $sort: {
-          total: -1,
-        },
-      },
-      {
-        $limit: 20,
-      },
-    ]);
-    console.log(leaderboard);
-    // res.send(leaderboard);
-  } catch (err) {
-    console.log("Error fetching Leaderboard: ", err);
     res.status(500).send("Internal Server Error");
   }
 };

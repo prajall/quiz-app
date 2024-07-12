@@ -1,14 +1,18 @@
 import jwt from "jsonwebtoken";
 
 export const authorisedUser = async (req, res, next) => {
+  console.log("checking user");
   try {
     const { token } = req.cookies;
 
     if (!token) {
       return res.send("Please Login").status(401);
     }
+
     const decodedData = jwt.decode(token, process.env.JWT_SECRET);
-    res.userData = decodedData;
+    req.userData = decodedData;
+    console.log("sending userData:", decodedData);
+
     next();
   } catch (error) {
     console.log(error);
