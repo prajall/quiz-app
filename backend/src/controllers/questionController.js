@@ -36,8 +36,20 @@ export const getRandomQuestions = async (req, res) => {
     res.send(questions).status(200);
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch random data", error: err });
+    res.status(500).json({ message: "Failed to fetch random data" });
   }
+};
+
+export const getQuestionById = async (req, res) => {
+  console.log("question");
+  const questionId = req.params.questionId;
+  try {
+    const question = await Question.findById(questionId);
+    if (!question) {
+      return res.status(404).send({ message: "Question Not found" });
+    }
+    return res
+      .status(200)
+      .json({ message: "Question fetched Successfully", question });
+  } catch (error) {}
 };

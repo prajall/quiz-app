@@ -5,6 +5,7 @@ import userRoute from "./routes/userRoute.js";
 import questionRoute from "./routes/questionRoute.js";
 import scoreRoute from "./routes/scoreRoute.js";
 import leaderboardRoute from "./routes/leaderboardRoute.js";
+import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
@@ -23,5 +24,5 @@ app.use(cookieParser());
 // SETUP ROUTES
 app.use("/user", userRoute);
 app.use("/question", questionRoute);
-app.use("/score", scoreRoute);
-app.use("/leaderboard", leaderboardRoute);
+app.use("/score", apiKeyValidation, scoreRoute);
+app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
