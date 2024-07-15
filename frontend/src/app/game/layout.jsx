@@ -5,8 +5,7 @@ const GameLayout = ({ children }) => {
 
   return (
     <div>
-      <h2>Question Category</h2>
-      <Timer maxTime={90000} />
+      <Timer />
       {children}
     </div>
   );
