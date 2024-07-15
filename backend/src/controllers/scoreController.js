@@ -2,10 +2,11 @@
 import { Score, User } from "../index.js";
 
 export const updateScore = async (req, res) => {
-  const { userId } = req.params;
-  console.log(userId);
-  // const userData = req.userData;
-  // const userId = userData.id;
+  // const { userId } = req.params;
+  const userData = req.userData;
+  const userId = userData.id;
+
+  // console.log("cookies:", req.cookies);
 
   try {
     const { score } = req.body;

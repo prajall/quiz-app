@@ -27,17 +27,15 @@ const ScoreProvider = ({ children }) => {
   };
 
   const uploadScore = async (userId) => {
-    console.log("Uploading Score");
     try {
-      console.log(score);
       const response = await axios.patch(
-        `http://localhost:3001/score/user/6694fba04ab01d7f5efcc98d`,
+        `http://localhost:3001/score`,
         { score },
         {
           headers: {
             "Content-Type": "application/json",
           },
-          // withCredentials: true,
+          withCredentials: true,
         }
       );
       console.log(response);
@@ -47,7 +45,7 @@ const ScoreProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log(score);
+    // console.log(score);
   }, [score, setScore]);
 
   return (

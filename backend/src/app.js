@@ -14,8 +14,8 @@ export default app;
 app.use(
   cors({
     // origin: process.env.CORS_ORIGIN,
-    origin: "*",
-    methods: "*",
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );

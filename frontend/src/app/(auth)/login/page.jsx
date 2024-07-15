@@ -1,24 +1,30 @@
 "use client";
 import { Button } from "@mui/material";
 import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
-  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  const router = useRouter();
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("http://localhost:3001/user/login", {
-        email: data.email,
-        password: data.password,
-      });
+      const response = await axios.post(
+        "http://localhost:3001/user/login",
+        {
+          email: data.email,
+          password: data.password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log(response);
       if (response.status >= 200) {
         console.log("login successful");

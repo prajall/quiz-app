@@ -38,6 +38,8 @@ const AnswerList = ({ question }) => {
 
   const handleFinish = async () => {
     await uploadScore();
+    alert("Score submitted");
+    router.push("/game");
   };
 
   useEffect(() => {
@@ -127,8 +129,18 @@ const AnswerList = ({ question }) => {
       </button>
 
       <div>
-        <button onClick={handleNext}>Next</button>
-        <button onClick={handleFinish}>Finish</button>
+        <button
+          onClick={handleNext}
+          className="px-4 py-1 rounded-lg m-2 bg-blue-300"
+        >
+          Next
+        </button>
+        <button
+          onClick={handleFinish}
+          className="px-4 py-1 rounded-lg m-2 bg-red-200"
+        >
+          Finish
+        </button>
       </div>
     </div>
   );

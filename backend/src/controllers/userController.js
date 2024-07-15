@@ -55,6 +55,7 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password);
   if (!email || !password) {
     return res.status(400).send("email and Password are required");
   }
@@ -74,6 +75,7 @@ const loginUser = async (req, res) => {
   const loggedInUser = await User.findOne({ email }).select("-password");
 
   const token = generateToken(user._id);
+  console.log(token);
 
   res.cookie(" token", token, {
     httpOnly: true,
