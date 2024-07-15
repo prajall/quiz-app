@@ -1,19 +1,37 @@
 "use client";
 import { Button } from "@mui/material";
+import axios from "axios";
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 const Login = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
-    const response = axios.post("http:localhost:3001/user/login", { data });
-    console.log(response);
+    try {
+      const response = await axios.post("http://localhost:3001/user/login", {
+        email: data.email,
+        password: data.password,
+      });
+      console.log(response);
+      if (response.status >= 200) {
+        console.log("login successful");
+        router.push("/game");
+      } else {
+        throw new Error("Login Error");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+      }
+      console.log("eror logging in: ", error);
+    }
   };
 
   return (
@@ -27,7 +45,7 @@ const Login = () => {
         className="flex flex-col p-3 max-w-96 mx-auto"
       >
         <div className="relative w-full mb-3">
-          <label className=" text-sm font-semibold mt-4 mb-2">Phone</label>
+          <label className=" text-sm font-semibold mt-4 mb-2">Email</label>
           <input
             {...register("email", {
               required: "Email is Required",

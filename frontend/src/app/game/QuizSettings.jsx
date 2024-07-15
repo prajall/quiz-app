@@ -7,7 +7,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
-const QuizSettings = ({ onStart }) => {
+const QuizSettings = () => {
   console.log("Rendered Quiz Setting");
   const [examId, setExamId] = useState("random");
   const { gameData, setGameData, resetGameData } = useContext(GameContext);
@@ -16,15 +16,14 @@ const QuizSettings = ({ onStart }) => {
 
   const router = useRouter();
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
+    console.log("change");
     setExamId(event.target.value);
   };
 
   const startQuiz = async () => {
-    setGameData((prev) => ({ ...prev, currentQuestion: 0 }));
+    let response;
     try {
-      setIsLoading(true);
-      let response;
       if (examId != "random") {
         response = await axios.get(
           `http://localhost:3001/question/exam/${examId}?limit=10`
@@ -33,27 +32,18 @@ const QuizSettings = ({ onStart }) => {
         response = await axios.get(
           `http://localhost:3001/question/random?limit=10`
         );
-        console.log(response.data);
       }
-      setGameData((prev) => ({ ...prev, questions: response.data }));
+      setGameData((prev) => ({ ...prev, questions: response?.data }));
     } catch (error) {
       console.log(error);
-    } finally {
-      console.log(gameData);
-      if (gameData.questions.length > 0) {
-        startTimer(120);
-        router.push(`/game/${gameData.questions[0]._id}`);
-      }
     }
+    startTimer(120);
+    router.push(`/game/${response.data[0]?._id}`);
   };
 
   useEffect(() => {
     resetGameData();
-  });
-
-  useEffect(() => {
-    console.log("gamedata:", gameData);
-  }, [gameData]);
+  }, []);
 
   return (
     <div>

@@ -2,12 +2,14 @@
 import { Score, User } from "../index.js";
 
 export const updateScore = async (req, res) => {
-  // const { userId } = req.params;
-  const userData = req.userData;
-  const userId = userData.id;
+  const { userId } = req.params;
+  console.log(userId);
+  // const userData = req.userData;
+  // const userId = userData.id;
 
   try {
     const { score } = req.body;
+    console.log(score);
 
     if (!score || !userId) {
       return res.status(400).json({ error: "Missing required fields" });

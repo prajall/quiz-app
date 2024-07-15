@@ -12,7 +12,7 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const response = axios.post("http:localhost:3001/user/login", { data });
+    const response = axios.post("http:localhost:3001/user/signUp", { data });
     console.log(response);
   };
 

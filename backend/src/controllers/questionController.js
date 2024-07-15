@@ -41,7 +41,6 @@ export const getRandomQuestions = async (req, res) => {
 };
 
 export const getQuestionById = async (req, res) => {
-  console.log("question");
   const questionId = req.params.questionId;
   try {
     const question = await Question.findById(questionId);

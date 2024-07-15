@@ -4,6 +4,7 @@ export const authorisedUser = async (req, res, next) => {
   console.log("checking user");
   try {
     const { token } = req.cookies;
+    console.log(token);
 
     if (!token) {
       return res.send("Please Login").status(401);

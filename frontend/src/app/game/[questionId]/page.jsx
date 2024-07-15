@@ -10,7 +10,7 @@ const Question = async ({ params }) => {
 
   return (
     <>
-      <div>
+      <div className="m-2">
         <h2>{question.name}</h2>
         <AnswerList question={question} />
       </div>
