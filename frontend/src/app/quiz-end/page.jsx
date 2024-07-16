@@ -1,15 +1,15 @@
 "use client";
-import { GameContext } from "@/contexts/GameContext";
+import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { exams } from "@/examData";
 import React, { useContext } from "react";
 
 const page = () => {
-  console.log("rendered game-end page");
+  console.log("rendered quiz-end page");
   const { score } = useContext(ScoreContext);
-  const { gameData } = useContext(GameContext);
+  const { quizData } = useContext(QuizContext);
 
-  const gameQuestions = gameData.questions;
+  const quizQuestions = quizData.questions;
 
   const filteredScores = Object.keys(score).reduce((acc, key) => {
     const examId = key;
@@ -17,7 +17,7 @@ const page = () => {
     //   exams.find((exam) => exam.exam_id === examId)?.name || examId;
     const s = score[key];
 
-    const matchedQuestion = gameQuestions.find(
+    const matchedQuestion = quizQuestions.find(
       (question) => question.exam_id === examId
     );
     if (matchedQuestion) {
@@ -41,7 +41,7 @@ const page = () => {
 
   return (
     <div>
-      <h1>GAME ENDED</h1>
+      <h1>QUIZ ENDED</h1>
       <p>Display score</p>
       <ul>
         {Object.keys(filteredScores).map((item, index) => (

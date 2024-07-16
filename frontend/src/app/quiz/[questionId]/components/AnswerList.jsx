@@ -1,5 +1,5 @@
 "use client";
-import { GameContext } from "@/contexts/GameContext";
+import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
@@ -8,7 +8,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 const AnswerList = ({ question }) => {
   console.log("Rendered AnswerList");
-  const { gameData, setGameData, endGame } = useContext(GameContext);
+  const { quizData, setQuizData, endQuiz } = useContext(QuizContext);
   const { score, incrementScore } = useContext(ScoreContext);
   const [answered, setAnswered] = useState(false);
   const [optionChoosen, setOptionChoosen] = useState(null);
@@ -21,38 +21,38 @@ const AnswerList = ({ question }) => {
     setOptionChoosen(option);
     if (question.opt_correct === option) {
       incrementScore(question.exam_id);
-      console.log(gameData);
+      console.log(quizData);
     }
     console.log(score);
   };
 
   const handleNext = () => {
-    setGameData((prev) => ({
+    setQuizData((prev) => ({
       ...prev,
       currentQuestion: prev.currentQuestion + 1,
     }));
-    if (gameData.currentQuestion >= gameData.questions.length) {
-      endGame();
-      router.push(`/game-end`);
+    if (quizData.currentQuestion >= quizData.questions.length) {
+      endQuiz();
+      router.push(`/quiz-end`);
     }
     console.log("next question");
-    router.push(`/game/${gameData.questions[gameData.currentQuestion]?._id}`);
+    router.push(`/quiz/${quizData.questions[quizData.currentQuestion]?._id}`);
   };
 
   const handleFinish = async () => {
-    endGame();
-    router.push("/game-end");
+    endQuiz();
+    router.push("/quiz-end");
   };
 
   useEffect(() => {
-    console.log("gameData during load:", gameData);
-    if (!gameData.isPlaying) {
-      console.log("Not playing redirecting /game");
-      redirect("/game");
+    console.log("quizData during load:", quizData);
+    if (!quizData.isPlaying) {
+      console.log("Not playing redirecting /quiz");
+      redirect("/quiz");
     }
-    if (gameData.questions[gameData.currentQuestion]?.name != question.name) {
-      console.log("wrong question, redirecting /game/current question");
-      router.push(`/game/${gameData.questions[gameData.currentQuestion]?._id}`);
+    if (quizData.questions[quizData.currentQuestion]?.name != question.name) {
+      console.log("wrong question, redirecting /quiz/current question");
+      router.push(`/quiz/${quizData.questions[quizData.currentQuestion]?._id}`);
     }
   }, []);
   return (

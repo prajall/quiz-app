@@ -1,5 +1,5 @@
 "use client";
-import { GameContext } from "@/contexts/GameContext";
+import { QuizContext } from "@/contexts/QuizContext";
 import { TimerContext } from "@/contexts/TimerContext";
 import { exams } from "@/examData";
 import { MenuItem, Select } from "@mui/material";
@@ -11,7 +11,7 @@ const page = () => {
   console.log("Rendered Quiz Setting");
   const [examId, setExamId] = useState("random");
   const [time, setTime] = useState(60);
-  const { setGameData, resetGameData, startGame } = useContext(GameContext);
+  const { setQuizData, resetQuizData, startQuiz } = useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
 
   const router = useRouter();
@@ -25,7 +25,7 @@ const page = () => {
     setTime(event.target.value);
   };
 
-  const startQuiz = async () => {
+  const beginQuiz = async () => {
     let response;
     try {
       if (examId != "random") {
@@ -37,17 +37,17 @@ const page = () => {
           `http://localhost:3001/question/random?limit=10`
         );
       }
-      setGameData((prev) => ({ ...prev, questions: response?.data }));
+      setQuizData((prev) => ({ ...prev, questions: response?.data }));
     } catch (error) {
       console.log(error);
     }
     startTimer(120);
-    startGame(time);
-    router.push(`/game/${response.data[0]?._id}`);
+    startQuiz(time);
+    router.push(`/quiz/${response.data[0]?._id}`);
   };
 
   useEffect(() => {
-    resetGameData();
+    resetQuizData();
     stopTimer();
     //todo: reset score
   }, []);
@@ -84,7 +84,7 @@ const page = () => {
           </MenuItem>
         ))}
       </Select>
-      <button onClick={startQuiz}>start</button>
+      <button onClick={beginQuiz}>start</button>
     </div>
   );
 };

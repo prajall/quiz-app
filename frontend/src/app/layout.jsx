@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import GameProvider from "@/contexts/GameContext";
+import QuizProvider from "@/contexts/QuizContext";
 import { TimerProvider } from "@/contexts/TimerContext";
 import ScoreProvider from "@/contexts/ScoreContext";
 
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <TimerProvider>
           <ScoreProvider>
-            <GameProvider>{children}</GameProvider>
+            <QuizProvider>{children}</QuizProvider>
           </ScoreProvider>
         </TimerProvider>
       </body>

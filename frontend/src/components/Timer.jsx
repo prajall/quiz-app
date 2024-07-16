@@ -1,19 +1,19 @@
 "use client";
-import { GameContext } from "@/contexts/GameContext";
+import { QuizContext } from "@/contexts/QuizContext";
 import { TimerContext } from "@/contexts/TimerContext";
 import React, { useContext, useEffect, useRef } from "react";
 
 const Timer = () => {
-  const { gameData, endGame } = useContext(GameContext);
+  const { quizData, endQuiz } = useContext(QuizContext);
   const { runningTimer } = useContext(TimerContext);
 
   useEffect(() => {
-    if (gameData.isPlaying && runningTimer <= 0) {
-      endGame();
+    if (quizData.isPlaying && runningTimer <= 0) {
+      endQuiz();
     }
   }, [runningTimer]);
 
-  return <>{gameData.isPlaying && <div>Time: {runningTimer}</div>}</>;
+  return <>{quizData.isPlaying && <div>Time: {runningTimer}</div>}</>;
   // return (
   //   <>
   //     <div>Time: {runningTimer}</div>

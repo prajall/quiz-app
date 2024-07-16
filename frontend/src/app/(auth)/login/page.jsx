@@ -29,7 +29,7 @@ const Login = () => {
       console.log(response);
       if (response.status >= 200) {
         console.log("login successful");
-        router.push("/game");
+        router.push("/quiz");
       } else {
         throw new Error("Login Error");
       }
