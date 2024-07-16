@@ -1,33 +1,33 @@
 "use client";
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useRef,
-  useEffect,
-} from "react";
-import { GameContext } from "./GameContext";
+import React, { createContext, useState, useRef, useEffect } from "react";
 
 export const TimerContext = createContext();
 
 export const TimerProvider = ({ children }) => {
-  const { gameData, setGameData } = useContext(GameContext);
   const [runningTimer, setRunningTimer] = useState(0);
   const timerRef = useRef(null);
 
   const startTimer = (maxTimer) => {
     setRunningTimer(maxTimer);
-    setGameData({ ...gameData, isPlaying: true });
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
     timerRef.current = setInterval(() => {
-      setRunningTimer((prev) => prev - 1);
+      setRunningTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
   };
 
   const stopTimer = () => {
-    setGameData({ ...gameData, isPlaying: false });
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+    clearInterval(timerRef.current);
+    timerRef.current = null;
   };
 
   useEffect(() => {
@@ -36,19 +36,12 @@ export const TimerProvider = ({ children }) => {
     }
   }, [runningTimer]);
 
-  useEffect(() => {
-    if (!gameData.isPlaying) {
-      stopTimer();
-    }
-  }, [gameData.isPlaying]);
-
   return (
     <TimerContext.Provider
       value={{
         runningTimer,
         startTimer,
         stopTimer,
-        setRunningTimer,
       }}
     >
       {children}

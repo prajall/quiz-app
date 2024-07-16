@@ -1,4 +1,5 @@
 import AnswerList from "@/components/AnswerList";
+import Score from "@/components/Score";
 import axios from "axios";
 
 const Question = async ({ params }) => {
@@ -11,6 +12,7 @@ const Question = async ({ params }) => {
   return (
     <>
       <div className="m-2">
+        <Score />
         <h2>{question.name}</h2>
         <AnswerList question={question} />
       </div>

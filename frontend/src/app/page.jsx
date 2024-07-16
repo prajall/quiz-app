@@ -7,7 +7,7 @@ export default function Home() {
         <h1>LETS PLAY QUIZ</h1>
       </div>
       <div className="w-full">
-        <Link href={"/play"} className="text-3xl mx-auto mt-20">
+        <Link href={"/game"} className="text-3xl mx-auto mt-20">
           Play {">"}
         </Link>
       </div>

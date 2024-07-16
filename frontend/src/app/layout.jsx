@@ -15,11 +15,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GameProvider>
-          <TimerProvider>
+        <TimerProvider>
+          <GameProvider>
             <ScoreProvider>{children}</ScoreProvider>
-          </TimerProvider>
-        </GameProvider>
+          </GameProvider>
+        </TimerProvider>
       </body>
     </html>
   );

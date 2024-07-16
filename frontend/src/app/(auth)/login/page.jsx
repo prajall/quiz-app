@@ -14,6 +14,7 @@ const Login = () => {
 
   const router = useRouter();
   const onSubmit = async (data) => {
+    event.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:3001/user/login",

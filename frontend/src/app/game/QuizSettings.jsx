@@ -10,9 +10,8 @@ import { useContext, useEffect, useState } from "react";
 const QuizSettings = () => {
   console.log("Rendered Quiz Setting");
   const [examId, setExamId] = useState("random");
-  const { gameData, setGameData, resetGameData } = useContext(GameContext);
-  const { startTimer } = useContext(TimerContext);
-  const [isloading, setIsLoading] = useState(false);
+  const { setGameData, resetGameData, startGame } = useContext(GameContext);
+  const { startTimer, stopTimer } = useContext(TimerContext);
 
   const router = useRouter();
 
@@ -37,12 +36,13 @@ const QuizSettings = () => {
     } catch (error) {
       console.log(error);
     }
-    startTimer(120);
+    startGame(10);
     router.push(`/game/${response.data[0]?._id}`);
   };
 
   useEffect(() => {
     resetGameData();
+    stopTimer();
   }, []);
 
   return (

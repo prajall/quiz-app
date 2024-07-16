@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import { cookies } from "next/headers";
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 
@@ -16,17 +17,16 @@ const defaultScore = {
   1010: 0,
 };
 
-export const ScoreContext = createContext();
+export const ScoreContext = createContext(defaultScore);
 
 const ScoreProvider = ({ children }) => {
   const [score, setScore] = useState(defaultScore);
 
   const incrementScore = (exam_id) => {
     setScore((prev) => ({ ...prev, [exam_id]: prev[exam_id] + 1 }));
-    setScore((prev) => ({ ...prev, total: prev.total + 1 }));
   };
 
-  const uploadScore = async (userId) => {
+  const uploadScore = async () => {
     try {
       const response = await axios.patch(
         `http://localhost:3001/score`,
@@ -45,7 +45,7 @@ const ScoreProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // console.log(score);
+    console.log(score);
   }, [score, setScore]);
 
   return (

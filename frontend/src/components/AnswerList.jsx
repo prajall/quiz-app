@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const AnswerList = ({ question }) => {
-  console.log("Rendered AnswerList");
-  const { gameData, setGameData } = useContext(GameContext);
-  const { incrementScore, uploadScore } = useContext(ScoreContext);
+  // console.log("Rendered AnswerList");
+  const { gameData, setGameData, endGame } = useContext(GameContext);
+  const { score, incrementScore } = useContext(ScoreContext);
   const [answered, setAnswered] = useState(false);
   const [optionChoosen, setOptionChoosen] = useState(null);
   const correctOption = question.opt_correct;
@@ -21,6 +21,7 @@ const AnswerList = ({ question }) => {
       incrementScore(question.exam_id);
       console.log(gameData);
     }
+    console.log(score);
   };
 
   const handleNext = () => {
@@ -37,15 +38,14 @@ const AnswerList = ({ question }) => {
   };
 
   const handleFinish = async () => {
-    await uploadScore();
-    alert("Score submitted");
+    endGame();
     router.push("/game");
   };
 
   useEffect(() => {
-    // if (!gameData.isPlaying) {
-    //   router.push("/game");
-    // }
+    if (!gameData.isPlaying) {
+      router.push("/game");
+    }
     setGameData({ ...gameData, currentQuestion: gameData.currentQuestion + 1 });
   }, []);
   return (
