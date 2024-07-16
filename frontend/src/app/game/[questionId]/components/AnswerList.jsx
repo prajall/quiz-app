@@ -30,8 +30,8 @@ const AnswerList = ({ question }) => {
       currentQuestion: gameData.currentQuestion + 1,
     });
     if (gameData.currentQuestion >= gameData.questions.length) {
-      alert("Game ended");
-      router.push(`/game/`);
+      endGame();
+      router.push(`/game-end`);
       return;
     }
     router.push(`/game/${gameData.questions[gameData.currentQuestion]?._id}`);
@@ -39,14 +39,14 @@ const AnswerList = ({ question }) => {
 
   const handleFinish = async () => {
     endGame();
-    router.push("/game");
+    router.push("/game-end");
   };
 
   useEffect(() => {
     if (!gameData.isPlaying) {
       router.push("/game");
     }
-    setGameData({ ...gameData, currentQuestion: gameData.currentQuestion + 1 });
+    console.log(gameData);
   }, []);
   return (
     <div>

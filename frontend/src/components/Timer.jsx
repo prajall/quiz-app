@@ -13,12 +13,12 @@ const Timer = () => {
     }
   }, [runningTimer]);
 
-  // return <>{gameData.isPlaying && <div>Time: {runningTimer}</div>}</>;
-  return (
-    <>
-      <div>Time: {runningTimer}</div>
-    </>
-  );
+  return <>{gameData.isPlaying && <div>Time: {runningTimer}</div>}</>;
+  // return (
+  //   <>
+  //     <div>Time: {runningTimer}</div>
+  //   </>
+  // );
 };
 
 export default Timer;

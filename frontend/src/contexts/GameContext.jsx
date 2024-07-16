@@ -1,5 +1,4 @@
 "use client";
-import { questions } from "@/questions";
 import React, { useContext, useState } from "react";
 import { createContext } from "react";
 import { TimerContext } from "./TimerContext";
@@ -8,7 +7,7 @@ import { ScoreContext } from "./ScoreContext";
 
 const defaultGameData = {
   isPlaying: false,
-  questions: questions,
+  questions: [],
   currentQuestion: 0,
 };
 
@@ -27,6 +26,7 @@ const GameProvider = ({ children }) => {
 
   const startGame = (maxTimer) => {
     setGameData((prev) => ({ ...prev, isPlaying: true }));
+    console.log(gameData.questions);
     startTimer(maxTimer);
   };
 

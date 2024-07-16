@@ -16,9 +16,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <TimerProvider>
-          <GameProvider>
-            <ScoreProvider>{children}</ScoreProvider>
-          </GameProvider>
+          <ScoreProvider>
+            <GameProvider>{children}</GameProvider>
+          </ScoreProvider>
         </TimerProvider>
       </body>
     </html>

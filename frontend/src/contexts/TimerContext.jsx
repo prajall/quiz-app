@@ -26,8 +26,11 @@ export const TimerProvider = ({ children }) => {
   };
 
   const stopTimer = () => {
-    clearInterval(timerRef.current);
-    timerRef.current = null;
+    if (runningTimer > 0) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setRunningTimer(0);
+    }
   };
 
   useEffect(() => {

@@ -1,19 +1,18 @@
 "use client";
 import axios from "axios";
-import { cookies } from "next/headers";
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
 
 const defaultScore = {
   1001: 0,
   1002: 0,
-  1003: 2,
+  1003: 0,
   1004: 0,
   1005: 0,
   1006: 0,
   1007: 0,
   1008: 0,
-  1009: 3,
+  1009: 0,
   1010: 0,
 };
 

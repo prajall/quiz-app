@@ -10,14 +10,20 @@ import { useContext, useEffect, useState } from "react";
 const QuizSettings = () => {
   console.log("Rendered Quiz Setting");
   const [examId, setExamId] = useState("random");
-  const { setGameData, resetGameData, startGame } = useContext(GameContext);
+  const [time, setTime] = useState(60);
+  const { gameData, setGameData, resetGameData, startGame } =
+    useContext(GameContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
 
   const router = useRouter();
 
-  const handleChange = async (event) => {
+  const handleExamChange = async (event) => {
     console.log("change");
     setExamId(event.target.value);
+  };
+  const handleTimeChange = async (event) => {
+    console.log("change");
+    setTime(event.target.value);
   };
 
   const startQuiz = async () => {
@@ -36,26 +42,41 @@ const QuizSettings = () => {
     } catch (error) {
       console.log(error);
     }
-    startGame(10);
+    console.log(response.data);
+    startGame(time);
     router.push(`/game/${response.data[0]?._id}`);
   };
 
   useEffect(() => {
     resetGameData();
     stopTimer();
+    //todo: reset score
   }, []);
 
   return (
     <div>
       <h2>Quiz settings:</h2>
-      <p>Time: 2 minutes</p>
+      <p>Time:</p>
+      <Select
+        labelId="demo-select-small-label"
+        id="demo-simple-select"
+        value={time}
+        label="Time"
+        onChange={handleTimeChange}
+        className="text-black"
+      >
+        <MenuItem value={30}>00:30</MenuItem>
+        <MenuItem value={60}>1:00</MenuItem>
+        <MenuItem value={90}>1:30</MenuItem>
+        <MenuItem value={120}>2:00</MenuItem>
+      </Select>
       <p>Choose your Exam:</p>
       <Select
         labelId="demo-select-small-label"
         id="demo-simple-select"
         value={examId}
         label="Exam Id"
-        onChange={handleChange}
+        onChange={handleExamChange}
         className="text-black"
       >
         {exams.map((exam) => (
