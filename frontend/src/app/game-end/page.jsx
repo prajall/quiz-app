@@ -45,7 +45,7 @@ const page = () => {
       <p>Display score</p>
       <ul>
         {Object.keys(filteredScores).map((item, index) => (
-          <li key={item}>
+          <li key={item} className="flex">
             <p> {exams.find((exam) => exam.exam_id === item)?.name || item}</p>
             <p>:</p>
             <p>{score[1000 + 1 + index]}</p>

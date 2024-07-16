@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import { TimerContext } from "./TimerContext";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,6 @@ export const GameContext = createContext();
 
 const GameProvider = ({ children }) => {
   const [gameData, setGameData] = useState(defaultGameData);
-  const { stopTimer, startTimer } = useContext(TimerContext);
   const { uploadScore } = useContext(ScoreContext);
 
   const router = useRouter();
@@ -26,17 +25,18 @@ const GameProvider = ({ children }) => {
 
   const startGame = (maxTimer) => {
     setGameData((prev) => ({ ...prev, isPlaying: true }));
-    console.log(gameData.questions);
-    startTimer(maxTimer);
   };
 
   const endGame = async () => {
     setGameData((prev) => ({ ...prev, isPlaying: false }));
-    stopTimer();
     alert("Game ended");
     await uploadScore();
     router.push("/game-end");
   };
+
+  useEffect(() => {
+    console.log("gameData Updated: ", gameData);
+  }, [gameData, setGameData]);
 
   return (
     <GameContext.Provider

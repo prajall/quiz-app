@@ -2,10 +2,12 @@
 import { GameContext } from "@/contexts/GameContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+
 import React, { useContext, useEffect, useState } from "react";
 
 const AnswerList = ({ question }) => {
-  // console.log("Rendered AnswerList");
+  console.log("Rendered AnswerList");
   const { gameData, setGameData, endGame } = useContext(GameContext);
   const { score, incrementScore } = useContext(ScoreContext);
   const [answered, setAnswered] = useState(false);
@@ -25,15 +27,15 @@ const AnswerList = ({ question }) => {
   };
 
   const handleNext = () => {
-    setGameData({
-      ...gameData,
-      currentQuestion: gameData.currentQuestion + 1,
-    });
+    setGameData((prev) => ({
+      ...prev,
+      currentQuestion: prev.currentQuestion + 1,
+    }));
     if (gameData.currentQuestion >= gameData.questions.length) {
       endGame();
       router.push(`/game-end`);
-      return;
     }
+    console.log("next question");
     router.push(`/game/${gameData.questions[gameData.currentQuestion]?._id}`);
   };
 
@@ -43,10 +45,15 @@ const AnswerList = ({ question }) => {
   };
 
   useEffect(() => {
+    console.log("gameData during load:", gameData);
     if (!gameData.isPlaying) {
-      router.push("/game");
+      console.log("Not playing redirecting /game");
+      redirect("/game");
     }
-    console.log(gameData);
+    if (gameData.questions[gameData.currentQuestion]?.name != question.name) {
+      console.log("wrong question, redirecting /game/current question");
+      router.push(`/game/${gameData.questions[gameData.currentQuestion]?._id}`);
+    }
   }, []);
   return (
     <div>
@@ -146,4 +153,4 @@ const AnswerList = ({ question }) => {
   );
 };
 
-export default React.memo(AnswerList);
+export default AnswerList;

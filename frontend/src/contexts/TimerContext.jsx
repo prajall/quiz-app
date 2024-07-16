@@ -16,7 +16,7 @@ export const TimerProvider = ({ children }) => {
 
     timerRef.current = setInterval(() => {
       setRunningTimer((prev) => {
-        if (prev <= 1) {
+        if (prev <= 0) {
           clearInterval(timerRef.current);
           return 0;
         }

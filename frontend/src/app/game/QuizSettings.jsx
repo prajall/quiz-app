@@ -42,7 +42,7 @@ const QuizSettings = () => {
     } catch (error) {
       console.log(error);
     }
-    console.log(response.data);
+    startTimer(120);
     startGame(time);
     router.push(`/game/${response.data[0]?._id}`);
   };
