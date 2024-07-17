@@ -17,7 +17,12 @@ const Score = () => {
     setTotalScore(calculateTotalScore());
   }, [score, setScore]);
 
-  return <div>Score: {totalScore} </div>;
+  return (
+    <div className="text-black font-semibold text-right">
+      Score:{" "}
+      <span className="text-2xl font-semibold text-primary">{totalScore}</span>
+    </div>
+  );
 };
 
 export default Score;

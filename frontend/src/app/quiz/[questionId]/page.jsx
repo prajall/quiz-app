@@ -1,6 +1,4 @@
-import Score from "@/components/Score";
 import axios from "axios";
-import ExamCategory from "./components/ExamCategory";
 import AnswerList from "./components/AnswerList";
 
 const Question = async ({ params }) => {
@@ -12,12 +10,7 @@ const Question = async ({ params }) => {
 
   return (
     <>
-      <div className="m-2">
-        <Score />
-        <ExamCategory question={question} />
-        <h2>{question.name}</h2>
-        <AnswerList question={question} />
-      </div>
+      <AnswerList question={question} />
     </>
   );
 };

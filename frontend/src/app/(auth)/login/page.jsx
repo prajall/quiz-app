@@ -14,7 +14,6 @@ const Login = () => {
 
   const router = useRouter();
   const onSubmit = async (data) => {
-    event.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:3001/user/login",
@@ -46,26 +45,28 @@ const Login = () => {
       <h3 className="text-3xl mb-2 text-green font-bold text-center ">
         Welcome Back,
       </h3>
-      <p className="text-lg text-center">Login to Continue</p>
+      <p className="text-lg text-center text-opacity-80">Login to Continue</p>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col p-3 max-w-96 mx-auto"
       >
         <div className="relative w-full mb-3">
-          <label className=" text-sm font-semibold mt-4 mb-2">Email</label>
+          <label className=" text-sm  mt-2 mb-3">Email</label>
           <input
             {...register("email", {
               required: "Email is Required",
             })}
+            className="px-4 py-3 text-sm w-full mt-1 bg-gray bg-opacity-60 ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
             type="email"
-            className="p-2 w-full mt-1 bg-gray ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
           />
-          {errors.username && (
-            <p className="text-red text-sm mt-1">{errors.username.message}</p>
+          {errors.email && (
+            <p className="text-incorrect text-sm mt-1 mb-1">
+              {errors.email.message}
+            </p>
           )}
         </div>
         <div className="relative w-full mb-3">
-          <label className=" text-sm font-semibold mt-4 mb-2">Password</label>
+          <label className=" text-sm  mt-2 mb-3">Password</label>
           <input
             {...register("password", {
               required: "Password is Required",
@@ -75,10 +76,10 @@ const Login = () => {
               },
             })}
             type="password"
-            className="p-2 w-full mt-1 bg-gray ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
+            className="px-4 py-3 text-sm  w-full mt-1 bg-gray bg-opacity-60 ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
           />
           {errors.password && (
-            <p className="absolute text-red text-sm mt-1 ">
+            <p className="absolute text-incorrect text-sm mt-1 mb-1 ">
               {errors.password.message}
             </p>
           )}
@@ -92,9 +93,13 @@ const Login = () => {
             Forgot Password ?
           </a>
         </div>
-        <Button variant="contained" type="submit" className="mt-4">
+        <button
+          variant="contained"
+          type="submit"
+          className="mt-4 bg-primary text-white py-3 rounded-lg "
+        >
           Login
-        </Button>
+        </button>
       </form>
     </div>
   );

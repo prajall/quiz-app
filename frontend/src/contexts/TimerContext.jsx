@@ -14,15 +14,15 @@ export const TimerProvider = ({ children }) => {
       clearInterval(timerRef.current);
     }
 
-    timerRef.current = setInterval(() => {
-      setRunningTimer((prev) => {
-        if (prev <= 0) {
-          clearInterval(timerRef.current);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    // timerRef.current = setInterval(() => {
+    //   setRunningTimer((prev) => {
+    //     if (prev <= 0) {
+    //       clearInterval(timerRef.current);
+    //       return 0;
+    //     }
+    //     return prev - 1;
+    //   });
+    // }, 1000);
   };
 
   const stopTimer = () => {

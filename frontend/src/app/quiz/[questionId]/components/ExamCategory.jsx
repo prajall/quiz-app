@@ -6,7 +6,12 @@ const ExamCategory = ({ question }) => {
     exams.find((exam) => exam.exam_id === question.exam_id)?.name ||
     question.exam_id;
 
-  return <div>Category: {category} </div>;
+  return (
+    <div className="text-black font-semibold ">
+      Category:{" "}
+      <span className="text-primary font-semibold text-xl"> {category}</span>{" "}
+    </div>
+  );
 };
 
 export default ExamCategory;

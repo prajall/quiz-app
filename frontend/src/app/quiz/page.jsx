@@ -2,7 +2,7 @@
 import { QuizContext } from "@/contexts/QuizContext";
 import { TimerContext } from "@/contexts/TimerContext";
 import { exams } from "@/examData";
-import { MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -53,38 +53,70 @@ const page = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Quiz settings:</h2>
-      <p>Time:</p>
-      <Select
-        labelId="demo-select-small-label"
-        id="demo-simple-select"
-        value={time}
-        label="Time"
-        onChange={handleTimeChange}
-        className="text-black"
-      >
-        <MenuItem value={30}>00:30</MenuItem>
-        <MenuItem value={60}>1:00</MenuItem>
-        <MenuItem value={90}>1:30</MenuItem>
-        <MenuItem value={120}>2:00</MenuItem>
-      </Select>
-      <p>Choose your Exam:</p>
-      <Select
-        labelId="demo-select-small-label"
-        id="demo-simple-select"
-        value={examId}
-        label="Exam Id"
-        onChange={handleExamChange}
-        className="text-black"
-      >
-        {exams.map((exam) => (
-          <MenuItem value={exam.exam_id} key={exam.exam_id}>
-            {exam.name}
-          </MenuItem>
-        ))}
-      </Select>
-      <button onClick={beginQuiz}>start</button>
+    <div className="mt-4 space-y-6 text-black">
+      <div className="space-y-1">
+        <h1 className="font-semibold text-3xl lg:text-4xl ">
+          Welcome To Nepali Quiz Pro
+        </h1>
+        <p className="opacity-90 text-sm">
+          This is a game of quiz with questions from different categories like
+          TSC, Loksewa, GK, etc.
+        </p>
+      </div>
+      <div className="space-y-6 rounded-xl max-w-96 ">
+        <h2 className="mb-8 text-2xl font-semibold  text-primary">
+          Choose your Quiz Settings
+        </h2>
+        <div className="flex gap-2 items-center">
+          <p className="w-1/2">Time:</p>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-simple-select"
+            value={time}
+            onChange={handleTimeChange}
+            className="h-8 rounded-full"
+          >
+            <MenuItem className="text-sm" value={30}>
+              00:30
+            </MenuItem>
+            <MenuItem className="text-sm" value={60}>
+              1:00
+            </MenuItem>
+            <MenuItem className="text-sm" value={90}>
+              1:30
+            </MenuItem>
+            <MenuItem className="text-sm" value={120}>
+              2:00
+            </MenuItem>
+          </Select>
+        </div>
+        <div className="flex gap-2">
+          <p className="w-1/2">Exam Category:</p>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-simple-select"
+            value={examId}
+            onChange={handleExamChange}
+            className="h-8 text-sm rounded-full"
+          >
+            {exams.map((exam) => (
+              <MenuItem
+                className="text-sm"
+                value={exam.exam_id}
+                key={exam.exam_id}
+              >
+                {exam.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+        <button
+          onClick={beginQuiz}
+          className="bg-primary text-white flex px-4 py-2 rounded-full text-sm"
+        >
+          Start Quiz
+        </button>
+      </div>
     </div>
   );
 };

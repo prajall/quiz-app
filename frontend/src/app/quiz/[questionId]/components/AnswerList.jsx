@@ -27,16 +27,26 @@ const AnswerList = ({ question }) => {
   };
 
   const handleNext = () => {
-    setQuizData((prev) => ({
-      ...prev,
-      currentQuestion: prev.currentQuestion + 1,
-    }));
-    if (quizData.currentQuestion >= quizData.questions.length) {
-      endQuiz();
-      router.push(`/quiz-end`);
-    }
-    console.log("next question");
-    router.push(`/quiz/${quizData.questions[quizData.currentQuestion]?._id}`);
+    setQuizData((prev) => {
+      const nextQuestion = prev.currentQuestion + 1;
+      const isLastQuestion = nextQuestion >= prev.questions.length;
+
+      // Update state
+      const updatedData = {
+        ...prev,
+        currentQuestion: nextQuestion,
+      };
+
+      // Navigate after state is updated
+      if (isLastQuestion) {
+        endQuiz();
+        router.push(`/quiz-end`);
+      } else {
+        router.push(`/quiz/${prev.questions[nextQuestion]._id}`);
+      }
+
+      return updatedData;
+    });
   };
 
   const handleFinish = async () => {
@@ -55,96 +65,89 @@ const AnswerList = ({ question }) => {
       router.push(`/quiz/${quizData.questions[quizData.currentQuestion]?._id}`);
     }
   }, []);
+
+  const defaultButtonClassnames =
+    "relative text-md pl-4 m-1 flex items-center border-2 border-gray h-10 text-left rounded-lg ";
+
+  const defaultIndexClassnames =
+    "absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2  border-2 rounded-full z-20  w-6 h-6 flex items-center justify-center ";
+
+  const buttons = [
+    {
+      option: "A",
+      opt: "opt_a",
+    },
+    {
+      option: "B",
+      opt: "opt_b",
+    },
+    {
+      option: "C",
+      opt: "opt_c",
+    },
+    {
+      option: "D",
+      opt: "opt_d",
+    },
+  ];
+
   return (
-    <div>
-      <button
-        onClick={() => handleClick("A")}
-        className={` py-1 px-4 m-1 border border-gray-400 rounded ${
-          answered
-            ? optionChoosen === "A"
-              ? optionChoosen === correctOption
-                ? "bg-green-500"
-                : "bg-red-400"
-              : ""
-            : "hover:bg-gray-100"
-        } ${
-          answered && optionChoosen != "A" && question.opt_correct == "A"
-            ? " ring-green-500 ring-2"
-            : ""
-        } `}
-        disabled={answered}
-      >
-        {question.opt_a}
-      </button>
-
-      <button
-        onClick={() => handleClick("B")}
-        className={` py-1 px-4 m-1 border border-gray-400 rounded ${
-          answered
-            ? optionChoosen === "B"
-              ? optionChoosen === correctOption
-                ? "bg-green-500"
-                : "bg-red-400"
-              : ""
-            : "hover:bg-gray-100"
-        } ${
-          answered && optionChoosen != "B" && question.opt_correct == "B"
-            ? " ring-green-500 ring-2"
-            : ""
-        } `}
-        disabled={answered}
-      >
-        {question.opt_b}
-      </button>
-      <button
-        onClick={() => handleClick("C")}
-        className={` py-1 px-4 m-1 border border-gray-400 rounded ${
-          answered
-            ? optionChoosen === "C"
-              ? optionChoosen === correctOption
-                ? "bg-green-500"
-                : "bg-red-400"
-              : ""
-            : "hover:bg-gray-100"
-        } ${
-          answered && optionChoosen != "C" && question.opt_correct == "C"
-            ? " ring-green-500 ring-2"
-            : ""
-        } `}
-        disabled={answered}
-      >
-        {question.opt_c}
-      </button>
-      <button
-        onClick={() => handleClick("D")}
-        className={` py-1 px-4 m-1 border border-gray-400 rounded ${
-          answered
-            ? optionChoosen === "D"
-              ? optionChoosen === correctOption
-                ? "bg-green-500"
-                : "bg-red-400"
-              : ""
-            : "hover:bg-gray-100"
-        } ${
-          answered && optionChoosen != "D" && question.opt_correct == "D"
-            ? " ring-green-500 ring-2"
-            : ""
-        } `}
-        disabled={answered}
-      >
-        {question.opt_d}
-      </button>
-
-      <div>
+    <div className="space-y-8">
+      <div className="grid gap-3 grid-cols-1 md:grid-cols-2 ">
+        {buttons.map((button) => (
+          <button
+            onClick={() => handleClick(button.option)}
+            title={question[button.opt]}
+            className={`relative text-md pl-4 m-1 flex items-center border-2 border-gray h-10 text-left rounded-lg  ${
+              answered
+                ? optionChoosen === button.option
+                  ? optionChoosen === correctOption
+                    ? "text-correct ring-2 ring-correct "
+                    : "text-incorrect ring-2 ring-incorrect "
+                  : ""
+                : "hover:bg-[#f2f2f2]"
+            } ${
+              answered && question.opt_correct == button.option
+                ? " text-correct ring-2 ring-correct "
+                : ""
+            }`}
+            disabled={answered}
+          >
+            <p className="overflow-hidden whitespace-nowrap">
+              {question[button.opt]}
+            </p>
+            <div
+              className={`absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2  border-2 rounded-full z-20  w-6 h-6 flex items-center justify-center ${
+                answered
+                  ? optionChoosen === button.option
+                    ? optionChoosen === correctOption
+                      ? "bg-correct  border-correct text-white"
+                      : "bg-incorrect border-incorrect text-white"
+                    : "border-gray text-gray bg-white"
+                  : "border-gray text-gray bg-white"
+              }  ${
+                answered &&
+                optionChoosen != correctOption &&
+                question.opt_correct == button.option
+                  ? "  text-correct border-correct"
+                  : ""
+              } `}
+            >
+              {button.option}
+            </div>
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-2 justify-end">
         <button
           onClick={handleNext}
-          className="px-4 py-1 rounded-lg m-2 bg-blue-300"
+          className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
         >
           Next
         </button>
         <button
           onClick={handleFinish}
-          className="px-4 py-1 rounded-lg m-2 bg-red-200"
+          className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-incorrect px-4  rounded-lg  text-white bg-incorrect"
         >
           Finish
         </button>
@@ -153,4 +156,4 @@ const AnswerList = ({ question }) => {
   );
 };
 
-export default AnswerList;
+export default React.memo(AnswerList);

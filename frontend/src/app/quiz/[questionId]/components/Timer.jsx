@@ -13,12 +13,15 @@ const Timer = () => {
     }
   }, [runningTimer]);
 
-  return <>{quizData.isPlaying && <div>Time: {runningTimer}</div>}</>;
-  // return (
-  //   <>
-  //     <div>Time: {runningTimer}</div>
-  //   </>
-  // );
+  return (
+    <>
+      {quizData.isPlaying && (
+        <div className="font-semibold text-center text-black">
+          Time: <span className="text-xl text-primary">{runningTimer}</span>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Timer;
