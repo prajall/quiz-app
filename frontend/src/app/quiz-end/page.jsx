@@ -44,9 +44,10 @@ const page = () => {
         width={100}
         height={100}
         cornerRadius="50%"
-        value={98}
+        value={totalScore}
+        text={`${totalScore}/${quizQuestions.length}`}
         valueMin={0}
-        valueMax={100}
+        valueMax={quizQuestions.length}
       />
       <div className="my-6 ">
         <h1 className="text-3xl lg:text-4xl mb-2 font-semibold ">QUIZ ENDED</h1>
