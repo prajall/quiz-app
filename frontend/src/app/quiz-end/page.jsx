@@ -3,6 +3,7 @@ import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { exams } from "@/examData";
 import React, { useContext } from "react";
+import { Gauge } from "@mui/x-charts/Gauge";
 
 const page = () => {
   console.log("rendered quiz-end page");
@@ -39,6 +40,14 @@ const page = () => {
 
   return (
     <div className="lg:text-lg sm:max-w-[500px] mx-auto">
+      <Gauge
+        width={100}
+        height={100}
+        cornerRadius="50%"
+        value={98}
+        valueMin={0}
+        valueMax={100}
+      />
       <div className="my-6 ">
         <h1 className="text-3xl lg:text-4xl mb-2 font-semibold ">QUIZ ENDED</h1>
         <p className="text-sm">

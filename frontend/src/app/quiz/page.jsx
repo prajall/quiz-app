@@ -6,6 +6,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const page = () => {
   console.log("Rendered Quiz Setting");
@@ -37,13 +38,21 @@ const page = () => {
           `http://localhost:3001/question/random?limit=10`
         );
       }
-      setQuizData((prev) => ({ ...prev, questions: response?.data }));
+      if (!response.data) {
+        toast.error("Error Getting Questions");
+        return;
+      }
+      if (response.status == 200) {
+        setQuizData((prev) => ({ ...prev, questions: response?.data }));
+      } else {
+        toast.error("Something Went Wrong");
+      }
     } catch (error) {
       console.log(error);
     }
     startTimer(120);
     startQuiz(time);
-    router.push(`/quiz/${response.data[0]?._id}`);
+    router.push(`/quiz/${response?.data[0]?._id}`);
   };
 
   useEffect(() => {

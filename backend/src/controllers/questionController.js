@@ -16,12 +16,12 @@ export const getExamQuestions = async (req, res) => {
       { $match: { exam_id } },
       { $sample: { size: limit } },
     ]);
-    res.send(questions).status(200);
+    res
+      .json({ message: "Question Fetched Successfully", questions })
+      .status(200);
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({ message: "Failed to fetch random data", error: err });
+    res.status(500).json({ message: "Failed to fetch Question" });
   }
 };
 export const getRandomQuestions = async (req, res) => {

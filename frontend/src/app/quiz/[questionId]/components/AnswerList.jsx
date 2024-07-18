@@ -127,9 +127,9 @@ const AnswerList = ({ question }) => {
                   : "border-gray text-gray bg-white"
               }  ${
                 answered &&
-                optionChoosen != correctOption &&
-                question.opt_correct == button.option
-                  ? "  text-correct border-correct"
+                question.opt_correct == button.option &&
+                optionChoosen != button.option
+                  ? " !text-correct ring-2 ring-correct "
                   : ""
               } `}
             >

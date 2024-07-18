@@ -4,6 +4,8 @@ import QuizProvider from "@/contexts/QuizContext";
 import { TimerProvider } from "@/contexts/TimerContext";
 import ScoreProvider from "@/contexts/ScoreContext";
 import Navbar from "@/components/Navbar";
+import { Slide, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 
@@ -16,6 +18,20 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={font.className}>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop={true}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover
+          theme="light"
+          limit={4}
+          transition={Slide}
+        />
+
         <TimerProvider>
           <ScoreProvider>
             <QuizProvider>
