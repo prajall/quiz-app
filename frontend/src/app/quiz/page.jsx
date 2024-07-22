@@ -108,6 +108,9 @@ const page = () => {
             onChange={handleExamChange}
             className="h-8 text-sm rounded-full"
           >
+            <MenuItem className="text-sm" value="random" key="random">
+              Random
+            </MenuItem>
             {exams.map((exam) => (
               <MenuItem
                 className="text-sm"

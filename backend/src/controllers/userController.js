@@ -31,7 +31,7 @@ const signupUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    const createdScore = await Score.create({
+    await Score.create({
       user: createdUser._id,
       1001: 0,
       1002: 0,

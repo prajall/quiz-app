@@ -8,17 +8,30 @@ export const getOverallLeaderboard = async (req, res) => {
           total: -1,
         },
       },
-
       {
         $limit: 20,
       },
       {
         $project: {
+          _id: 1,
           total: 1,
           user: 1,
         },
       },
+      {
+        $addFields: {
+          score: "$total", // include score field to have value of total
+        },
+      },
+      {
+        $project: {
+          total: 0, // Exclude the total field
+        },
+      },
     ]);
+    if (!leaderboard) {
+      res.status(404).json({ message: "Leaderboard Not Found" });
+    }
     res.send(leaderboard);
   } catch (err) {
     console.log("Error fetching Leaderboard: ", err);
@@ -97,6 +110,95 @@ export const getExamLeaderboard = async (req, res) => {
     res.send(leaderboard);
   } catch (err) {
     console.log("Error fetching Leaderboard: ", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+export const getAllExamLeaderboards = async (req, res) => {
+  let leaderboards = [];
+
+  try {
+    for (let examId = 1001; examId <= 1010; examId++) {
+      const leaderboard = await Score.aggregate([
+        {
+          $sort: {
+            [examId]: -1,
+          },
+        },
+        {
+          $limit: 20,
+        },
+        {
+          $project: {
+            [examId]: 1,
+            user: 1,
+          },
+        },
+      ]);
+      const transformedLeaderboard = leaderboard.map((item) => ({
+        ...item,
+        score: item[examId],
+        [examId]: undefined,
+      }));
+
+      leaderboards.push({
+        exam_id: examId.toString(),
+        leaderboard: transformedLeaderboard,
+      });
+    }
+
+    console.log(leaderboards);
+    res.send(leaderboards);
+  } catch (err) {
+    console.log("Error fetching Leaderboards: ", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+export const getAllEsdsxamLeaderboards = async (req, res) => {
+  const leaderboards = [];
+
+  try {
+    for (let examId = 1001; examId <= 1010; examId++) {
+      const leaderboard = await Score.aggregate([
+        {
+          $match: {
+            exam_id: examId,
+          },
+        },
+        {
+          $sort: {
+            score: -1,
+          },
+        },
+        {
+          $limit: 10,
+        },
+        {
+          $project: {
+            exam_id: 1,
+            user: 1,
+            score: `$${examId}`,
+          },
+        },
+      ]);
+
+      const transformedLeaderboard = leaderboard.map((item) => ({
+        ...item,
+        score: item[examId],
+        [examId]: undefined,
+      }));
+
+      leaderboards.push({
+        exam_id: examId.toString(),
+        leaderboard: transformedLeaderboard,
+      });
+    }
+
+    console.log(leaderboards);
+    res.send(leaderboards);
+  } catch (err) {
+    console.log("Error fetching Leaderboards: ", err);
     res.status(500).send("Internal Server Error");
   }
 };

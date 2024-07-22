@@ -1,9 +1,5 @@
 export const exams = [
   {
-    exam_id: "random",
-    name: "Random",
-  },
-  {
     exam_id: "1001",
     name: "TSC",
   },

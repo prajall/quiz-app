@@ -18,3 +18,28 @@ export const fetchQuestions = async (examId) => {
     console.log("ApiCalls Error 1:", error);
   }
 };
+
+export const fetchLeaderboard = async () => {
+  try {
+    const response = await axios.get("http://localhost:3001/leaderboard", {
+      headers: {
+        apiKey: 123456789,
+      },
+    });
+    if (response.status == 200) {
+      return response.data.concat(response.data);
+      console.log(response.data);
+    } else {
+      toast.error("Failed to load Leaderboard");
+    }
+  } catch (err) {
+    console.log("Leaderboard Fetching error.", err);
+    if (err.response) {
+      toast.error(err.response?.message);
+    } else if (err.message) {
+      toast.error(err.message);
+    } else {
+      toast.error("Something went wrong");
+    }
+  }
+};

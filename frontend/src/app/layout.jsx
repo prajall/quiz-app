@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
           <ScoreProvider>
             <QuizProvider>
               <Navbar />
-              <div className=" w-11/12 max-w-screen-xl md:px-0 mx-auto">
+              <div className=" w-11/12 max-w-screen-xl md:px-0 mx-auto text-black">
                 {children}
               </div>
             </QuizProvider>

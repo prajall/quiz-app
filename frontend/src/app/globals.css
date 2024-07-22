@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.background {
+  background-image: url("../assets/leaderboard-background.png");
+  background-size: cover;
+}
+
+.gradient-bg-1 {
+  background: linear-gradient(to bottom, #19528A, #1c61a69a, white);
+}
+
+.gradient-bg-2 {
+  background: linear-gradient(to bottom, #4298ED, #4298ED9a, white);
+}
+
+.gradient-bg-3 {
+  background: linear-gradient(to bottom, #043669, #0436699a, white);
+}
