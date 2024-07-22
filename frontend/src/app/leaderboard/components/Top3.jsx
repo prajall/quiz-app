@@ -7,12 +7,30 @@ const Top3 = ({ leaderboard }) => {
     return;
   }
 
+  let height2 = Math.floor((leaderboard[1].score / leaderboard[0].score) * 240);
+  if (height2 < 130) {
+    height2 = 130;
+  }
+  console.log(height2);
+  let height3 = Math.floor((leaderboard[2].score / leaderboard[0].score) * 240);
+  if (height3 < 100) {
+    height3 = 100;
+  }
+  console.log(height3);
+
+  //to trigger reanimation on data change
+  const uniqueKey = leaderboard.map((item) => item.user + item.score).join("-");
+
   const top3 = leaderboard.slice(0, 3);
 
   return (
-    <div className="flex justify-center items-end mx-auto mt-2 h-full background">
+    <div
+      key={uniqueKey}
+      className="flex justify-center items-end mx-auto mt-2 h-full background"
+    >
       <div className=" w-24 sm:w-28 lg:w-32 flex flex-col items-center ">
         <motion.div
+          // To trigger reanimation
           className="flex flex-col items-center"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -31,9 +49,10 @@ const Top3 = ({ leaderboard }) => {
         </motion.div>
         {/* <p className="font-semibold text-primary">3212</p> */}
         <motion.div
-          className="rounded-t-3xl gradient-bg-1 w-full h-1/2 flex flex-col items-center justify-start pt-4"
+          // Adding a key prop here
+          className="rounded-t-3xl gradient-bg-1 w-full flex flex-col items-center justify-start pt-4"
           initial={{ height: 0 }}
-          animate={{ height: "10rem" }}
+          animate={{ height: `${height2}px` }}
           transition={{ duration: 0.5, delay: 0.06 }}
         >
           <span className="text-xl font-bold text-white">{top3[1]?.score}</span>
@@ -64,9 +83,9 @@ const Top3 = ({ leaderboard }) => {
         </motion.div>
         {/* <p className="font-semibold text-white">3212</p> */}
         <motion.div
-          className="rounded-t-3xl gradient-bg-2 w-full sm:w-28 lg:w-32 h-60  flex flex-col items-center justify-start pt-4"
+          className="rounded-t-3xl gradient-bg-2  w-full sm:w-28 lg:w-32 h-60  flex flex-col items-center justify-start pt-4"
           initial={{ height: 0 }}
-          animate={{ height: "15rem" }}
+          animate={{ height: "240px" }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <span className="text-xl font-bold text-white ">
@@ -94,9 +113,9 @@ const Top3 = ({ leaderboard }) => {
         </motion.div>
         {/* <p className="font-semibold text-primary">3212</p> */}
         <motion.div
-          className="rounded-t-3xl gradient-bg-3 bg-opacity-75  w-full h-32 flex flex-col items-center justify-start pt-4"
+          className="rounded-t-3xl gradient-bg-3 bg-opacity-75 w-full  flex flex-col items-center justify-start pt-4"
           initial={{ height: 0 }}
-          animate={{ height: "8rem" }}
+          animate={{ height: `${height3}px` }}
           transition={{ duration: 0.5, delay: 0.12 }}
         >
           <span className="text-xl font-bold text-white">{top3[2]?.score}</span>

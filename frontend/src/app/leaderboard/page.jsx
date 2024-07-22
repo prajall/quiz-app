@@ -34,8 +34,6 @@ const LeaderboardPage = () => {
       console.log("Leaderboard Fetching error.", err);
       if (err.response) {
         toast.error(err.response?.message);
-      } else if (err.message) {
-        toast.error(err.message);
       } else {
         toast.error("Something went wrong");
       }
@@ -101,7 +99,7 @@ const LeaderboardPage = () => {
     <div className="mt-4 ">
       <header className="py-2 max-w-screen-lg mx-auto md:flex justify-between">
         <h1 className="text-2xl font-semibold text-primary text-center ">
-          Overall Leaderboard
+          Leaderboard
         </h1>
         <SwitchableComponent
           onChangeSelected={onChangeSelected}
@@ -112,7 +110,7 @@ const LeaderboardPage = () => {
         <div className="h-[450px]">
           <Top3 leaderboard={leaderboard} />
         </div>
-        <div className=" mx-auto my-4 w-full p-4 max-w-screen-lg rounded-[30px]  border-primary shadow-md drop-shadow-sm shadow-black">
+        <div className=" mx-auto my-4 w-full p-4 max-w-screen-lg rounded-[30px]  border-primary shadow-sm drop-shadow-sm shadow-black">
           <OverallTable leaderboard={leaderboard} isFetching={isFetching} />
         </div>
       </div>

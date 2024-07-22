@@ -66,8 +66,17 @@ const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
           <div className="w-full absolute flex justify-end left-1/2 -translate-x-1/2  ">
             <Select
               onChange={handleExamSelection}
-              className="h-10 rounded-lg text-xs w-full "
+              className="h-10 rounded-xl text-xs w-full "
               value={selectedExam}
+              sx={{
+                borderRadius: "0.75rem",
+                ".MuiOutlinedInput-root": {
+                  borderRadius: "0.75rem",
+                },
+                ".MuiSelect-select": {
+                  borderRadius: "0.75rem",
+                },
+              }}
             >
               {exams.map((exam, index) => (
                 <MenuItem value={index} className="text-xs">

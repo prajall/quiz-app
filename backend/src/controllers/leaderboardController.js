@@ -106,7 +106,6 @@ export const getExamLeaderboard = async (req, res) => {
         },
       },
     ]);
-    console.log(leaderboard);
     res.send(leaderboard);
   } catch (err) {
     console.log("Error fetching Leaderboard: ", err);
@@ -147,7 +146,6 @@ export const getAllExamLeaderboards = async (req, res) => {
       });
     }
 
-    console.log(leaderboards);
     res.send(leaderboards);
   } catch (err) {
     console.log("Error fetching Leaderboards: ", err);
@@ -195,7 +193,6 @@ export const getAllEsdsxamLeaderboards = async (req, res) => {
       });
     }
 
-    console.log(leaderboards);
     res.send(leaderboards);
   } catch (err) {
     console.log("Error fetching Leaderboards: ", err);

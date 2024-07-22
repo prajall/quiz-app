@@ -95,4 +95,11 @@ export const logoutUser = async (req, res) => {
   }
 };
 
+export const getCookies = async (req, res) => {
+  console.log("get");
+  const cookie = req.cookies;
+  console.log(cookie);
+  res.status(200).send(cookie);
+};
+
 export { loginUser, signupUser };
