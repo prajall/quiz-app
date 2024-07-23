@@ -7,9 +7,9 @@ const ExamCategory = ({ question }) => {
     question.exam_id;
 
   return (
-    <div className="text-black font-semibold ">
+    <div className="text-black  font-semibold ">
       Category:{" "}
-      <span className="text-primary font-semibold text-xl"> {category}</span>{" "}
+      <span className="text-primary font-semibold text-lg"> {category}</span>{" "}
     </div>
   );
 };

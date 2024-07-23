@@ -17,7 +17,7 @@ const Timer = () => {
     <>
       {quizData.isPlaying && (
         <div className="font-semibold text-center text-black">
-          Time: <span className="text-xl text-primary">{runningTimer}</span>
+          Time: <span className="text-lg text-primary">{runningTimer}</span>
         </div>
       )}
     </>

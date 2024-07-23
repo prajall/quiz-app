@@ -106,7 +106,12 @@ export const getExamLeaderboard = async (req, res) => {
         },
       },
     ]);
-    res.send(leaderboard);
+    const transformedLeaderboard = leaderboard.map((item) => ({
+      ...item,
+      score: item[exam_id],
+      [exam_id]: undefined,
+    }));
+    res.send(transformedLeaderboard);
   } catch (err) {
     console.log("Error fetching Leaderboard: ", err);
     res.status(500).send("Internal Server Error");

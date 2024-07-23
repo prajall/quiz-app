@@ -26,7 +26,7 @@ export const TimerProvider = ({ children }) => {
   };
 
   const stopTimer = () => {
-    if (runningTimer > 0) {
+    if (runningTimer >= 0) {
       clearInterval(timerRef.current);
       timerRef.current = null;
       setRunningTimer(0);

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const page = () => {
   console.log("Rendered Quiz Setting");
-  const [examId, setExamId] = useState("random");
+  const [examId, setExamId] = useState("all");
   const [time, setTime] = useState(60);
   const { setQuizData, resetQuizData, startQuiz } = useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
@@ -19,6 +19,7 @@ const page = () => {
 
   const handleExamChange = async (event) => {
     console.log("change");
+    setQuizData((prev) => ({ ...prev, currentQuestion: event.target.value }));
     setExamId(event.target.value);
   };
   const handleTimeChange = async (event) => {
@@ -29,7 +30,7 @@ const page = () => {
   const beginQuiz = async () => {
     let response;
     try {
-      if (examId != "random") {
+      if (examId != "all") {
         response = await axios.get(
           `http://localhost:3001/question/exam/${examId}?limit=10`
         );
@@ -64,16 +65,16 @@ const page = () => {
   return (
     <div className="mt-4 space-y-6 text-black">
       <div className="space-y-1">
-        <h1 className="font-semibold text-3xl lg:text-4xl ">
-          Welcome To Nepali Quiz Pro
+        <h1 className="font-semibold text-3xl text-primary lg:text-4xl ">
+          Welcome To Quiz Pro
         </h1>
-        <p className="opacity-90 text-sm">
+        {/* <p className="opacity-90 text-sm">
           This is a game of quiz with questions from different categories like
           TSC, Loksewa, GK, etc.
-        </p>
+        </p> */}
       </div>
-      <div className="space-y-6 rounded-xl max-w-96 ">
-        <h2 className="mb-8 text-2xl font-semibold  text-primary">
+      <div className="space-y-6 rounded-xl max-w-96 border p-4 md:p-6 shadow-sm shadow-black mx-auto ">
+        <h2 className="mb-8 text-2xl font-semibold">
           Choose your Quiz Settings
         </h2>
         <div className="flex gap-2 items-center">
@@ -106,9 +107,10 @@ const page = () => {
             id="demo-simple-select"
             value={examId}
             onChange={handleExamChange}
-            className="h-8 text-sm rounded-full"
+            className="h-8 text-sm px-2 "
+            sx={{ borderRadius: "30px" }}
           >
-            <MenuItem className="text-sm" value="random" key="random">
+            <MenuItem className="text-sm" value="all" key="random">
               Random
             </MenuItem>
             {exams.map((exam) => (
@@ -122,9 +124,10 @@ const page = () => {
             ))}
           </Select>
         </div>
+
         <button
           onClick={beginQuiz}
-          className="bg-primary text-white flex px-4 py-2 rounded-full text-sm"
+          className="w-28 text-sm py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
         >
           Start Quiz
         </button>

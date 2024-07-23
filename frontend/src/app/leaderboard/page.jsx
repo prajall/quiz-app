@@ -1,12 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { toast } from "react-toastify";
 import Top3 from "./components/Top3";
-// import ExamTable from "./components/ExamTable";
-import OverallTable from "./components/OverallTable";
-import ExamTable from "./components/ExamTable";
+import LeaderboardTable from "./components/LeaderboardTable";
 import SwitchableComponent from "./components/Switch";
 
 const LeaderboardPage = () => {
@@ -98,9 +96,9 @@ const LeaderboardPage = () => {
   return (
     <div className="mt-4 ">
       <header className="py-2 max-w-screen-lg mx-auto md:flex justify-between">
-        <h1 className="text-2xl font-semibold text-primary text-center ">
+        <h2 className="text-2xl font-semibold text-primary text-center ">
           Leaderboard
-        </h1>
+        </h2>
         <SwitchableComponent
           onChangeSelected={onChangeSelected}
           onChangeSelectedExam={onChangeSelectedExam}
@@ -108,11 +106,14 @@ const LeaderboardPage = () => {
       </header>
       <div className="">
         <div className="h-[450px]">
-          <Top3 leaderboard={leaderboard} />
+          <Top3 leaderboard={leaderboard?.slice(0, 3)} />
         </div>
-        <div className=" mx-auto my-4 w-full p-4 max-w-screen-lg rounded-[30px]  border-primary shadow-sm drop-shadow-sm shadow-black">
-          <OverallTable leaderboard={leaderboard} isFetching={isFetching} />
-        </div>
+
+        <LeaderboardTable
+          leaderboard={leaderboard?.slice(3)}
+          isFetching={isFetching}
+          startFrom={4}
+        />
       </div>
     </div>
   );

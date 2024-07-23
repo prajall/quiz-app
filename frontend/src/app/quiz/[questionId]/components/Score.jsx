@@ -20,7 +20,7 @@ const Score = () => {
   return (
     <div className="text-black font-semibold text-right">
       Score:{" "}
-      <span className="text-2xl font-semibold text-primary">{totalScore}</span>
+      <span className="text-lg font-semibold text-primary">{totalScore}</span>
     </div>
   );
 };

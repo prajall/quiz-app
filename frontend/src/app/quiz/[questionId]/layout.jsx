@@ -16,7 +16,7 @@ const QuestionLayout = async ({ params, children }) => {
   return (
     <>
       <div className="my-4 space-y-6 ">
-        <div className="grid grid-cols-3 pb-4 border-b border-opacity-50 border-black  ">
+        <div className="grid grid-cols-3 pb-4 text-sm sm:text-md border-b border-opacity-50 border-black  ">
           <ExamCategory question={question} />
           <Timer />
           <Score />
