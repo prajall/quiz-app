@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { InputLabel, MenuItem, Select } from "@mui/material";
 import { exams } from "@/examData";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MenuItem } from "@mui/material";
 
 const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
   const [selected, setSelected] = useState("Overall");
@@ -30,6 +39,7 @@ const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
     onChangeSelected(selected);
   }, [selected]);
   useEffect(() => {
+    console.log("adfasdf");
     onChangeSelectedExam(selectedExam);
   }, [selectedExam]);
 
@@ -54,7 +64,6 @@ const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
         ))}
       </div>
 
-      {/* <AnimatePresence> */}
       {selected === "Exams" && (
         <motion.div
           key="examSelector"
@@ -65,29 +74,23 @@ const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
         >
           <div className="w-full absolute flex justify-end left-1/2 -translate-x-1/2  ">
             <Select
-              onChange={handleExamSelection}
-              className="h-10 rounded-xl text-xs w-full "
               value={selectedExam}
-              sx={{
-                borderRadius: "0.75rem",
-                ".MuiOutlinedInput-root": {
-                  borderRadius: "0.75rem",
-                },
-                ".MuiSelect-select": {
-                  borderRadius: "0.75rem",
-                },
-              }}
+              onValueChange={(value) => setSelectedExam(Number(value))}
             >
-              {exams.map((exam, index) => (
-                <MenuItem value={index} className="text-xs">
-                  {exam.name}
-                </MenuItem>
-              ))}
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={exams[selectedExam].name} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {exams.map((exam, index) => (
+                    <SelectItem value={index}>{exam.name}</SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
             </Select>
           </div>
         </motion.div>
       )}
-      {/* </AnimatePresence> */}
     </div>
   );
 };

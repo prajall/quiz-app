@@ -4,6 +4,7 @@ import app from "./app.js";
 import { questionSchema } from "./models/questionModel.js";
 import { scoreSchema } from "./models/scoreModel.js";
 import { userSchema } from "./models/userModel.js";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
@@ -35,3 +36,9 @@ quizDB.on("error", (error) => {
 export const Question = questionDB.model("Questions", questionSchema);
 export const Score = quizDB.model("Score", scoreSchema);
 export const User = quizDB.model("Users", userSchema);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});

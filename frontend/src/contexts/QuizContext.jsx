@@ -273,7 +273,7 @@ const QuizProvider = ({ children }) => {
 
   const endQuiz = async () => {
     setQuizData((prev) => ({ ...prev, isPlaying: false }));
-    alert("Quiz ended");
+    // alert("Quiz ended");
     await uploadScore();
     router.push("/quiz-end");
   };

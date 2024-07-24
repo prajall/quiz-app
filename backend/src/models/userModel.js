@@ -13,6 +13,13 @@ export const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

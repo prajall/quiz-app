@@ -1,8 +1,13 @@
 "use client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { QuizContext } from "@/contexts/QuizContext";
 import { TimerContext } from "@/contexts/TimerContext";
-import { exams } from "@/examData";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { examIdToName, exams } from "@/examData";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -17,14 +22,9 @@ const page = () => {
 
   const router = useRouter();
 
-  const handleExamChange = async (event) => {
-    console.log("change");
-    setQuizData((prev) => ({ ...prev, currentQuestion: event.target.value }));
-    setExamId(event.target.value);
-  };
-  const handleTimeChange = async (event) => {
-    console.log("change");
-    setTime(event.target.value);
+  const handleExamChange = async (value) => {
+    setQuizData((prev) => ({ ...prev, currentQuestion: value }));
+    setExamId(value);
   };
 
   const beginQuiz = async () => {
@@ -65,7 +65,7 @@ const page = () => {
   return (
     <div className="mt-4 space-y-6 text-black">
       <div className="space-y-1">
-        <h1 className="font-semibold text-3xl text-primary lg:text-4xl ">
+        <h1 className="font-semibold text-2xl text-primary text-center lg:text-4xl ">
           Welcome To Quiz Pro
         </h1>
         {/* <p className="opacity-90 text-sm">
@@ -80,48 +80,53 @@ const page = () => {
         <div className="flex gap-2 items-center">
           <p className="w-1/2">Time:</p>
           <Select
-            labelId="demo-select-small-label"
-            id="demo-simple-select"
             value={time}
-            onChange={handleTimeChange}
-            className="h-8 rounded-full"
+            onValueChange={(value) => setTime(value)}
+            className=""
           >
-            <MenuItem className="text-sm" value={30}>
-              00:30
-            </MenuItem>
-            <MenuItem className="text-sm" value={60}>
-              1:00
-            </MenuItem>
-            <MenuItem className="text-sm" value={90}>
-              1:30
-            </MenuItem>
-            <MenuItem className="text-sm" value={120}>
-              2:00
-            </MenuItem>
+            <SelectTrigger className="w-32">{time}</SelectTrigger>
+            <SelectContent>
+              <SelectItem className="text-sm" value={30}>
+                00:30
+              </SelectItem>
+              <SelectItem className="text-sm" value={60}>
+                1:00
+              </SelectItem>
+              <SelectItem className="text-sm" value={90}>
+                1:30
+              </SelectItem>
+              <SelectItem className="text-sm" value={120}>
+                2:00
+              </SelectItem>
+            </SelectContent>
           </Select>
         </div>
         <div className="flex gap-2">
           <p className="w-1/2">Exam Category:</p>
           <Select
-            labelId="demo-select-small-label"
-            id="demo-simple-select"
             value={examId}
-            onChange={handleExamChange}
+            onValueChange={handleExamChange}
             className="h-8 text-sm px-2 "
-            sx={{ borderRadius: "30px" }}
           >
-            <MenuItem className="text-sm" value="all" key="random">
-              Random
-            </MenuItem>
-            {exams.map((exam) => (
-              <MenuItem
-                className="text-sm"
-                value={exam.exam_id}
-                key={exam.exam_id}
-              >
-                {exam.name}
-              </MenuItem>
-            ))}
+            <SelectTrigger className="w-32">
+              {" "}
+              {examIdToName(examId)}{" "}
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem className="text-sm" value="all" key="random">
+                Random
+              </SelectItem>
+              {exams.map((exam) => (
+                <SelectItem
+                  className="text-sm"
+                  value={exam.exam_id}
+                  key={exam.exam_id}
+                >
+                  {exam.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
 

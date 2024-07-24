@@ -3,6 +3,7 @@ import axios from "axios";
 import ExamCategory from "./components/ExamCategory";
 import Timer from "@/app/quiz/[questionId]/components/Timer";
 import React from "react";
+import ProgressBar from "./components/ProgressBar";
 
 const QuestionLayout = async ({ params, children }) => {
   const questionId = params.questionId;
@@ -10,8 +11,6 @@ const QuestionLayout = async ({ params, children }) => {
     `http://localhost:3001/question/${questionId}`
   );
   const question = response.data.question;
-
-  const data = "this is a data";
 
   return (
     <>
@@ -21,7 +20,7 @@ const QuestionLayout = async ({ params, children }) => {
           <Timer />
           <Score />
         </div>
-
+        <ProgressBar />
         <div className=" mx-auto space-y-4 md:space-y-8  sm:border-gray sm:border sm:shadow-md sm:p-4  md:p-6 lg:p-8 rounded-lg">
           <p className="font-semibold text-xl md:text-2xl text-black min-h-24 xl:min-h-16 flex items-center leading-[1.5]">
             Q. {question.name}

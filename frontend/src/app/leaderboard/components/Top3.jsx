@@ -1,6 +1,4 @@
-import React from "react";
-import crown from "@/assets/crown.png";
-import { easeOut, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Top3 = ({ leaderboard }) => {
   if (!leaderboard || leaderboard.length < 3) {

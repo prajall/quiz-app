@@ -1,7 +1,7 @@
 "use client";
 import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
-import { exams } from "@/examData";
+import { examIdToName, exams } from "@/examData";
 import React, { useContext, useEffect, useState } from "react";
 import { Gauge } from "@mui/x-charts/Gauge";
 import { BarChart } from "@mui/x-charts";
@@ -87,7 +87,7 @@ const page = () => {
   };
 
   useEffect(() => {
-    // fetchLeaderboard();
+    fetchLeaderboard();
   }, []);
 
   return (
@@ -119,21 +119,19 @@ const page = () => {
             Your Final Score:
           </p>
           <ul className="py-2 max-w-[400px] mx-auto">
-            <li className="flex justify-between p-3 text-primary font-semibold text-xl rounded-lg">
-              <p>Total:</p>
-              <p>{totalScore}</p>
-            </li>
             {Object.keys(filteredScores).map((item, index) => (
               <li
                 key={item}
                 className="flex justify-between p-2 hover:bg-gray/20 duration-300"
               >
-                <p>
-                  {exams.find((exam) => exam.exam_id === item)?.name || item} :
-                </p>
+                <p>{examIdToName(item)} :</p>
                 <p>{score[1000 + 1 + index]}</p>
               </li>
             ))}
+            <li className="flex justify-between p-2 mt-1 text-primary font-semibold text-xl rounded-lg">
+              <p>Total:</p>
+              <p>{totalScore}</p>
+            </li>
           </ul>
         </div>
 
@@ -157,9 +155,7 @@ const page = () => {
       <section className="max-w-screen-lg my-4 mt-6 mx-auto">
         <div className="flex gap-2 items-center  ">
           <p className="font-semibold  text-xl ">
-            {exams.find((exam) => exam.exam_id === quizData.currentExam)
-              ?.name || quizData.currentExam}{" "}
-            leaderboard
+            {examIdToName(quizData.currentExam)} leaderboard
           </p>
           <Link
             href={"/leaderboard"}

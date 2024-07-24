@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@mui/material";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -93,13 +93,13 @@ const Login = () => {
             Forgot Password ?
           </a>
         </div>
-        <button
+        <Button
           variant="contained"
           type="submit"
           className="mt-4 bg-primary text-white py-3 rounded-lg "
         >
           Login
-        </button>
+        </Button>
       </form>
     </div>
   );

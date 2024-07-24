@@ -36,12 +36,11 @@ const AnswerList = ({ question }) => {
         ...prev,
         currentQuestion: nextQuestion,
       };
-
-      // Navigate after state is updated
       if (isLastQuestion) {
         endQuiz();
         router.push(`/quiz-end`);
       } else {
+        // Navigate after state is updated
         router.push(`/quiz/${prev.questions[nextQuestion]._id}`);
       }
 
@@ -139,12 +138,14 @@ const AnswerList = ({ question }) => {
         ))}
       </div>
       <div className="flex gap-2 justify-end">
-        <button
-          onClick={handleNext}
-          className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
-        >
-          Next
-        </button>
+        {quizData.currentQuestion + 1 < quizData.questions?.length && (
+          <button
+            onClick={handleNext}
+            className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
+          >
+            Next
+          </button>
+        )}
         <button
           onClick={handleFinish}
           className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-incorrect px-4  rounded-lg  text-white bg-incorrect"

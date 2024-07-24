@@ -1,10 +1,8 @@
 import React from "react";
-import { exams } from "@/examData";
+import { examIdToName, exams } from "@/examData";
 
 const ExamCategory = ({ question }) => {
-  const category =
-    exams.find((exam) => exam.exam_id === question.exam_id)?.name ||
-    question.exam_id;
+  const category = examIdToName(question.exam_id);
 
   return (
     <div className="text-black  font-semibold ">

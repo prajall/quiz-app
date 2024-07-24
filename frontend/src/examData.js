@@ -40,3 +40,7 @@ export const exams = [
     name: "GK",
   },
 ];
+
+export const examIdToName = (id) => {
+  return exams.find((exam) => exam.exam_id === id)?.name || id;
+};

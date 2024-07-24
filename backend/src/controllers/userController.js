@@ -1,54 +1,99 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import multer from "multer";
+import jwt, { decode } from "jsonwebtoken";
 import { User, Score } from "../index.js";
+import { uploadOnCloudinary } from "../cloudinary.js";
 
 // generate jwt token
 const generateToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET);
   return token;
 };
+const verifyToken = (token) => {
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    return verified; // Return the decoded data
+  } catch (err) {
+    console.log("Invalid Token");
+    return false;
+  }
+};
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 //signup new user
 
 const signupUser = async (req, res) => {
-  const { email, password } = req.body;
-  console.log(email, password);
-
-  try {
-    if (!email || !password) {
-      return res.status(400).send("email and Password are required");
+  upload.single("profilePicture")(req, res, async (err) => {
+    if (err) {
+      return res.status(400).send("Error uploading file");
     }
 
-    const userExist = await User.findOne({ email });
-    if (userExist) {
-      return res.status(409).send("email already exist");
+    const { email, password, name } = req.body;
+
+    try {
+      if (!email || !password) {
+        return res.status(400).send("Email and Password are required");
+      }
+
+      const userExist = await User.findOne({ email });
+      if (userExist) {
+        return res.status(409).send("Email already exists");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      let imageUrl = "";
+      if (req.file) {
+        const cloudinaryResult = await uploadOnCloudinary(
+          req.file.buffer,
+          "profile_pictures"
+        );
+        console.log(cloudinaryResult);
+        imageUrl = cloudinaryResult.url;
+      }
+      //todo: provide default profile
+      const createdUser = await User.create({
+        email,
+        password: hashedPassword,
+        name,
+        image: imageUrl,
+      });
+
+      const userWithoutPassword = createdUser.toObject();
+      delete userWithoutPassword.password;
+
+      await Score.create({
+        user: createdUser._id,
+        1001: 0,
+        1002: 0,
+        1003: 0,
+        1004: 0,
+        1005: 0,
+        1006: 0,
+        1007: 0,
+        1008: 0,
+        1009: 0,
+        1010: 0,
+      });
+
+      if (createdUser) {
+        const token = generateToken(createdUser._id);
+
+        res.cookie(" token", token, {
+          httpOnly: true,
+          secure: true,
+          expires: new Date(Date.now() + 2592000000),
+        });
+      }
+
+      return res.status(200).send(userWithoutPassword);
+    } catch (err) {
+      console.log("Signup User error: ", err);
+      return res.status(500).send("Internal Server Error");
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const createdUser = await User.create({
-      email,
-      password: hashedPassword,
-    });
-
-    await Score.create({
-      user: createdUser._id,
-      1001: 0,
-      1002: 0,
-      1003: 0,
-      1004: 0,
-      1005: 0,
-      1006: 0,
-      1007: 0,
-      1008: 0,
-      1009: 0,
-      1010: 0,
-    });
-
-    return res.send(createdUser).status(200);
-  } catch (err) {
-    console.log("Signup User error: ", err);
-  }
+  });
 };
 
 //login
@@ -87,7 +132,10 @@ const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+    });
     res.status(200).send("Token Cleared Successfully");
   } catch (error) {
     console.error("Logout error:", error);
@@ -96,10 +144,34 @@ export const logoutUser = async (req, res) => {
 };
 
 export const getCookies = async (req, res) => {
-  console.log("get");
   const cookie = req.cookies;
   console.log(cookie);
   res.status(200).send(cookie);
+};
+
+export const getUserInfo = async (req, res) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).send("Please Login");
+  }
+
+  try {
+    const decodedData = verifyToken(token);
+    if (!decodedData) {
+      return res.status(404).send("Invalid Token");
+    }
+    const user = await User.findById(decodedData.id).select("-password");
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    return res.status(200).send(user);
+  } catch (err) {
+    console.error("Error fetching user info: ", err);
+    return res.status(400).send(err.message);
+  }
 };
 
 export { loginUser, signupUser };
