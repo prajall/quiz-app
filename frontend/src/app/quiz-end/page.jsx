@@ -4,8 +4,6 @@ import { ScoreContext } from "@/contexts/ScoreContext";
 import { examIdToName, exams } from "@/examData";
 import React, { useContext, useEffect, useState } from "react";
 import { Gauge } from "@mui/x-charts/Gauge";
-import { BarChart } from "@mui/x-charts";
-import OverallTable from "../leaderboard/components/LeaderboardTable";
 import LeaderboardTable from "../leaderboard/components/LeaderboardTable";
 import { toast } from "react-toastify";
 import axios from "axios";

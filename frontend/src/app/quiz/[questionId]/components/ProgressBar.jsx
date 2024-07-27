@@ -1,9 +1,6 @@
 "use client";
 import { Progress } from "@/components/ui/progress";
 import { QuizContext } from "@/contexts/QuizContext";
-import { LinearProgress } from "@mui/material";
-import { linearProgressClasses } from "@mui/material/LinearProgress";
-import { styled } from "@mui/material/styles";
 import { useContext } from "react";
 
 const ProgressBar = () => {

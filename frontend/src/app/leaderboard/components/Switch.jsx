@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { exams } from "@/examData";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MenuItem } from "@mui/material";
+import { exams } from "@/examData";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
   const [selected, setSelected] = useState("Overall");

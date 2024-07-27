@@ -1,17 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { getCookiesClient } from "@/clientSideFunctions";
+import { useTheme } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { toast } from "react-toastify";
-import axios from "axios";
 import { motion } from "framer-motion";
-import { getCookiesClient } from "@/clientSideFunctions";
-import { useTheme } from "@mui/material/styles";
 
 const LeaderboardTable = ({ leaderboard, isFetching, startFrom }) => {
   if (!leaderboard) {

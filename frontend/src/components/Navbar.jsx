@@ -1,10 +1,20 @@
 "use client";
-import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import axios from "axios";
-import { Router } from "lucide-react";
+import { LogOut, Router, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { Select, SelectItem } from "./ui/select";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -12,14 +22,6 @@ const Navbar = () => {
 
   const router = useRouter();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const handleLogout = async () => {
     setIsSubmitting(true);
     try {
@@ -67,44 +69,34 @@ const Navbar = () => {
         )}
         {user && (
           <>
-            {user.image && <Avatar alt="Profile Picture" src={user.image} />}
-            {!user.image && (
-              <>
-                <Button
-                  id="basic-button"
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
-                >
-                  <Avatar
-                    sx={{
-                      color: "#284b63",
-                      width: 35,
-                      height: 35,
-                      fontSize: 19,
-                    }}
-                  >
-                    {user.email.charAt(0).toUpperCase()}
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar className="bg-gray w-8 h-8">
+                    <AvatarImage src={user.image} />
+                    <AvatarFallback>
+                      {user.email.charAt(0).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
-                </Button>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
-                  <MenuItem onClick={handleLogout} disabled={isSubmitting}>
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </>
-            )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    {" "}
+                    <User size={16} /> <span className="ml-2">Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    disabled={isSubmitting}
+                    className="cursor-pointer"
+                  >
+                    <LogOut size={16} />
+                    <span className="ml-2">Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           </>
         )}
       </div>

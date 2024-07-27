@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 
 const page = () => {
   console.log("Rendered Quiz Setting");
-  const [examId, setExamId] = useState("all");
+  const [examId, setExamId] = useState("All");
   const [time, setTime] = useState(60);
   const { setQuizData, resetQuizData, startQuiz } = useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
@@ -30,7 +30,7 @@ const page = () => {
   const beginQuiz = async () => {
     let response;
     try {
-      if (examId != "all") {
+      if (examId != "All") {
         response = await axios.get(
           `http://localhost:3001/question/exam/${examId}?limit=10`
         );
@@ -77,7 +77,7 @@ const page = () => {
         <h2 className="mb-8 text-2xl font-semibold">
           Choose your Quiz Settings
         </h2>
-        <div className="flex gap-2 items-center">
+        <div className="flex justify-between gap-2 items-center">
           <p className="w-1/2">Time:</p>
           <Select
             value={time}
@@ -101,7 +101,7 @@ const page = () => {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center justify-between gap-2">
           <p className="w-1/2">Exam Category:</p>
           <Select
             value={examId}
@@ -114,8 +114,8 @@ const page = () => {
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem className="text-sm" value="all" key="random">
-                Random
+              <SelectItem className="text-sm" value="All" key="random">
+                All
               </SelectItem>
               {exams.map((exam) => (
                 <SelectItem
