@@ -72,7 +72,7 @@ const Navbar = () => {
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Avatar className="bg-gray w-8 h-8">
+                  <Avatar className="bg-gray border-2 border-white w-8 h-8">
                     <AvatarImage src={user.image} />
                     <AvatarFallback>
                       {user.email.charAt(0).toUpperCase()}

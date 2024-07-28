@@ -13,8 +13,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom }) => {
   if (!leaderboard) {
     return;
   }
-
-  const theme = useTheme();
+  console.log(leaderboard);
 
   const cookies = getCookiesClient();
   console.log(cookies);
@@ -80,9 +79,23 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom }) => {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       whiteSpace: "nowrap",
+                      // display: "flex",
                     }}
                   >
-                    {item.user}
+                    <span className="flex gap-2 items-center">
+                      <img
+                        className="rounded-full w-6 sm:w-8 h-6 md:h-8 "
+                        src={
+                          item.userInfo.image
+                            ? item.userInfo.image
+                            : "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg"
+                        }
+                        alt={"Third"}
+                      />
+                      {item.userInfo.name
+                        ? item.userInfo.name
+                        : item.userInfo._id}
+                    </span>
                   </TableCell>
                   <TableCell sx={{ paddingRight: "5px" }} align="right">
                     {item.score}

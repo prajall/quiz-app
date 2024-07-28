@@ -28,12 +28,38 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    setError,
   } = useForm();
 
   const router = useRouter();
 
+  const resizeImage = (base64Str, maxWidth, maxHeight) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = maxWidth;
+        canvas.height = maxHeight;
+        ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
+
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, "image/jpeg");
+      };
+    });
+  };
   const onSubmitStep1 = (data) => {
     console.log("Step 1 data:", data);
+    if (data.password != data.confirmPassword) {
+      setError("confirmPassword", {
+        type: "validate",
+        message: "Confirm Password do not match with Passwords",
+      });
+      return;
+    }
     setStep(2);
   };
 
@@ -46,9 +72,10 @@ const Register = () => {
     formData.append("password", data.password);
     formData.append("name", data.name);
     if (croppedImage) {
-      const blob = await (await fetch(croppedImage)).blob();
-      formData.append("profilePicture", blob, "profilePicture.jpg");
+      const resizedBlob = await resizeImage(croppedImage, 200, 200);
+      formData.append("profilePicture", resizedBlob, "profilePicture.jpg");
     }
+
     console.log(formData);
 
     try {
@@ -112,6 +139,7 @@ const Register = () => {
               <label className=" text-sm font-semibold mt-4 mb-2">Email</label>
               <input
                 {...register("email", { required: "Email is Required" })}
+                placeholder="Email"
                 type="email"
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
@@ -133,12 +161,35 @@ const Register = () => {
                     message: "Password must be minimum 8 characters",
                   },
                 })}
+                placeholder="Password"
                 type="password"
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
               {errors.password && (
                 <p className="text-incorrect text-sm mt-1">
                   {errors.password.message}
+                </p>
+              )}
+            </div>
+            <div className=" w-full mb-3">
+              <label className=" text-sm font-semibold mt-6 mb-2">
+                Confirm Password
+              </label>
+              <input
+                {...register("confirmPassword", {
+                  required: "Confirm Password is Required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be minimum 8 characters",
+                  },
+                })}
+                placeholder="Password"
+                type="password"
+                className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
+              />
+              {errors.confirmPassword && (
+                <p className="text-incorrect text-sm mt-1">
+                  {errors.confirmPassword.message}
                 </p>
               )}
             </div>
@@ -160,6 +211,7 @@ const Register = () => {
               <input
                 {...register("name", { required: "Name is Required" })}
                 type="text"
+                placeholder="Name"
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
               {errors.name && (
@@ -167,9 +219,10 @@ const Register = () => {
                   {errors.name.message}
                 </p>
               )}
-              <label className="text-sm font-semibold mt-6 text-black">
+              <div className="mt-6" />
+              <label className="text-sm font-semibold  text-black">
                 Profile Picture{" "}
-                <span className="text-xs text-gray text-opacity-70">
+                <span className="text-xs text-muted-foreground">
                   (optional)
                 </span>
               </label>
@@ -185,7 +238,7 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={() => document.getElementById("fileInput").click()}
-                    className="p-1 text-xs w-32 mt-1 ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm  "
+                    className="p-2 text-xs w-32 mt-1 ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm  "
                   >
                     Upload Image
                   </button>
@@ -204,7 +257,7 @@ const Register = () => {
                     <img
                       src={croppedImage}
                       alt=""
-                      className="w-32 h-32 rounded-full"
+                      className="w-32 h-32 rounded-full mx-auto"
                     />
                   </DialogTrigger>
                   <DialogContent>

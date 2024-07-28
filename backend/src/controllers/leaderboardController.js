@@ -12,26 +12,31 @@ export const getOverallLeaderboard = async (req, res) => {
         $limit: 20,
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      {
+        $unwind: "$userInfo",
+      },
+      {
         $project: {
           _id: 1,
-          total: 1,
-          user: 1,
-        },
-      },
-      {
-        $addFields: {
-          score: "$total", // include score field to have value of total
-        },
-      },
-      {
-        $project: {
-          total: 0, // Exclude the total field
+          score: "$total",
+          "userInfo.name": 1,
+          "userInfo._id": 1,
+          "userInfo.image": 1,
         },
       },
     ]);
-    if (!leaderboard) {
-      res.status(404).json({ message: "Leaderboard Not Found" });
+
+    if (!leaderboard || leaderboard.length === 0) {
+      return res.status(404).json({ message: "Leaderboard Not Found" });
     }
+
     res.send(leaderboard);
   } catch (err) {
     console.log("Error fetching Leaderboard: ", err);
@@ -100,9 +105,22 @@ export const getExamLeaderboard = async (req, res) => {
         $limit: 20,
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      {
+        $unwind: "$userInfo",
+      },
+      {
         $project: {
           [exam_id]: 1,
-          user: 1,
+
+          "userInfo.name": 1,
+          "userInfo.image": 1,
         },
       },
     ]);
@@ -122,34 +140,49 @@ export const getAllExamLeaderboards = async (req, res) => {
   let leaderboards = [];
 
   try {
-    for (let examId = 1001; examId <= 1010; examId++) {
+    for (let exam_id = 1001; exam_id <= 1010; exam_id++) {
       const leaderboard = await Score.aggregate([
         {
           $sort: {
-            [examId]: -1,
+            [exam_id]: -1,
           },
         },
         {
           $limit: 20,
         },
         {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "userInfo",
+          },
+        },
+        {
+          $unwind: "$userInfo",
+        },
+        {
           $project: {
-            [examId]: 1,
-            user: 1,
+            [exam_id]: 1,
+            "userInfo.name": 1,
+            "userInfo.image": 1,
+            "userInfo._id": 1,
           },
         },
       ]);
       const transformedLeaderboard = leaderboard.map((item) => ({
         ...item,
-        score: item[examId],
-        [examId]: undefined,
+        score: item[exam_id],
+        [exam_id]: undefined,
       }));
 
       leaderboards.push({
-        exam_id: examId.toString(),
+        exam_id: exam_id.toString(),
         leaderboard: transformedLeaderboard,
       });
     }
+
+    console.log(leaderboards);
 
     res.send(leaderboards);
   } catch (err) {
@@ -162,11 +195,11 @@ export const getAllEsdsxamLeaderboards = async (req, res) => {
   const leaderboards = [];
 
   try {
-    for (let examId = 1001; examId <= 1010; examId++) {
+    for (let exam_id = 1001; exam_id <= 1010; exam_id++) {
       const leaderboard = await Score.aggregate([
         {
           $match: {
-            exam_id: examId,
+            exam_id: exam_id,
           },
         },
         {
@@ -181,19 +214,19 @@ export const getAllEsdsxamLeaderboards = async (req, res) => {
           $project: {
             exam_id: 1,
             user: 1,
-            score: `$${examId}`,
+            score: `$${exam_id}`,
           },
         },
       ]);
 
       const transformedLeaderboard = leaderboard.map((item) => ({
         ...item,
-        score: item[examId],
-        [examId]: undefined,
+        score: item[exam_id],
+        [exam_id]: undefined,
       }));
 
       leaderboards.push({
-        exam_id: examId.toString(),
+        exam_id: exam_id.toString(),
         leaderboard: transformedLeaderboard,
       });
     }

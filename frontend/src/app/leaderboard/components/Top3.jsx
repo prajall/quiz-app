@@ -34,16 +34,17 @@ const Top3 = ({ leaderboard }) => {
         >
           <p className="font-semibold">#2</p>
           <img
-            className="rounded-full w-3/4 ring-[3px] border border-white ring-[#1C61A6]"
-            alt="adsf"
-            src="https://images.pexels.com/photos/10311994/pexels-photo-10311994.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            className="rounded-full w-3/4 ring-4 border border-white mt-1 ring-[#4298ED9a] "
+            src={
+              top3[1].userInfo.image
+                ? top3[1].userInfo.image
+                : "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg"
+            }
           />
-
-          <p className="text-xs  m-2 text-[#19528A] font-semibold">
-            Shiny Nibba{" "}
+          <p className="text-xs m-2 text-[#19528A] font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
+            {top3[1].userInfo.name ? top3[1].userInfo.name : "Quiz Player"}
           </p>
         </motion.div>
-        {/* <p className="font-semibold text-primary">3212</p> */}
         <motion.div
           // Adding a key prop here
           className="rounded-t-3xl gradient-bg-1 w-full flex flex-col items-center justify-start pt-4"
@@ -78,8 +79,8 @@ const Top3 = ({ leaderboard }) => {
                 : "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg"
             }
           />
-          <p className="text-xs m-2 font-semibold text-[#4298ED]">
-            Kylian Artinez{" "}
+          <p className="text-xs m-2 text-[#19528A] font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
+            {top3[0].userInfo.name ? top3[0].userInfo.name : "Quiz Player"}
           </p>
         </motion.div>
         {/* <p className="font-semibold text-white">3212</p> */}
@@ -104,12 +105,16 @@ const Top3 = ({ leaderboard }) => {
           <p className="font-semibold">#3</p>
 
           <img
-            className="rounded-full w-3/4 ring-[3px] border border-white ring-[#0436699a]"
-            src="https://images.pexels.com/photos/1520760/pexels-photo-1520760.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            className="rounded-full w-3/4 ring-[3px] border mt-1 border-white ring-[#0436699a]"
+            src={
+              top3[2].userInfo.image
+                ? top3[2].userInfo.image
+                : "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg"
+            }
             alt={"Third"}
           />
-          <p className="text-xs m-2 text-[#043669] font-semibold">
-            Shizu Ctha{" "}
+          <p className="text-xs m-2 text-[#19528A] font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
+            {top3[2].userInfo.name ? top3[2].userInfo.name : "Quiz Player"}
           </p>
         </motion.div>
         {/* <p className="font-semibold text-primary">3212</p> */}

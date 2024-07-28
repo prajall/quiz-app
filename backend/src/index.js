@@ -13,30 +13,31 @@ app.listen(process.env.PORT, async () => {
 });
 
 // connect to database
-const questionDB = mongoose.createConnection(
-  "mongodb+srv://mailgyannexus:08u37GXx3KMZvqFw@quiz.ajqftit.mongodb.net/?retryWrites=true&w=majority&appName=QUIZ"
-);
-questionDB.on("connected", () => {
-  console.log("Database1 Connected Successfully");
-});
+let questionDB;
+let quizDB;
+try {
+  questionDB = mongoose.createConnection(process.env.DATABASE1_URI);
+  questionDB.on("connected", () => {
+    console.log("Database1 Connected Successfully");
+  });
 
-const quizDB = mongoose.createConnection(
-  "mongodb+srv://prajalmhrzn:prajal123@cluster0.fsgb03y.mongodb.net/quiz?retryWrites=true&w=majority&appName=Cluster0"
-);
+  quizDB = mongoose.createConnection(process.env.DATABASE2_URI);
 
-quizDB.on("connected", () => {
-  console.log("Database2 Connected Successfully");
-});
+  quizDB.on("connected", () => {
+    console.log("Database2 Connected Successfully");
+  });
 
-quizDB.on("error", (error) => {
-  console.log("Database2 Connection Error: ", error);
-});
+  quizDB.on("error", (error) => {
+    console.log("Database2 Connection Error: ", error);
+  });
+} catch (err) {
+  console.log(err);
+}
 
 //assign each model to databases
 export const Question = questionDB.model("Questions", questionSchema);
 export const Score = quizDB.model("Score", scoreSchema);
 export const User = quizDB.model("Users", userSchema);
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,

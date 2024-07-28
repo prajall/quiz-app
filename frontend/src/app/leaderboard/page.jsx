@@ -53,14 +53,14 @@ const LeaderboardPage = () => {
       );
       if (response.status == 200) {
         setExamsLeaderboard(response.data.concat(response.data));
-        // console.log("ExamsLeaderboard:", response.data);
+        console.log("ExamsLeaderboard:", response.data);
       } else {
         toast.error("Failed to load Leaderboard");
       }
     } catch (err) {
       console.log("Leaderboard Fetching error.", err);
       if (err.response) {
-        toast.error(err.response?.message);
+        toast.error(err.response?.data);
       } else if (err.message) {
         toast.error(err.message);
       } else {
