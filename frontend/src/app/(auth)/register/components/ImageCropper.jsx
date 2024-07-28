@@ -14,24 +14,6 @@ const ImageCropper = ({ selectedImage, onSubmitCroppedImage }) => {
   const [imageRef, setImageRef] = useState(null);
   const imgRef = useRef(null);
 
-  const onImageLoaded = (image) => {
-    const { naturalWidth, naturalHeight } = image.currentTarget;
-    console.log(naturalHeight, naturalWidth);
-    setImageRef(image.currentTarget);
-    imgRef.current = image.currentTarget;
-    const aspect = 1;
-    const width = 50;
-    const height = width / aspect;
-    setCrop({
-      unit: "%",
-      width,
-      height,
-      x: (100 - width) / 2,
-      y: (100 - height) / 2,
-      aspect,
-    });
-  };
-
   const makeClientCrop = (crop) => {
     if (imageRef && crop.width && crop.height) {
       const canvas = document.createElement("canvas");
@@ -57,6 +39,24 @@ const ImageCropper = ({ selectedImage, onSubmitCroppedImage }) => {
       onSubmitCroppedImage(base64Image);
     }
   };
+  const onImageLoaded = (image) => {
+    const { naturalWidth, naturalHeight } = image.currentTarget;
+    console.log(naturalHeight, naturalWidth);
+
+    setImageRef(image.currentTarget);
+    imgRef.current = image.currentTarget;
+    let width = 150;
+    let height = 150;
+
+    setCrop({
+      unit: "px",
+      width,
+      height,
+      x: 0,
+      y: 0,
+    });
+    makeClientCrop(crop);
+  };
 
   const onCropChange = (newCrop) => {
     setCrop(newCrop);
@@ -73,6 +73,7 @@ const ImageCropper = ({ selectedImage, onSubmitCroppedImage }) => {
         aspect={1}
         minWidth={70}
         minHeight={70}
+        className="w-fit mx-auto"
       >
         <img src={selectedImage} alt="Source" onLoad={onImageLoaded} />
       </ReactCrop>

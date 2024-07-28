@@ -29,7 +29,8 @@ const signupUser = async (req, res) => {
       return res.status(400).send("Error uploading file");
     }
 
-    const { email, password, name } = req.body;
+    const { email, password, name, interests } = req.body;
+    console.log(interests);
 
     try {
       if (!email || !password || !name) {
@@ -59,7 +60,9 @@ const signupUser = async (req, res) => {
         password: hashedPassword,
         name,
         image: imageUrl,
+        interests: interests,
       });
+      console.log(createdUser);
 
       const userWithoutPassword = createdUser.toObject();
       delete userWithoutPassword.password;

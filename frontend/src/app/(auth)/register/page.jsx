@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -17,18 +17,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { exams } from "@/examData";
 
 const Register = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
+  const [interestedExams, setInterestedExams] = useState([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
     setError,
+    setValue,
   } = useForm();
 
   const router = useRouter();
@@ -63,7 +67,18 @@ const Register = () => {
     setStep(2);
   };
 
-  const onSubmitStep2 = async (data) => {
+  const onSubmitStep2 = (data) => {
+    console.log("step 2 Data:", data);
+    setStep(3);
+  };
+
+  const onSubmitStep3 = async (data) => {
+    console.log(data);
+    // if (data.interests.length == 0) {
+    if (!data.interests || data.interests.length === 0) {
+      setError("interests", { message: "Select atleast one field" });
+      return;
+    }
     setIsSubmitting(true);
     console.log("Step 2 data:", data);
     console.log("croppedImage: ", croppedImage);
@@ -71,9 +86,15 @@ const Register = () => {
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("name", data.name);
+
     if (croppedImage) {
       const resizedBlob = await resizeImage(croppedImage, 200, 200);
       formData.append("profilePicture", resizedBlob, "profilePicture.jpg");
+    }
+    if (Array.isArray(data.interests)) {
+      data.interests.forEach((interest, index) => {
+        formData.append(`interests[${index}]`, interest);
+      });
     }
 
     console.log(formData);
@@ -124,13 +145,34 @@ const Register = () => {
     setCroppedImage(croppedImage);
   };
 
+  const handleCheckboxChange = (exam) => {
+    setError("interests", null);
+    setInterestedExams((prev) => {
+      const updatedExams = prev.includes(exam)
+        ? prev.filter((item) => item !== exam)
+        : [...prev, exam];
+      setValue("interests", updatedExams);
+      return updatedExams;
+    });
+  };
+
+  useEffect(() => {
+    register("interests");
+  }, []);
+
   return (
     <div className="h-[80vh] w-full flex flex-col items-center justify-center">
       <h3 className="text-3xl mb-6 text-green font-bold text-center text-primary ">
         Create Account
       </h3>
       <form
-        onSubmit={handleSubmit(step === 1 ? onSubmitStep1 : onSubmitStep2)}
+        onSubmit={handleSubmit(
+          step === 1
+            ? onSubmitStep1
+            : step === 2
+            ? onSubmitStep2
+            : onSubmitStep3
+        )}
         className="flex flex-col p-3 w-full sm:w-96 mx-auto"
       >
         {step === 1 && (
@@ -144,7 +186,7 @@ const Register = () => {
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
               {errors.email && (
-                <p className="text-incorrect text-sm mt-1">
+                <p className="text-incorrect text-xs mt-1">
                   {errors.email.message}
                 </p>
               )}
@@ -166,7 +208,7 @@ const Register = () => {
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
               {errors.password && (
-                <p className="text-incorrect text-sm mt-1">
+                <p className="text-incorrect text-xs mt-1">
                   {errors.password.message}
                 </p>
               )}
@@ -188,7 +230,7 @@ const Register = () => {
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
               {errors.confirmPassword && (
-                <p className="text-incorrect text-sm mt-1">
+                <p className="text-incorrect text-xs mt-1">
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -215,7 +257,7 @@ const Register = () => {
                 className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
               />
               {errors.name && (
-                <p className="text-secondary text-sm mt-1">
+                <p className="text-incorrect text-xs mt-1">
                   {errors.name.message}
                 </p>
               )}
@@ -284,24 +326,68 @@ const Register = () => {
               </>
             )}
 
-            <div className="flex justify-between mt-4">
-              <Button
-                variant="contained"
-                onClick={() => setStep(1)}
-                className="mt-4 bg-secondary text-white"
-              >
-                Back
+            <div className="flex justify-between mt-4 items-center">
+              <Button variant="link" onClick={() => setStep(1)}>
+                {"<< "}Back
               </Button>
               <Button
-                variant="contained"
-                disabled={isSubmitting}
+                variant="primary"
                 type="submit"
-                className="mt-4 bg-primary text-white"
+                className=" bg-primary text-white"
               >
-                Submit
+                Next {" >>"}
               </Button>
             </div>
           </>
+        )}
+
+        {step == 3 && (
+          <div>
+            <h1 className="font-semibold text-lg">
+              What are your Interests?{" "}
+              <span className="text-muted-foreground font-light text-xs">
+                (Select Atleast One)
+              </span>{" "}
+            </h1>
+            {errors.interests && (
+              <p className="text-incorrect text-xs mt-1">
+                {errors.interests.message}
+              </p>
+            )}
+            <div className=" mt-4 space-y-2">
+              {exams.map((exam) => (
+                <div key={exam.exam_id} className="flex gap-1">
+                  <input
+                    type="checkbox"
+                    id={exam.exam_id}
+                    name={exam.exam_id}
+                    value={exam.exam_id}
+                    checked={interestedExams.includes(exam.exam_id)}
+                    onChange={() => handleCheckboxChange(exam.exam_id)}
+                  />
+                  <label htmlFor={exam.exam_id}>{exam.name}</label>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between mt-4">
+              <Button
+                variant="link"
+                onClick={() => {
+                  setStep(2);
+                }}
+                className="text-primary"
+              >
+                {"<< "}Back
+              </Button>
+              <Button
+                className="text-white "
+                type="submit"
+                disabled={isSubmitting}
+              >
+                Register
+              </Button>
+            </div>
+          </div>
         )}
       </form>
     </div>
