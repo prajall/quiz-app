@@ -9,18 +9,16 @@ const Top3 = ({ leaderboard }) => {
   if (height2 < 130) {
     height2 = 130;
   }
-  console.log(height2);
   let height3 = Math.floor((leaderboard[2].score / leaderboard[0].score) * 240);
   if (height3 < 100) {
     height3 = 100;
   }
-  console.log(height3);
 
   //to trigger reanimation on data change
   const uniqueKey = leaderboard.map((item) => item.user + item.score).join("-");
 
   const top3 = leaderboard.slice(0, 3);
-
+  console.log(top3);
   return (
     <div
       key={uniqueKey}
@@ -73,7 +71,12 @@ const Top3 = ({ leaderboard }) => {
           />
           <img
             className="rounded-full w-3/4 ring-4 border border-white ring-[#4298ED9a] "
-            src="https://images.pexels.com/photos/20094341/pexels-photo-20094341/free-photo-of-portrait-of-man-wearing-brown-cap.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            // src="https://images.pexels.com/photos/20094341/pexels-photo-20094341/free-photo-of-portrait-of-man-wearing-brown-cap.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src={
+              top3[0].userInfo.image
+                ? top3[0].userInfo.image
+                : "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg"
+            }
           />
           <p className="text-xs m-2 font-semibold text-[#4298ED]">
             Kylian Artinez{" "}

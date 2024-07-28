@@ -23,7 +23,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 //signup new user
-
 const signupUser = async (req, res) => {
   upload.single("profilePicture")(req, res, async (err) => {
     if (err) {
@@ -33,8 +32,8 @@ const signupUser = async (req, res) => {
     const { email, password, name } = req.body;
 
     try {
-      if (!email || !password) {
-        return res.status(400).send("Email and Password are required");
+      if (!email || !password || !name) {
+        return res.status(400).send("All fields are required");
       }
 
       const userExist = await User.findOne({ email });
@@ -44,7 +43,8 @@ const signupUser = async (req, res) => {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      let imageUrl = "";
+      let imageUrl =
+        "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg";
       if (req.file) {
         const cloudinaryResult = await uploadOnCloudinary(
           req.file.buffer,
@@ -53,7 +53,7 @@ const signupUser = async (req, res) => {
         console.log(cloudinaryResult);
         imageUrl = cloudinaryResult.url;
       }
-      //todo: provide default profile
+
       const createdUser = await User.create({
         email,
         password: hashedPassword,
