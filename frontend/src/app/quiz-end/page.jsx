@@ -50,7 +50,7 @@ const page = () => {
     let response;
     try {
       setIsFetching(true);
-      if (quizData.currentExam === "all") {
+      if (quizData.currentExam === "All") {
         response = await axios.get("http://localhost:3001/leaderboard", {
           headers: {
             apiKey: 123456789,

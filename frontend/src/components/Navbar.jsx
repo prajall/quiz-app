@@ -2,7 +2,7 @@
 import axios from "axios";
 import { LogOut, Router, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Select, SelectItem } from "./ui/select";
 import { Button } from "./ui/button";
@@ -15,21 +15,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { AppContext } from "@/contexts/AppContext";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
+  const { appData, setAppData } = useContext(AppContext);
   const [user, setUser] = useState(null);
+  console.log(appData);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
 
   const handleLogout = async () => {
+    const cookies = Cookies.remove("token");
+    console.log(cookies);
     setIsSubmitting(true);
     try {
       const response = await axios.post("http://localhost:3001/user/logout", {
         withCredentials: true,
       });
       if (response.status == 200) {
-        setUser(null);
+        setAppData((prev) => ({ ...prev, user: null }));
         toast.success("Logged Out Successfully");
         router.push("/");
       }
@@ -38,20 +46,10 @@ const Navbar = () => {
       console.log("Error Logging out:", error);
     }
   };
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/user/getuser", {
-        withCredentials: true,
-      });
-      setUser(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    setUser(appData.user);
+  }, [appData.user]);
 
   return (
     <div className="w-full bg-primary h-16 flex items-center">
@@ -60,11 +58,19 @@ const Navbar = () => {
           QUIZ<span className="text-gray">pro</span>
         </h1>
         {!user && (
-          <menu className="hidden sm:flex gap-2">
-            <button className=" text-white px-4 hover:underline">Signup</button>
-            <button className="shadow-none px-4  bg-primary hover:bg-primary hover:shadow:none text-white border border-white rounded-full">
+          <menu className="hidden sm:flex gap-2 items-center">
+            <Link
+              href={"/register"}
+              className=" text-white text-sm px-4 hover:underline"
+            >
+              Signup
+            </Link>
+            <Link
+              href={"/login"}
+              className="border text-sm border-white rounded-md px-4 py-1 duration-300 text-white hover:bg-white hover:bg-opacity-10"
+            >
               Login
-            </button>
+            </Link>
           </menu>
         )}
         {user && (
@@ -75,7 +81,7 @@ const Navbar = () => {
                   <Avatar className="bg-gray border-2 border-white w-8 h-8">
                     <AvatarImage src={user.image} />
                     <AvatarFallback>
-                      {user.email.charAt(0).toUpperCase()}
+                      {user.email?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>

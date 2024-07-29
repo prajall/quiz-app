@@ -10,6 +10,7 @@ const AnswerList = ({ question }) => {
   console.log("Rendered AnswerList");
   const { quizData, setQuizData, endQuiz } = useContext(QuizContext);
   const { score, incrementScore } = useContext(ScoreContext);
+  const [isLoading, setIsLoading] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [optionChoosen, setOptionChoosen] = useState(null);
   const correctOption = question.opt_correct;
@@ -142,14 +143,17 @@ const AnswerList = ({ question }) => {
           <button
             onClick={handleNext}
             className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
+            disabled={isLoading}
           >
             Next
           </button>
         )}
         <button
           onClick={handleFinish}
-          className="w-36 py-2 border border-white duration-300 hover:ring-2  hover:ring-incorrect px-4  rounded-lg  text-white bg-incorrect"
+          className="w-36 flex justify-center items-center gap-1 py-2 border border-white duration-300 hover:ring-2  hover:ring-incorrect px-4  rounded-lg  text-white bg-incorrect"
+          disabled={isLoading}
         >
+          {isLoading && <Spinner className="w-6" />}
           Finish
         </button>
       </div>

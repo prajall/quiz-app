@@ -1,11 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { AppContext } from "@/contexts/AppContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const { appData, setAppData } = useContext(AppContext);
+
   const {
     register,
     handleSubmit,
@@ -27,18 +31,30 @@ const Login = () => {
       );
       console.log(response);
       if (response.status >= 200) {
-        console.log("login successful");
+        toast.success("Logged in successfully");
+        setAppData((prev) => ({ ...prev, user: response.data }));
         router.push("/quiz");
       } else {
         throw new Error("Login Error");
       }
     } catch (error) {
       if (error.response) {
+        toast.error(error.response.data);
         console.log(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something Went Wrong");
       }
       console.log("eror logging in: ", error);
     }
   };
+
+  useEffect(() => {
+    if (appData.user) {
+      router.push("/");
+    }
+  }, []);
 
   return (
     <div className="mt-14">

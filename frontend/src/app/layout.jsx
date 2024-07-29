@@ -6,6 +6,7 @@ import ScoreProvider from "@/contexts/ScoreContext";
 import Navbar from "@/components/Navbar";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AppProvider from "@/contexts/AppContext";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 
@@ -31,17 +32,18 @@ export default function RootLayout({ children }) {
           limit={4}
           transition={Slide}
         />
-
-        <TimerProvider>
-          <ScoreProvider>
-            <QuizProvider>
-              <Navbar />
-              <div className=" w-11/12 max-w-screen-xl md:px-0 mx-auto text-black">
-                {children}
-              </div>
-            </QuizProvider>
-          </ScoreProvider>
-        </TimerProvider>
+        <AppProvider>
+          <TimerProvider>
+            <ScoreProvider>
+              <QuizProvider>
+                <Navbar />
+                <div className=" w-11/12 max-w-screen-xl md:px-0 mx-auto text-black">
+                  {children}
+                </div>
+              </QuizProvider>
+            </ScoreProvider>
+          </TimerProvider>
+        </AppProvider>
       </body>
     </html>
   );

@@ -118,9 +118,9 @@ export const getExamLeaderboard = async (req, res) => {
       {
         $project: {
           [exam_id]: 1,
-
           "userInfo.name": 1,
           "userInfo.image": 1,
+          "userInfo._id": 1,
         },
       },
     ]);

@@ -1,4 +1,5 @@
 "use client";
+import Spinner from "@/components/Spinner";
 import {
   Select,
   SelectContent,
@@ -16,6 +17,7 @@ import { toast } from "react-toastify";
 const page = () => {
   console.log("Rendered Quiz Setting");
   const [examId, setExamId] = useState("All");
+  const [isLoading, setIsLoading] = useState(false);
   const [time, setTime] = useState(60);
   const { setQuizData, resetQuizData, startQuiz } = useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
@@ -28,6 +30,7 @@ const page = () => {
   };
 
   const beginQuiz = async () => {
+    setIsLoading(true);
     let response;
     try {
       if (examId != "All") {
@@ -48,12 +51,13 @@ const page = () => {
       } else {
         toast.error("Something Went Wrong");
       }
+      startTimer(time);
+      startQuiz();
+      router.push(`/quiz/${response?.data[0]?._id}`);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
-    startTimer(120);
-    startQuiz(time);
-    router.push(`/quiz/${response?.data[0]?._id}`);
   };
 
   useEffect(() => {
@@ -74,7 +78,7 @@ const page = () => {
         </p> */}
       </div>
       <div className="space-y-6 rounded-xl max-w-96 border p-4 md:p-6 shadow-sm shadow-black mx-auto ">
-        <h2 className="mb-8 text-2xl font-semibold">
+        <h2 className="mb-8 text-2xl text-center font-semibold">
           Choose your Quiz Settings
         </h2>
         <div className="flex justify-between gap-2 items-center">
@@ -132,8 +136,10 @@ const page = () => {
 
         <button
           onClick={beginQuiz}
-          className="w-28 text-sm py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
+          className=" text-center flex ml-auto disabled:hover:ring-0 disabled:bg-opacity-80 gap-1 items-center text-sm py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
+          disabled={isLoading}
         >
+          {isLoading && <Spinner className="w-6" />}
           Start Quiz
         </button>
       </div>

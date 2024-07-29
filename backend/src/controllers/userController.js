@@ -30,7 +30,6 @@ const signupUser = async (req, res) => {
     }
 
     const { email, password, name, interests } = req.body;
-    console.log(interests);
 
     try {
       if (!email || !password || !name) {
@@ -139,7 +138,7 @@ export const logoutUser = async (req, res) => {
       httpOnly: true,
       secure: true,
     });
-    res.status(200).send("Token Cleared Successfully");
+    res.status(200).send("Logged out Successfully");
   } catch (error) {
     console.error("Logout error:", error);
     res.status(500).json({ error: "Logout failed" });
@@ -164,8 +163,9 @@ export const getUserInfo = async (req, res) => {
     if (!decodedData) {
       return res.status(404).send("Invalid Token");
     }
-    const user = await User.findById(decodedData.id).select("-password");
-
+    const user = await User.findById(decodedData.id).select(
+      "-password -interests -createdAt -updatedAt"
+    );
     if (!user) {
       return res.status(404).send("User not found");
     }

@@ -162,7 +162,7 @@ const Register = () => {
 
   return (
     <div className="h-[80vh] w-full flex flex-col items-center justify-center">
-      <h3 className="text-3xl mb-6 text-green font-bold text-center text-primary ">
+      <h3 className="text-3xl mb-6 text-green font-bold text-center text-primary duration-300 ">
         Create Account
       </h3>
       <form
@@ -245,7 +245,14 @@ const Register = () => {
           </>
         )}
         {step === 2 && (
-          <>
+          <motion.div
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={"exit"}
+            variants={{
+              exit: { x: -100, opacity: 0, transition: { duration: 0.5 } },
+            }}
+          >
             <div className="relative w-full">
               <label className="text-sm font-semibold mt-4 mb-2 text-black">
                 Your Name
@@ -338,7 +345,7 @@ const Register = () => {
                 Next {" >>"}
               </Button>
             </div>
-          </>
+          </motion.div>
         )}
 
         {step == 3 && (
