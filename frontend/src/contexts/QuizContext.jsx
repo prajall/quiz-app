@@ -9,7 +9,7 @@ const defaultQuizData = {
   isPlaying: false,
   questions: [],
   currentQuestion: 0,
-  currentExam: "1001",
+  currentExam: "All",
 };
 
 export const QuizContext = createContext();

@@ -8,7 +8,7 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import LeaderboardTable from "../leaderboard/components/LeaderboardTable1";
+import LeaderboardTable from "../leaderboard/components/LeaderboardTable";
 
 const page = () => {
   const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
@@ -17,7 +17,7 @@ const page = () => {
   console.log("rendered quiz-end page");
   const { score } = useContext(ScoreContext);
   const { quizData } = useContext(QuizContext);
-
+  console.log(quizData.currentExam);
   const quizQuestions = quizData.questions;
 
   const filteredScores = Object.keys(score).reduce((acc, key) => {

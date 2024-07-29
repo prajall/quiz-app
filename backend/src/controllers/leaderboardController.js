@@ -141,7 +141,7 @@ export const getExamLeaderboard = async (req, res) => {
       },
 
       {
-        $limit: 20,
+        $limit: 10,
       },
       {
         $lookup: {
@@ -187,7 +187,7 @@ export const getAllExamLeaderboards = async (req, res) => {
           },
         },
         {
-          $limit: 20,
+          $limit: 10,
         },
         {
           $lookup: {

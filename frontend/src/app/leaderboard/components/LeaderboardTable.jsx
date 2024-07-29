@@ -96,7 +96,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
                 className={
                   userIndex?.rank < leaderboard.length &&
                   userIndex._id === item.userInfo?._id
-                    ? "border-b border-t border-primary font-semibold text-primary"
+                    ? "border-b border-t font-semibold text-primary bg-muted/50 "
                     : ""
                 }
               >
@@ -129,7 +129,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
                 animate={{ scale: 1, opacity: 1 }}
                 variants={fadeInVariants}
                 transition={{ duration: 0.3 }}
-                className="border-b border-t border-primary font-semibold text-primary"
+                className="border-b border-t font-semibold text-primary"
               >
                 <TableCell>
                   # {userIndex !== null ? userIndex.rank : "N/A"}

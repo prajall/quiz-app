@@ -53,11 +53,13 @@ const page = () => {
       } else {
         toast.error("Something Went Wrong");
       }
+      setQuizData((prev) => ({ ...prev, currentExam: examId }));
       startTimer(time);
       startQuiz();
       router.push(`/quiz/${response?.data[0]?._id}`);
     } catch (error) {
       console.log(error);
+    } finally {
       setIsLoading(false);
     }
   };
