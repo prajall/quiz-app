@@ -1,17 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import axios from "axios";
 import { toast } from "react-toastify";
 import Top3 from "./components/Top3";
 import LeaderboardTable from "./components/LeaderboardTable";
 import SwitchableComponent from "./components/Switch";
+import { exams } from "@/examData";
 
 const LeaderboardPage = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [leaderboard, setLeaderboard] = useState([]);
   const [overallLeaderboard, setOverallLeaderboard] = useState([]);
   const [examsLeaderboard, setExamsLeaderboard] = useState([]);
+  const [exam_id, setExam_Id] = useState("All");
 
   const fetchOverallLeaderboard = async () => {
     setIsFetching(true);
@@ -22,8 +23,8 @@ const LeaderboardPage = () => {
         },
       });
       if (response.status == 200) {
-        setOverallLeaderboard(response.data.concat(response.data));
-        setLeaderboard(response.data.concat(response.data));
+        setOverallLeaderboard(response.data);
+        setLeaderboard(response.data);
         // console.log(response.data);
       } else {
         toast.error("Failed to load Leaderboard");
@@ -80,14 +81,17 @@ const LeaderboardPage = () => {
     console.log(selected);
     if (selected === "Overall") {
       setLeaderboard(overallLeaderboard);
+      setExam_Id("All");
     } else {
       setLeaderboard(examsLeaderboard[0]?.leaderboard);
+      setExam_Id("1001");
       return;
     }
   };
   const onChangeSelectedExam = (selectedExam) => {
     console.log(selectedExam);
     setLeaderboard(examsLeaderboard[selectedExam]?.leaderboard);
+    setExam_Id(exams[selectedExam].exam_id);
   };
 
   useEffect(() => {
@@ -113,6 +117,7 @@ const LeaderboardPage = () => {
           leaderboard={leaderboard?.slice(3)}
           isFetching={isFetching}
           startFrom={4}
+          exam_id={exam_id}
         />
       </div>
     </div>

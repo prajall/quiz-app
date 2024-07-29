@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/", getOverallLeaderboard);
 router.get("/exam/:exam_id", getExamLeaderboard);
 router.get("/allexams", getAllExamLeaderboards);
-router.get("/user/:userId", getUserOverallRanking);
-router.get("/user/:userId/exam/:exam_id", getUserExamRanking);
+router.get("/user", getUserOverallRanking);
+router.get("/user/exam/:exam_id", getUserExamRanking);
 
 export default router;

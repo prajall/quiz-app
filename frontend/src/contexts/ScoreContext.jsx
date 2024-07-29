@@ -5,13 +5,13 @@ import { createContext } from "react";
 
 const defaultScore = {
   1001: 0,
-  1002: 3,
+  1002: 0,
   1003: 0,
-  1004: 2,
+  1004: 0,
   1005: 0,
-  1006: 2,
+  1006: 0,
   1007: 0,
-  1008: 1,
+  1008: 0,
   1009: 0,
   1010: 0,
 };
@@ -23,6 +23,10 @@ const ScoreProvider = ({ children }) => {
 
   const incrementScore = (exam_id) => {
     setScore((prev) => ({ ...prev, [exam_id]: prev[exam_id] + 1 }));
+  };
+
+  const resetScore = () => {
+    setScore(defaultScore);
   };
 
   const uploadScore = async () => {
@@ -49,7 +53,7 @@ const ScoreProvider = ({ children }) => {
 
   return (
     <ScoreContext.Provider
-      value={{ score, setScore, incrementScore, uploadScore }}
+      value={{ score, setScore, incrementScore, uploadScore, resetScore }}
     >
       {children}
     </ScoreContext.Provider>

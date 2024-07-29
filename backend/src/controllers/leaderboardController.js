@@ -1,4 +1,5 @@
 import { Score } from "../index.js";
+import jwt from "jsonwebtoken";
 
 export const getOverallLeaderboard = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ export const getOverallLeaderboard = async (req, res) => {
         },
       },
       {
-        $limit: 20,
+        $limit: 10,
       },
       {
         $lookup: {
@@ -45,38 +46,71 @@ export const getOverallLeaderboard = async (req, res) => {
 };
 
 export const getUserOverallRanking = async (req, res) => {
-  const { userId } = req.params;
+  const token = req.cookies.token;
 
   try {
-    const userScore = await Score.findOne({ user: userId });
+    // Verify the token and extract the userId
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
 
-    if (!userScore) {
-      return res.status(404).send("User score not found");
+    if (!userId) {
+      return res.status(400).json({ message: "Missing UserId" });
     }
 
+    // Find the user's overall score
+    const userScore = await Score.findOne({
+      user: userId,
+    });
+
+    if (!userScore) {
+      return res.status(404).json({ message: "User score not found" });
+    }
+
+    // Count scores greater than the user's overall score
     const higherScoresCount = await Score.countDocuments({
       total: { $gt: userScore.total },
     });
 
+    // User's rank is the count of higher scores + 1 (1-indexed)
     const userRank = higherScoresCount + 1;
 
-    return res.status(200).send(userRank.toString());
+    // Send both rank and score
+    return res.status(200).json({
+      rank: userRank,
+      score: userScore.total,
+      _id: userId,
+    });
   } catch (err) {
     console.error("Error fetching user rank:", err);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const getUserExamRanking = async (req, res) => {
-  const { userId, exam_id } = req.params;
-  try {
-    const userExamScore = await Score.findOne({ user: userId });
+  const { exam_id } = req.params;
+  const token = req.cookies.token;
 
-    if (!userExamScore) {
-      return res.status(404).send("User score not found");
+  try {
+    // Verify the token and extract the userId
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    if (!userId || !exam_id) {
+      return res.status(400).json({ message: "Missing UserId or ExamId" });
     }
 
-    // Count scores greater than the user's exam score
+    // Find the user's exam score
+    const userExamScore = await Score.findOne({
+      user: userId,
+    });
+
+    if (!userExamScore || userExamScore[exam_id] === undefined) {
+      return res
+        .status(404)
+        .json({ message: "User score not found or exam score missing" });
+    }
+
+    // Count scores greater than the user's exam score for the given exam_id
     const higherScoresCount = await Score.countDocuments({
       [exam_id]: { $gt: userExamScore[exam_id] },
     });
@@ -84,10 +118,15 @@ export const getUserExamRanking = async (req, res) => {
     // User's rank is the count of higher scores + 1 (1-indexed)
     const userExamRank = higherScoresCount + 1;
 
-    return res.status(200).send(userExamRank.toString());
+    // Send both rank and score
+    return res.status(200).json({
+      rank: userExamRank,
+      score: userExamScore[exam_id],
+      _id: userId,
+    });
   } catch (err) {
     console.error("Error fetching user rank:", err);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -181,8 +220,6 @@ export const getAllExamLeaderboards = async (req, res) => {
         leaderboard: transformedLeaderboard,
       });
     }
-
-    console.log(leaderboards);
 
     res.send(leaderboards);
   } catch (err) {

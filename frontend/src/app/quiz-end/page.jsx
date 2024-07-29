@@ -1,14 +1,14 @@
 "use client";
 import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
-import { examIdToName, exams } from "@/examData";
-import React, { useContext, useEffect, useState } from "react";
+import { examIdToName } from "@/examData";
 import { Gauge } from "@mui/x-charts/Gauge";
-import LeaderboardTable from "../leaderboard/components/LeaderboardTable";
-import { toast } from "react-toastify";
 import axios from "axios";
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import LeaderboardTable from "../leaderboard/components/LeaderboardTable1";
 
 const page = () => {
   const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
@@ -67,7 +67,7 @@ const page = () => {
         );
       }
       if (response.status == 200) {
-        setCurrentLeaderboard(response.data.concat(response.data));
+        setCurrentLeaderboard(response.data);
         console.log(response.data);
       } else {
         toast.error("Failed to load Leaderboard");
@@ -166,6 +166,7 @@ const page = () => {
           leaderboard={currentLeaderboard}
           isFetching={isFetching}
           startFrom={1}
+          exam_id={quizData.currentExam}
         />
       </section>
     </div>

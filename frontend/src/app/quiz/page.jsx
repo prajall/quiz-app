@@ -7,6 +7,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { QuizContext } from "@/contexts/QuizContext";
+import { ScoreContext } from "@/contexts/ScoreContext";
 import { TimerContext } from "@/contexts/TimerContext";
 import { examIdToName, exams } from "@/examData";
 import axios from "axios";
@@ -21,6 +22,7 @@ const page = () => {
   const [time, setTime] = useState(60);
   const { setQuizData, resetQuizData, startQuiz } = useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
+  const { resetScore } = useContext(ScoreContext);
 
   const router = useRouter();
 
@@ -63,7 +65,7 @@ const page = () => {
   useEffect(() => {
     resetQuizData();
     stopTimer();
-    //todo: reset score
+    resetScore();
   }, []);
 
   return (
