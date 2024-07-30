@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  emailChecker,
   getCookies,
   getUserInfo,
   loginUser,
@@ -12,6 +13,7 @@ const router = express.Router();
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.post("/signup", signupUser);
+router.post("/checkemail", emailChecker);
 router.get("/getcookie", getCookies);
 router.get("/getuser", getUserInfo);
 

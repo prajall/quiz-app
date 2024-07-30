@@ -53,17 +53,19 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-primary h-16 flex items-center">
-      <div className="md:w-11/12 w-full max-w-screen-xl px-2 md:px-0 mx-auto flex items-center gap-2 justify-between">
-        <div>
+      <div className="md:w-11/12 w-full max-w-screen-xl px-2 md:px-0 mx-auto flex items-end justify-between">
+        <div className="flex items-center">
           <Link href={"/"} className="font-bold text-3xl text-white">
             QUIZ<span className="text-gray">pro</span>
           </Link>
+          <div className="ml-6">
+            <Link href={"/leaderboard"} className=" text-sm text-white">
+              {" "}
+              Leaderboard
+            </Link>
+          </div>
         </div>
         <div className="flex gap-2 items-end">
-          <Link href={"/leaderboard"} className="text-sm text-white">
-            {" "}
-            Leaderboard
-          </Link>
           {!user && (
             <menu className="hidden sm:flex gap-2 items-center">
               <Link

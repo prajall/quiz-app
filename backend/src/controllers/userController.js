@@ -129,7 +129,20 @@ const loginUser = async (req, res) => {
     secure: true,
     expires: new Date(Date.now() + 2592000000),
   });
-  return res.status(200).send(loggedInUser);
+  return res.status(200).json({ message: "Login successfully", loggedInUser });
+};
+
+//check if user exist
+export const emailChecker = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).send("Email and Password are required");
+  }
+  const userExist = await User.findOne({ email });
+  if (userExist) {
+    return res.status(409).send("Email already exists");
+  }
+  res.send("continue").status(200);
 };
 
 export const logoutUser = async (req, res) => {
