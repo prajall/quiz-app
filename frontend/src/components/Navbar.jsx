@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { LogOut, Router, User } from "lucide-react";
+import { LogOut, Menu, Router, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -15,6 +15,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Link from "next/link";
 import { AppContext } from "@/contexts/AppContext";
 import Cookies from "js-cookie";
@@ -22,7 +30,7 @@ import Cookies from "js-cookie";
 const Navbar = () => {
   const { appData, setAppData } = useContext(AppContext);
   const [user, setUser] = useState(null);
-  console.log(appData);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -55,10 +63,63 @@ const Navbar = () => {
     <div className="w-full bg-primary h-16 flex items-center">
       <div className="md:w-11/12 w-full max-w-screen-xl px-2 md:px-0 mx-auto flex items-end justify-between">
         <div className="flex items-center">
+          <Sheet open={sheetOpen} onOpenChange={(val) => setSheetOpen(val)}>
+            <SheetTrigger className="md:hidden text-white mr-1">
+              <Menu />
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="bg-secondary text-white bg-opacity-90"
+            >
+              <SheetHeader>
+                <SheetTitle className="text-white">Links</SheetTitle>
+              </SheetHeader>
+              <div className="mt-4 ">
+                <ul className="space-y-3">
+                  <li>
+                    <Link
+                      onClick={() => setSheetOpen(false)}
+                      href={"/leaderboard"}
+                      className="hover:underline"
+                    >
+                      Leaderboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      onClick={() => setSheetOpen(false)}
+                      href={"/leaderboard"}
+                      className="hover:underline"
+                    >
+                      Blog
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      onClick={() => setSheetOpen(false)}
+                      href={"/leaderboard"}
+                      className="hover:underline"
+                    >
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      onClick={() => setSheetOpen(false)}
+                      href={"/leaderboard"}
+                      className="hover:underline"
+                    >
+                      Contact
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </SheetContent>
+          </Sheet>
           <Link href={"/"} className="font-bold text-3xl text-white">
             QUIZ<span className="text-gray">pro</span>
           </Link>
-          <div className="ml-6">
+          <div className="ml-6 hidden md:flex">
             <Link href={"/leaderboard"} className=" text-sm text-white">
               {" "}
               Leaderboard

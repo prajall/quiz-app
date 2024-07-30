@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { exams } from "@/examData";
 import { Crop, CropIcon, Cross, Pen, X } from "lucide-react";
+import Link from "next/link";
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -474,6 +475,12 @@ const Register = () => {
             )}
           </motion.div>
         </form>
+        <p className="text-xs py-2 text-center">
+          Already have an account?{" "}
+          <Link href="/login" className="text-primary hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

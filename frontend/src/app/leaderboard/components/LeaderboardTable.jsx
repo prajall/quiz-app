@@ -121,6 +121,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
             ))}
         </TableBody>
         {userIndex &&
+          userIndex > 3 &&
           !leaderboard.some((item) => item.userInfo._id === userIndex._id) && (
             <TableFooter>
               <motion.tr

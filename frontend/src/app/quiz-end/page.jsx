@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import LeaderboardTable from "../leaderboard/components/LeaderboardTable";
+import RadialBar from "./RadialBar";
 
 const page = () => {
   const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
@@ -100,16 +101,7 @@ const page = () => {
           <p className="font-semibold mb-3  text-xl text-center">
             Correctly Answered:
           </p>
-          <Gauge
-            width={250}
-            height={250}
-            cornerRadius="50%"
-            text={`${totalScore}/${quizData.questions.length}`}
-            value={totalScore || 0}
-            valueMin={0}
-            valueMax={quizData.questions?.length}
-            className="mx-auto"
-          />
+          <RadialBar />
         </div>
 
         <div className=" md:w-1/2 mt-6 md:mt-0 ">
@@ -120,7 +112,7 @@ const page = () => {
             {Object.keys(filteredScores).map((item, index) => (
               <li
                 key={item}
-                className="flex justify-between p-2 hover:bg-gray/20 duration-300"
+                className="flex justify-between p-2 border-b hover:bg-gray/30 duration-300"
               >
                 <p>{examIdToName(item)} :</p>
                 <p>{score[1000 + 1 + index]}</p>
@@ -134,19 +126,10 @@ const page = () => {
         </div>
 
         <div className="md:w-1/2 hidden md:flex flex-col ">
-          <p className="font-semibold mb-3  text-xl text-center">
+          <p className="font-semibold mb-3 text-xl text-center">
             Correctly Answered:
           </p>
-          <Gauge
-            width={250}
-            height={250}
-            cornerRadius="50%"
-            text={`${totalScore}/${quizData.questions.length}`}
-            value={totalScore || 0}
-            valueMin={0}
-            valueMax={quizData.questions?.length}
-            className="mx-auto"
-          />
+          <RadialBar />
         </div>
       </section>
 

@@ -1,12 +1,12 @@
 import { authChecker } from "@/authChecker";
 import { redirect } from "next/navigation";
 
-const QuizLayout = ({ children }) => {
-  if (!authChecker()) {
-    redirect("/login");
+const RegisterLayout = ({ children }) => {
+  if (authChecker()) {
+    redirect("/");
   }
 
   return <div>{children}</div>;
 };
 
-export default QuizLayout;
+export default RegisterLayout;

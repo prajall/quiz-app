@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 
 const Login = () => {
   const { appData, setAppData } = useContext(AppContext);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -18,6 +19,7 @@ const Login = () => {
 
   const router = useRouter();
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     try {
       const response = await axios.post(
         "http://localhost:3001/user/login",
@@ -47,6 +49,8 @@ const Login = () => {
         toast.error("Something Went Wrong");
       }
       console.log("eror logging in: ", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -112,9 +116,10 @@ const Login = () => {
         <Button
           variant="contained"
           type="submit"
-          className="mt-4 bg-primary text-white py-3 rounded-lg "
+          className="mt-4 bg-primary text-white py-3 rounded-lg disabled:opacity-80"
+          disabled={isSubmitting}
         >
-          Login
+          {isSubmitting ? "Login..." : "Login"}
         </Button>
       </form>
     </div>
