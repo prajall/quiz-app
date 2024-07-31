@@ -17,12 +17,16 @@ import { toast } from "react-toastify";
 
 const page = () => {
   console.log("Rendered Quiz Setting");
-  const [examId, setExamId] = useState("All");
-  const [isLoading, setIsLoading] = useState(false);
-  const [time, setTime] = useState(60);
-  const { setQuizData, resetQuizData, startQuiz } = useContext(QuizContext);
+  const { quizData, setQuizData, resetQuizData, startQuiz } =
+    useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
   const { resetScore } = useContext(ScoreContext);
+  const [examId, setExamId] = useState(quizData.currentExam);
+  const [isLoading, setIsLoading] = useState(false);
+  const [time, setTime] = useState(quizData.time);
+  const [questionLength, setQuestionsLength] = useState(
+    quizData.questionLength
+  );
 
   const router = useRouter();
 
@@ -37,7 +41,7 @@ const page = () => {
     try {
       if (examId != "All") {
         response = await axios.get(
-          `http://localhost:3001/question/exam/${examId}?limit=10`
+          `http://localhost:3001/question/exam/${examId}?limit=${questionLength}`
         );
       } else {
         response = await axios.get(
@@ -53,7 +57,12 @@ const page = () => {
       } else {
         toast.error("Something Went Wrong");
       }
-      setQuizData((prev) => ({ ...prev, currentExam: examId }));
+      setQuizData((prev) => ({
+        ...prev,
+        currentExam: examId,
+        time,
+        questionLength,
+      }));
       startTimer(time);
       startQuiz();
       router.push(`/quiz/${response?.data[0]?._id}`);
@@ -68,10 +77,11 @@ const page = () => {
     resetQuizData();
     stopTimer();
     resetScore();
+    console.log("----------------quizdata:---------------", quizData);
   }, []);
 
   return (
-    <div className="mt-4 space-y-6 text-black">
+    <div className="h-[80vh] flex flex-col items-center justify-center space-y-6 text-black">
       <div className="space-y-1">
         <h1 className="font-semibold text-2xl text-primary text-center lg:text-4xl ">
           Welcome To Quiz Pro
@@ -81,7 +91,7 @@ const page = () => {
           TSC, Loksewa, GK, etc.
         </p> */}
       </div>
-      <div className="space-y-6 rounded-xl max-w-96 border p-4 md:p-6 shadow-sm shadow-black mx-auto ">
+      <div className="space-y-6 rounded-xl w-full max-w-[450px] border p-4 md:p-6 shadow-sm shadow-black mx-auto ">
         <h2 className="mb-8 text-2xl text-center font-semibold">
           Choose your Quiz Settings
         </h2>
@@ -92,7 +102,9 @@ const page = () => {
             onValueChange={(value) => setTime(value)}
             className=""
           >
-            <SelectTrigger className="w-32">{time}</SelectTrigger>
+            <SelectTrigger className="w-32">
+              {time ? time : "60"}s
+            </SelectTrigger>
             <SelectContent>
               <SelectItem className="text-sm" value={30}>
                 00:30
@@ -134,6 +146,34 @@ const page = () => {
                   {exam.name}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex justify-between gap-2 items-center">
+          <p className="w-1/2">Number of Questions:</p>
+          <Select
+            value={questionLength}
+            onValueChange={(value) => setQuestionsLength(value)}
+          >
+            <SelectTrigger className="w-32">
+              {questionLength ? questionLength : 10}
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem className="text-sm" value={10}>
+                10
+              </SelectItem>
+              <SelectItem className="text-sm" value={20}>
+                20
+              </SelectItem>
+              <SelectItem className="text-sm" value={30}>
+                30
+              </SelectItem>
+              <SelectItem className="text-sm" value={40}>
+                40
+              </SelectItem>
+              <SelectItem className="text-sm" value={50}>
+                50
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -22,9 +22,11 @@ const AnswerList = ({ question }) => {
     setOptionChoosen(option);
     if (question.opt_correct === option) {
       incrementScore(question.exam_id);
+      setQuizData((prev) => ({ ...prev, correct: prev.correct + 1 }));
       console.log(quizData);
+    } else {
+      setQuizData((prev) => ({ ...prev, incorrect: prev.incorrect + 1 }));
     }
-    console.log(score);
   };
 
   const handleNext = () => {

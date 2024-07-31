@@ -17,7 +17,6 @@ const AppProvider = ({ children }) => {
       const response = await axios.get("http://localhost:3001/user/getuser", {
         withCredentials: true,
       });
-      console.log(response.data);
       if (response.status === 200) {
         setAppData((prev) => ({ ...prev, user: response.data }));
       }

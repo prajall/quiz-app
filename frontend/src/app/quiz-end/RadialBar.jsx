@@ -1,14 +1,22 @@
-import React from "react";
+"use client";
+import { QuizContext } from "@/contexts/QuizContext";
+import React, { useContext } from "react";
 import Chart from "react-apexcharts";
 
 const RadialChartComponent = () => {
-  const series = [5, 2, 3];
+  const { quizData } = useContext(QuizContext);
+
+  const series = [
+    quizData.correct,
+    quizData.incorrect,
+    quizData.questions.length - quizData.correct - quizData.incorrect,
+  ];
   const options = {
     chart: {
       type: "donut",
     },
     labels: ["Correct", "Incorrect", "Not Answered"],
-    colors: ["#284b63", "#dc3545", "#cccccc"],
+    colors: ["#284b63", "#dc3545", "#bbbbbb"],
     responsive: [
       {
         breakpoint: 480,
@@ -35,7 +43,7 @@ const RadialChartComponent = () => {
               show: true,
               label: "Solved",
               formatter: function (w) {
-                return "5/10";
+                return `${quizData.correct}/${quizData.questions.length}`;
               },
               style: {
                 fontSize: "20px",
@@ -59,7 +67,7 @@ const RadialChartComponent = () => {
   };
 
   return (
-    <div className="mx-auto w-full  overflow-hidden ">
+    <div className="mx-auto flex justify-center w-full overflow-hidden ">
       <Chart
         options={options}
         series={series}

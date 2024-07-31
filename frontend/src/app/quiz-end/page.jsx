@@ -14,6 +14,7 @@ import RadialBar from "./RadialBar";
 const page = () => {
   const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [totalScore, setTotalScore] = useState(0);
 
   console.log("rendered quiz-end page");
   const { score } = useContext(ScoreContext);
@@ -42,10 +43,8 @@ const page = () => {
     Object.keys(score).forEach((exam_id) => {
       tScore += score[exam_id];
     });
-    return tScore;
+    setTotalScore(tScore);
   };
-
-  const totalScore = calculateTotalScore();
 
   const fetchLeaderboard = async () => {
     let response;
@@ -106,29 +105,37 @@ const page = () => {
           <RadialBar />
         </div>
 
-        <div className=" md:w-1/2 mt-6 md:mt-0 ">
+        <div className=" md:w-1/2  mt-6 md:mt-0 ">
           <p className="font-semibold mb-3  text-xl text-center">
             Your Final Score:
           </p>
-          <ul className="py-2 max-w-[400px] mx-auto">
-            {Object.keys(filteredScores).map((item, index) => (
-              <li
-                key={item}
-                className="flex justify-between p-2 border-b hover:bg-gray/30 duration-300"
-              >
-                <p>{examIdToName(item)} :</p>
-                <p>{score[1000 + 1 + index]}</p>
+          <div className="max-w-[400px] mx-auto">
+            <ul className="py-2 ">
+              {Object.keys(filteredScores).map((item, index) => (
+                <li
+                  key={item}
+                  className="flex justify-between p-2 border-b hover:bg-gray/30 duration-300"
+                >
+                  <p>{examIdToName(item)} :</p>
+                  <p>{score[1000 + 1 + index]}</p>
+                </li>
+              ))}
+              <li className="flex justify-between p-2 mt-1 text-primary font-semibold text-xl rounded-lg">
+                <p>Total:</p>
+                <p>{totalScore}</p>
               </li>
-            ))}
-            <li className="flex justify-between p-2 mt-1 text-primary font-semibold text-xl rounded-lg">
-              <p>Total:</p>
-              <p>{totalScore}</p>
-            </li>
-          </ul>
+            </ul>
+            <Link
+              className="text-center w-fit flex ml-auto disabled:hover:ring-0 disabled:bg-opacity-80 gap-1 items-center text-sm py-2 border border-white duration-300 hover:ring-2  hover:ring-primary px-4  rounded-lg  text-white bg-primary"
+              href={"/quiz"}
+            >
+              Play Again
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="max-w-screen-lg my-4 mt-6 mx-auto">
+      <section className="max-w-screen-lg my-4 mt-10 mx-auto">
         <div className="flex gap-2 items-center  ">
           <p className="font-semibold  text-xl ">
             {examIdToName(quizData.currentExam)} leaderboard

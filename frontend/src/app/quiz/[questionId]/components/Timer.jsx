@@ -15,11 +15,11 @@ const Timer = () => {
 
   return (
     <>
-      {quizData.isPlaying && (
-        <div className="font-semibold text-center text-black">
-          Time: <span className="text-lg text-primary">{runningTimer}</span>
-        </div>
-      )}
+      {/* {quizData.isPlaying && ( */}
+      <div className="font-semibold text-center text-black">
+        Time: <span className="text-lg text-primary">{runningTimer}</span>
+      </div>
+      {/* )} */}
     </>
   );
 };

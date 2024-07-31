@@ -120,6 +120,7 @@ const Navbar = () => {
           <div className="ml-6 hidden md:flex gap-2 ">
             {navLinks.map((navLink) => (
               <Link
+                key={navLink.link}
                 href={navLink.link}
                 className=" text-sm mt-2 text-white  hover:text-white"
               >

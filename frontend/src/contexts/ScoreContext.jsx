@@ -41,15 +41,10 @@ const ScoreProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    console.log(score);
-  }, [score, setScore]);
 
   return (
     <ScoreContext.Provider
