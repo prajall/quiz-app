@@ -78,7 +78,7 @@ const Navbar = () => {
   }, [appData.user]);
 
   return (
-    <div className="w-full border-b h-16 flex items-center">
+    <div className="w-full bg-primary text-white h-16 flex items-center">
       <div className="md:w-11/12 w-full max-w-screen-xl px-2 md:px-0 mx-auto flex items-end justify-between">
         <div className="flex items-center">
           <Sheet open={sheetOpen} onOpenChange={(val) => setSheetOpen(val)}>
@@ -114,14 +114,14 @@ const Navbar = () => {
               </div>
             </SheetContent>
           </Sheet>
-          <Link href={"/"} className="font-bold text-3xl text-primary">
-            QUIZ<span className="text-secondary">pro</span>
+          <Link href={"/"} className="font-bold text-3xl ">
+            QUIZ<span className="text-gray">pro</span>
           </Link>
           <div className="ml-6 hidden md:flex gap-2 ">
             {navLinks.map((navLink) => (
               <Link
                 href={navLink.link}
-                className=" text-sm mt-2 text-primary hover:text-white"
+                className=" text-sm mt-2 text-white  hover:text-white"
               >
                 {" "}
                 {navLink.name}
@@ -151,7 +151,7 @@ const Navbar = () => {
               <>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <Avatar className="bg-gray border-2 border-white w-8 h-8">
+                    <Avatar className="bg-gray border-2 border-white ">
                       <AvatarImage src={user.image} />
                       <AvatarFallback>
                         {user.email?.charAt(0).toUpperCase()}
