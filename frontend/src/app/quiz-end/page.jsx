@@ -93,11 +93,13 @@ const page = () => {
     <div className="lg:text-lg mx-auto">
       {/* headers */}
       <div className="my-6 border-b border-gray pb-2">
-        <h2 className="text-2xl font-semibold text-primary  ">Quiz Ended</h2>
+        <h2 className="text-2xl font-semibold text-primary md:text-center ">
+          Quiz Ended
+        </h2>
       </div>
 
-      <section className="md:flex">
-        <div className="md:w-1/2 md:hidden flex flex-col ">
+      <section className="md:flex md:flex-row-reverse">
+        <div className="md:w-1/2 flex flex-col ">
           <p className="font-semibold mb-3  text-xl text-center">
             Correctly Answered:
           </p>
@@ -123,13 +125,6 @@ const page = () => {
               <p>{totalScore}</p>
             </li>
           </ul>
-        </div>
-
-        <div className="md:w-1/2 hidden md:flex flex-col ">
-          <p className="font-semibold mb-3 text-xl text-center">
-            Correctly Answered:
-          </p>
-          <RadialBar />
         </div>
       </section>
 

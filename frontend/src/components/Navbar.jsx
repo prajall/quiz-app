@@ -1,12 +1,4 @@
 "use client";
-import axios from "axios";
-import { LogOut, Menu, Router, User } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { Select, SelectItem } from "./ui/select";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,14 +10,20 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import Link from "next/link";
 import { AppContext } from "@/contexts/AppContext";
+import axios from "axios";
 import Cookies from "js-cookie";
+import { LogOut, Menu, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const { appData, setAppData } = useContext(AppContext);
@@ -55,12 +53,32 @@ const Navbar = () => {
     }
   };
 
+  const navLinks = [
+    {
+      name: "Home",
+      link: "/",
+    },
+    {
+      name: "Leaderboard",
+      link: "/leaderboard",
+    },
+
+    {
+      name: "About",
+      link: "/about",
+    },
+    {
+      name: "Contacts",
+      link: "/contacts",
+    },
+  ];
+
   useEffect(() => {
     setUser(appData.user);
   }, [appData.user]);
 
   return (
-    <div className="w-full bg-primary h-16 flex items-center">
+    <div className="w-full border-b h-16 flex items-center">
       <div className="md:w-11/12 w-full max-w-screen-xl px-2 md:px-0 mx-auto flex items-end justify-between">
         <div className="flex items-center">
           <Sheet open={sheetOpen} onOpenChange={(val) => setSheetOpen(val)}>
@@ -76,54 +94,39 @@ const Navbar = () => {
               </SheetHeader>
               <div className="mt-4 ">
                 <ul className="space-y-3">
-                  <li>
-                    <Link
-                      onClick={() => setSheetOpen(false)}
-                      href={"/leaderboard"}
-                      className="hover:underline"
+                  {navLinks.map((navlink, index) => (
+                    <motion.li
+                      initial={{ x: -50, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index / 10 }}
+                      className=" py-1 "
                     >
-                      Leaderboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      onClick={() => setSheetOpen(false)}
-                      href={"/leaderboard"}
-                      className="hover:underline"
-                    >
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      onClick={() => setSheetOpen(false)}
-                      href={"/leaderboard"}
-                      className="hover:underline"
-                    >
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      onClick={() => setSheetOpen(false)}
-                      href={"/leaderboard"}
-                      className="hover:underline"
-                    >
-                      Contact
-                    </Link>
-                  </li>
+                      <Link
+                        onClick={() => setSheetOpen(false)}
+                        href={navlink.link}
+                        className="hover:ml-1 duration-300  "
+                      >
+                        {navlink.name}
+                      </Link>
+                    </motion.li>
+                  ))}
                 </ul>
               </div>
             </SheetContent>
           </Sheet>
-          <Link href={"/"} className="font-bold text-3xl text-white">
-            QUIZ<span className="text-gray">pro</span>
+          <Link href={"/"} className="font-bold text-3xl text-primary">
+            QUIZ<span className="text-secondary">pro</span>
           </Link>
-          <div className="ml-6 hidden md:flex">
-            <Link href={"/leaderboard"} className=" text-sm text-white">
-              {" "}
-              Leaderboard
-            </Link>
+          <div className="ml-6 hidden md:flex gap-2 ">
+            {navLinks.map((navLink) => (
+              <Link
+                href={navLink.link}
+                className=" text-sm mt-2 text-primary hover:text-white"
+              >
+                {" "}
+                {navLink.name}
+              </Link>
+            ))}
           </div>
         </div>
         <div className="flex gap-2 items-end">

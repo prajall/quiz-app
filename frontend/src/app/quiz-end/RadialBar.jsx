@@ -59,13 +59,13 @@ const RadialChartComponent = () => {
   };
 
   return (
-    <div className="mx-auto relative">
+    <div className="mx-auto w-full  overflow-hidden ">
       <Chart
         options={options}
         series={series}
         type="donut"
-        width="500"
-        height="500"
+        width="450"
+        height="450"
       />
     </div>
   );
