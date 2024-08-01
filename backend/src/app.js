@@ -30,6 +30,6 @@ app.use("/user", userRoute);
 app.use("/question", questionRoute);
 app.use("/score", scoreRoute);
 app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Server is working");
 });
