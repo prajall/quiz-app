@@ -86,6 +86,7 @@ const signupUser = async (req, res) => {
         res.cookie(" token", token, {
           httpOnly: true,
           secure: true,
+          sameSite: "None",
           expires: new Date(Date.now() + 2592000000),
         });
       }
