@@ -37,6 +37,7 @@ export default function Home() {
           <Image
             src={hero}
             alt="Quiz Illustration"
+            priority={true}
             className="w-full h-auto max-w-[400px] md:m-0 "
           />
         </div>

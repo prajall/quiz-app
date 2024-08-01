@@ -129,7 +129,7 @@ const loginUser = async (req, res) => {
     secure: true,
     expires: new Date(Date.now() + 2592000000),
   });
-  return res.status(200).json({ message: "Login successfully", loggedInUser });
+  return res.status(200).json(loggedInUser);
 };
 
 //check if user exist
