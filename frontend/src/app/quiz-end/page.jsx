@@ -2,14 +2,16 @@
 import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { examIdToName } from "@/examData";
-import { Gauge } from "@mui/x-charts/Gauge";
 import axios from "axios";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import LeaderboardTable from "../leaderboard/components/LeaderboardTable";
-import RadialBar from "./RadialBar";
+// import RadialBar from "./RadialBar";
+import dynamic from "next/dynamic";
+
+const RadialBar = dynamic(() => import("./RadialBar"), { ssr: false });
 
 const page = () => {
   const [currentLeaderboard, setCurrentLeaderboard] = useState([]);
