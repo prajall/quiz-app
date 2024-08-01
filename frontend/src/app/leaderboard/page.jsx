@@ -29,10 +29,15 @@ const LeaderboardPage = () => {
       } else {
         toast.error("Failed to load Leaderboard");
       }
-    } catch (err) {
-      console.log("Leaderboard Fetching error.", err);
-      if (err.response) {
-        toast.error(err.response?.message);
+    } catch (error) {
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }
@@ -58,12 +63,15 @@ const LeaderboardPage = () => {
       } else {
         toast.error("Failed to load Leaderboard");
       }
-    } catch (err) {
-      console.log("Leaderboard Fetching error.", err);
-      if (err.response) {
-        toast.error(err.response?.data);
-      } else if (err.message) {
-        toast.error(err.message);
+    } catch (error) {
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }

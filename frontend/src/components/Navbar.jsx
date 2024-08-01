@@ -48,8 +48,17 @@ const Navbar = () => {
         router.push("/");
       }
     } catch (error) {
-      toast.error("Error Logging out");
-      console.log("Error Logging out:", error);
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Error Logging out");
+      }
     }
   };
 
@@ -96,6 +105,7 @@ const Navbar = () => {
                 <ul className="space-y-3">
                   {navLinks.map((navlink, index) => (
                     <motion.li
+                      key={index}
                       initial={{ x: -50, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index / 10 }}

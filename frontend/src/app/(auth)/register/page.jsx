@@ -86,7 +86,10 @@ const Register = () => {
         toast.error("Email Already Exists");
       }
     } catch (error) {
-      console.log(error);
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
       if (error.response) {
         toast.error(error.response.data);
       } else if (error.message) {
@@ -147,7 +150,10 @@ const Register = () => {
         router.push("/");
       }
     } catch (error) {
-      console.log(error);
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
       if (error.response) {
         toast.error(error.response.data);
       } else if (error.message) {

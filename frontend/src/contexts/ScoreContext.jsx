@@ -42,7 +42,17 @@ const ScoreProvider = ({ children }) => {
         }
       );
     } catch (error) {
-      console.log(error);
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

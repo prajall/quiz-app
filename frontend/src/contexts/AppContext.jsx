@@ -2,6 +2,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const defaultAppData = {
   user: null,
@@ -20,8 +21,18 @@ const AppProvider = ({ children }) => {
       if (response.status === 200) {
         setAppData((prev) => ({ ...prev, user: response.data }));
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 

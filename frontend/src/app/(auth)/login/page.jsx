@@ -40,6 +40,10 @@ const Login = () => {
         throw new Error("Login Error");
       }
     } catch (error) {
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
       if (error.response) {
         toast.error(error.response.data);
         console.log(error.response.data);

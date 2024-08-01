@@ -6,12 +6,13 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { AppContext } from "@/contexts/AppContext";
 import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { TimerContext } from "@/contexts/TimerContext";
 import { examIdToName, exams } from "@/examData";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -21,6 +22,7 @@ const page = () => {
     useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
   const { resetScore } = useContext(ScoreContext);
+  const { appData } = useContext(AppContext);
   const [examId, setExamId] = useState(quizData.currentExam);
   const [isLoading, setIsLoading] = useState(false);
   const [time, setTime] = useState(quizData.time);
@@ -67,6 +69,17 @@ const page = () => {
       startQuiz();
       router.push(`/quiz/${response?.data[0]?._id}`);
     } catch (error) {
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -78,6 +91,12 @@ const page = () => {
     stopTimer();
     resetScore();
     console.log("----------------quizdata:---------------", quizData);
+  }, []);
+
+  useEffect(() => {
+    if (!appData.user) {
+      redirect("/login");
+    }
   }, []);
 
   return (

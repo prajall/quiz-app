@@ -12,6 +12,7 @@ import { AppContext } from "@/contexts/AppContext";
 import { motion } from "framer-motion";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
   const { appData } = useContext(AppContext);
@@ -38,8 +39,19 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
         console.log("User Index response", response);
         setUserIndex(response.data);
       }
-    } catch (err) {
-      toast.error("Error fetching user rank");
+    } catch (error) {
+      if (error.message == "Network Error") {
+        toast.error("Error Connecting to the Server");
+        return;
+      }
+      if (error.response) {
+        toast.error(error.response.data);
+      } else if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("Something went wrong");
+        toast.error("Error fetching user rank");
+      }
       console.error("Error fetching user index:", err);
     }
   };
