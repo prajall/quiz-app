@@ -12,10 +12,7 @@ const app = express();
 app.use(
   cors({
     // origin: process.env.CORS_ORIGIN,
-    origin: [
-      "http://localhost:3000",
-      "https://quiz-app-frontend-six-tawny.vercel.app",
-    ],
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
