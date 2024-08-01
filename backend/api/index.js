@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import app from "./app.js";
+import app from "../src/app";
 import { questionSchema } from "./models/questionModel.js";
 import { scoreSchema } from "./models/scoreModel.js";
 import { userSchema } from "./models/userModel.js";
