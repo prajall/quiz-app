@@ -128,6 +128,7 @@ const loginUser = async (req, res) => {
     httpOnly: true,
     secure: true,
     expires: new Date(Date.now() + 2592000000),
+    sameSite: "None",
   });
   return res.status(200).json(loggedInUser);
 };
