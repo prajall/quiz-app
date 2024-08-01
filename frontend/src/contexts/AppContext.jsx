@@ -15,9 +15,12 @@ const AppProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/user/getuser", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/getuser`,
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status === 200) {
         setAppData((prev) => ({ ...prev, user: response.data }));
       }
@@ -28,8 +31,6 @@ const AppProvider = ({ children }) => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }

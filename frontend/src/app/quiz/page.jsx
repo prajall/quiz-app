@@ -43,11 +43,11 @@ const page = () => {
     try {
       if (examId != "All") {
         response = await axios.get(
-          `http://localhost:3001/question/exam/${examId}?limit=${questionLength}`
+          `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?limit=${questionLength}`
         );
       } else {
         response = await axios.get(
-          `http://localhost:3001/question/random?limit=10`
+          `${process.env.NEXT_PUBLIC_API_URL}/question/random?limit=10`
         );
       }
       if (!response.data) {
@@ -75,8 +75,6 @@ const page = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }

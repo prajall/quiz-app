@@ -39,9 +39,12 @@ const Navbar = () => {
     console.log(cookies);
     setIsSubmitting(true);
     try {
-      const response = await axios.post("http://localhost:3001/user/logout", {
-        withCredentials: true,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status == 200) {
         setAppData((prev) => ({ ...prev, user: null }));
         toast.success("Logged Out Successfully");
@@ -54,8 +57,6 @@ const Navbar = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Error Logging out");
       }

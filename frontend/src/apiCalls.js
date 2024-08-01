@@ -5,12 +5,12 @@ export const fetchQuestions = async (examId) => {
   try {
     if (examId != "random") {
       const response = await axios.get(
-        `http://localhost:3001/question/exam/${examId}?limit=10`
+        `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?limit=10`
       );
       return response.data;
     } else {
       const response = await axios.get(
-        `http://localhost:3001/question/random?limit=10`
+        `${process.env.NEXT_PUBLIC_API_URLBLIC_API_URL}/question/random?limit=10`
       );
       return response.data;
     }
@@ -31,11 +31,14 @@ export const fetchQuestions = async (examId) => {
 
 export const fetchLeaderboard = async () => {
   try {
-    const response = await axios.get("http://localhost:3001/leaderboard", {
-      headers: {
-        apiKey: 123456789,
-      },
-    });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/leaderboard`,
+      {
+        headers: {
+          apiKey: 123456789,
+        },
+      }
+    );
     if (response.status == 200) {
       return response.data.concat(response.data);
       console.log(response.data);

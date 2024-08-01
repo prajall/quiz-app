@@ -8,7 +8,7 @@ import ProgressBar from "./components/ProgressBar";
 const QuestionLayout = async ({ params, children }) => {
   const questionId = params.questionId;
   const response = await axios.get(
-    `http://localhost:3001/question/${questionId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`,
     { withCredentials: true, headers: { apiKey: "123456789" } }
   );
   const question = response.data.question;

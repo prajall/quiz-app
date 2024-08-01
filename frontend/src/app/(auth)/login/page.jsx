@@ -22,7 +22,7 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
-        "http://localhost:3001/user/login",
+        `${process.env.NEXT_PUBLIC_API_URL}/user/login`,
         {
           email: data.email,
           password: data.password,
@@ -47,8 +47,6 @@ const Login = () => {
       if (error.response) {
         toast.error(error.response.data);
         console.log(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something Went Wrong");
       }

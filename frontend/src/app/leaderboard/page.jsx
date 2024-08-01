@@ -15,13 +15,17 @@ const LeaderboardPage = () => {
   const [exam_id, setExam_Id] = useState("All");
 
   const fetchOverallLeaderboard = async () => {
+    console.log(process.env.NEXT_PUBLIC_API_URL);
     setIsFetching(true);
     try {
-      const response = await axios.get("http://localhost:3001/leaderboard", {
-        headers: {
-          apiKey: 123456789,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/leaderboard`,
+        {
+          headers: {
+            apiKey: 123456789,
+          },
+        }
+      );
       if (response.status == 200) {
         setOverallLeaderboard(response.data);
         setLeaderboard(response.data);
@@ -36,8 +40,6 @@ const LeaderboardPage = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }
@@ -50,7 +52,7 @@ const LeaderboardPage = () => {
     setIsFetching(true);
     try {
       const response = await axios.get(
-        "http://localhost:3001/leaderboard/allexams",
+        `${process.env.NEXT_PUBLIC_API_URL}/leaderboard/allexams`,
         {
           headers: {
             apiKey: 123456789,
@@ -70,8 +72,6 @@ const LeaderboardPage = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }

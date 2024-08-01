@@ -26,9 +26,9 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
       let url;
       console.log(appData.user?._id, exam_id);
       if (exam_id === "All") {
-        url = `http://localhost:3001/leaderboard/user`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/leaderboard/user`;
       } else if (exam_id) {
-        url = `http://localhost:3001/leaderboard/user/exam/${exam_id}`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/leaderboard/user/exam/${exam_id}`;
       }
 
       if (url) {
@@ -46,8 +46,6 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
         toast.error("Error fetching user rank");

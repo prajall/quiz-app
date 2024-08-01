@@ -4,7 +4,7 @@ import AnswerList from "./components/AnswerList";
 const Question = async ({ params }) => {
   const questionId = params.questionId;
   const response = await axios.get(
-    `http://localhost:3001/question/${questionId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`
   );
   const question = response.data.question;
 

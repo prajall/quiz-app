@@ -78,7 +78,7 @@ const Register = () => {
         return;
       }
       const response = await axios.post(
-        "http://localhost:3001/user/checkemail",
+        `${process.env.NEXT_PUBLIC_API_URL}/user/checkemail`,
         data
       );
       if (response.status == 200) setStep(2);
@@ -92,8 +92,6 @@ const Register = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }
@@ -136,7 +134,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/user/signup",
+        `${process.env.NEXT_PUBLIC_API_URL}/user/signup`,
         formData,
         {
           headers: {
@@ -156,8 +154,6 @@ const Register = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }

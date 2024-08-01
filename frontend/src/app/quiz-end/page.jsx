@@ -51,14 +51,17 @@ const page = () => {
     try {
       setIsFetching(true);
       if (quizData.currentExam === "All") {
-        response = await axios.get("http://localhost:3001/leaderboard", {
-          headers: {
-            apiKey: 123456789,
-          },
-        });
+        response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/leaderboard`,
+          {
+            headers: {
+              apiKey: 123456789,
+            },
+          }
+        );
       } else {
         response = await axios.get(
-          `http://localhost:3001/leaderboard/exam/${quizData.currentExam}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/leaderboard/exam/${quizData.currentExam}`,
           {
             headers: {
               apiKey: 123456789,
@@ -79,8 +82,6 @@ const page = () => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }

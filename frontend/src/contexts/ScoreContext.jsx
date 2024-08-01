@@ -32,7 +32,7 @@ const ScoreProvider = ({ children }) => {
   const uploadScore = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:3001/score`,
+        `${process.env.NEXT_PUBLIC_API_URL}/score`,
         { score },
         {
           headers: {
@@ -48,8 +48,6 @@ const ScoreProvider = ({ children }) => {
       }
       if (error.response) {
         toast.error(error.response.data);
-      } else if (error.message) {
-        toast.error(error.message);
       } else {
         toast.error("Something went wrong");
       }
