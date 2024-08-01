@@ -91,7 +91,13 @@ const page = () => {
   };
 
   useEffect(() => {
-    fetchLeaderboard();
+    if (typeof window !== "undefined") {
+      fetchLeaderboard();
+      calculateTotalScore();
+    } else {
+      console.log("typeof window is undefined");
+      toast.error("Something went wrong");
+    }
   }, []);
 
   return (
