@@ -9,8 +9,6 @@ import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
-export default app;
-
 app.use(
   cors({
     // origin: process.env.CORS_ORIGIN,
@@ -33,3 +31,5 @@ app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
 app.get("/", (req, res) => {
   return res.send("Server is working");
 });
+
+export default app;
