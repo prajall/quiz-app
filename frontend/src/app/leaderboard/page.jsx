@@ -38,7 +38,7 @@ const LeaderboardPage = () => {
         toast.error("Error Connecting to the Server");
         return;
       }
-      if (error.response) {
+      if (error.response.data.data) {
         toast.error(error.response.data);
       } else {
         toast.error("Something went wrong");
@@ -70,7 +70,7 @@ const LeaderboardPage = () => {
         toast.error("Error Connecting to the Server");
         return;
       }
-      if (error.response) {
+      if (error.response.data.data) {
         toast.error(error.response.data);
       } else {
         toast.error("Something went wrong");

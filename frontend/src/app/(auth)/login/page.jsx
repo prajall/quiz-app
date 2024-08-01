@@ -44,7 +44,7 @@ const Login = () => {
         toast.error("Error Connecting to the Server");
         return;
       }
-      if (error.response) {
+      if (error.response.data.data.data) {
         toast.error(error.response.data);
         console.log(error.response.data);
       } else {

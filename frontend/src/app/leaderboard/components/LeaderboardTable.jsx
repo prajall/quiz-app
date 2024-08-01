@@ -44,7 +44,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
         toast.error("Error Connecting to the Server");
         return;
       }
-      if (error.response) {
+      if (error.response.data.data) {
         toast.error(error.response.data);
       } else {
         toast.error("Something went wrong");
