@@ -14,7 +14,10 @@ export default app;
 app.use(
   cors({
     // origin: process.env.CORS_ORIGIN,
-    origin: process.env.CORS_ORIGIN.split(","),
+    origin: [
+      "http://localhost:3000",
+      "https://quiz-app-frontend-six-tawny.vercel.app",
+    ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
