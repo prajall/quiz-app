@@ -11,17 +11,17 @@ const HeaderFont = Roboto_Slab({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
-      <section className="min-h-[700px] flex items-center flex-col-reverse md:flex-row gap-3 justify-between px-4 md:px-0">
+      <section className="min-h-[600px] xl:min-h-[700px] flex items-center flex-col-reverse md:flex-row gap-3 justify-between px-4 md:px-0">
         <div className=" flex flex-col justify-center md:max-w-[60%]">
           <h1
             className={cn(
               HeaderFont.className,
-              "text-5xl md:text-6xl lg:text-8xl font-bold lg:tracking-wider mb-4 mt-24 md:mt-0 text-black"
+              "text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold lg:tracking-wider mb-6 mt-24 md:mt-0 text-black"
             )}
           >
             LEARN AND <br /> PLAY<span className="text-primary"> QUIZ</span>
           </h1>
-          <p className="text-muted-foreground text-lg mb-6">
+          <p className="text-muted-foreground text-lg mb-8">
             Challenge your knowledge with our interactive quizzes.
             <br />
             Track your scores and compete with others on the leaderboard.
@@ -33,12 +33,12 @@ export default function Home() {
             Play Now
           </Link>
         </div>
-        <div className="mt-10 md:mt-0 flex justify-end md:pr-10 md:w-1/2">
+        <div className="mt-10 md:mt-0 md:p-6 lg:p-10 xl:p-14 flex justify-end items-center md:pr-10 md:w-1/2">
           <Image
             src={hero}
             alt="Quiz Illustration"
             priority={true}
-            className="w-full h-auto max-w-[400px] md:m-0 "
+            className="w-full h-auto md:m-0 "
           />
         </div>
       </section>

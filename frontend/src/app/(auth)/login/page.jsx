@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { AppContext } from "@/contexts/AppContext";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -134,6 +135,12 @@ const Login = () => {
             {isSubmitting ? "Login..." : "Login"}
           </Button>
         </form>
+        <p className="text-xs py-2 text-center">
+          New to QuizPro?{" "}
+          <Link href="/register" className="text-primary hover:underline">
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

@@ -97,7 +97,7 @@ const Navbar = () => {
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="bg-secondary text-white bg-opacity-90"
+              className="bg-primary text-white bg-opacity-90"
             >
               <SheetHeader>
                 <SheetTitle className="text-white">Links</SheetTitle>
