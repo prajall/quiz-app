@@ -211,7 +211,7 @@ const Register = () => {
   return (
     <div className="h-[80vh] w-full flex flex-col items-center justify-center">
       <div className="border mt-4 rounded-xl py-4 p-2 md:p-6 overflow-hidden">
-        <h3 className="text-3xl mb-6 text-green font-bold text-center text-primary duration-300 ">
+        <h3 className="text-3xl text-green font-bold text-center text-primary duration-300 ">
           Create Account
         </h3>
         <form
@@ -222,7 +222,7 @@ const Register = () => {
               ? onSubmitStep2
               : onSubmitStep3
           )}
-          className="flex flex-col p-3 w-full sm:w-96 mx-auto "
+          className="flex flex-col p-3 mt-4 w-full sm:w-96 mx-auto "
         >
           <motion.div
             key={step} // Ensures that Framer Motion knows each step is distinct

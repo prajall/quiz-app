@@ -35,17 +35,17 @@ const Navbar = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    const cookies = Cookies.remove("token");
-    console.log(cookies);
     setIsSubmitting(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
+        {},
         {
           withCredentials: true,
         }
       );
       if (response.status == 200) {
+        console.log(Cookies.get("token"));
         setAppData((prev) => ({ ...prev, user: null }));
         toast.success("Logged Out Successfully");
         router.push("/");
@@ -128,7 +128,7 @@ const Navbar = () => {
           <Link href={"/"} className="font-bold text-3xl ">
             QUIZ<span className="text-gray">pro</span>
           </Link>
-          <div className="ml-6 hidden md:flex gap-2 ">
+          <div className="ml-6 hidden md:flex gap-4 ">
             {navLinks.map((navLink) => (
               <Link
                 key={navLink.link}
@@ -141,18 +141,18 @@ const Navbar = () => {
             ))}
           </div>
         </div>
-        <div className="flex gap-2 items-end">
+        <div className="flex gap-2 items-center">
           {!user && (
-            <menu className="hidden sm:flex gap-2 items-center">
+            <menu className="flex gap-2 items-center">
               <Link
                 href={"/register"}
-                className=" text-white text-sm px-4 hover:underline"
+                className="hidden sm:flex text-white text-sm px-4 hover:underline"
               >
                 Signup
               </Link>
               <Link
                 href={"/login"}
-                className="border text-sm border-white rounded-md px-4 py-1 duration-300 text-white hover:bg-white hover:bg-opacity-10"
+                className="border text-sm border-white rounded-md px-5 py-2 duration-300 text-white hover:bg-white hover:bg-opacity-10"
               >
                 Login
               </Link>
@@ -160,36 +160,37 @@ const Navbar = () => {
           )}
           {user && (
             <>
-              <>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Avatar className="bg-gray border-2 border-white ">
-                      <AvatarImage src={user.image} />
-                      <AvatarFallback>
-                        {user.email?.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>
-                      {user.name ? user.name : user.email}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      {" "}
-                      <User size={16} /> <span className="ml-2">Profile</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      disabled={isSubmitting}
-                      className="cursor-pointer"
-                    >
-                      <LogOut size={16} />
-                      <span className="ml-2">Logout</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
+              <p className="max-w-24 text-xs overflow-hidden text-ellipsis whitespace-nowrap">
+                {user?.name}
+              </p>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar className="bg-gray border-2 border-white ">
+                    <AvatarImage src={user.image} />
+                    <AvatarFallback>
+                      {user.email?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>
+                    {user.name ? user.name : user.email}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    {" "}
+                    <User size={16} /> <span className="ml-2">Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    disabled={isSubmitting}
+                    className="cursor-pointer"
+                  >
+                    <LogOut size={16} />
+                    <span className="ml-2">Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>

@@ -11,12 +11,12 @@ const HeaderFont = Roboto_Slab({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
-      <section className="min-h-[600px] flex items-center flex-col-reverse md:flex-row gap-3 justify-between px-4 md:px-0">
+      <section className="min-h-[700px] flex items-center flex-col-reverse md:flex-row gap-3 justify-between px-4 md:px-0">
         <div className=" flex flex-col justify-center md:max-w-[60%]">
           <h1
             className={cn(
               HeaderFont.className,
-              "text-5xl md:text-6xl lg:text-7xl  font-bold lg:tracking-wider mb-4 mt-24 md:mt-0 text-black"
+              "text-5xl md:text-6xl lg:text-8xl font-bold lg:tracking-wider mb-4 mt-24 md:mt-0 text-black"
             )}
           >
             LEARN AND <br /> PLAY<span className="text-primary"> QUIZ</span>
