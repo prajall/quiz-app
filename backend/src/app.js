@@ -9,9 +9,11 @@ import leaderboardRoute from "./routes/leaderboardRoute.js";
 import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
 
 const app = express();
+
 app.get("/", (req, res) => {
   return res.send("Server is working");
 });
+
 export default app;
 
 app.use(
