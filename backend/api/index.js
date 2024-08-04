@@ -17,18 +17,13 @@ app.listen(port, () => {
 let questionDB;
 let quizDB;
 try {
-  console.log(process.env.DATABASE2_URI);
-  questionDB = mongoose.createConnection(
-    "mongodb+srv://mailgyannexus:08u37GXx3KMZvqFw@quiz.ajqftit.mongodb.net/?retryWrites=true&w=majority&appName=QUIZ"
-  );
+  questionDB = mongoose.createConnection(process.env.DATABASE1_URI);
   questionDB.on("connected", () => {
     console.log("Database1 Connected Successfully");
   });
 
-  // quizDB = mongoose.createConnection(process.env.DATABASE2_URI);
-  quizDB = mongoose.createConnection(
-    "mongodb+srv://prajalmhrzn:prajal123@cluster0.fsgb03y.mongodb.net/quiz?retryWrites=true&w=majority&appName=Cluster0"
-  );
+  quizDB = mongoose.createConnection(process.env.DATABASE2_URI);
+
   quizDB.on("connected", () => {
     console.log("Database2 Connected Successfully");
   });
