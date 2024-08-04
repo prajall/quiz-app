@@ -11,6 +11,9 @@ dotenv.config();
 app.listen(process.env.PORT, async () => {
   console.log("Server is running on port", process.env.PORT);
 });
+app.get("/", (req, res) => {
+  return res.send("Server is working");
+});
 
 // connect to database
 let questionDB;
