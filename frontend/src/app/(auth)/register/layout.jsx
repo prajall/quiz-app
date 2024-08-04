@@ -2,9 +2,9 @@ import { authChecker } from "@/authChecker";
 import { redirect } from "next/navigation";
 
 const RegisterLayout = ({ children }) => {
-  if (authChecker()) {
-    redirect("/");
-  }
+  // if (authChecker()) {
+  //   redirect("/");
+  // }
 
   return <div>{children}</div>;
 };
