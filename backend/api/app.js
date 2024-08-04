@@ -1,6 +1,16 @@
-import app from "./index";
+import express from "express";
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import userRoute from "./routes/userRoute.js";
+import questionRoute from "./routes/questionRoute.js";
+import scoreRoute from "./routes/scoreRoute.js";
+import leaderboardRoute from "./routes/leaderboardRoute.js";
+import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
+
+const app = express();
+
+export default app;
 
 app.use(
   cors({
