@@ -15,7 +15,7 @@ console.log(process.env.CORS_ORIGIN);
 
 app.use(
   cors({
-    origin: "https://quiz-frontend-work.vercel.app",
+    origin: ["https://quiz-frontend-work.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })

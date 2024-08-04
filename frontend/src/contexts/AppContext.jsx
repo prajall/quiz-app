@@ -35,8 +35,11 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchUser();
-    console.log(appData);
   }, []);
+
+  useEffect(() => {
+    console.log("Appdata updated:", appData);
+  }, [appData]);
 
   return (
     <AppContext.Provider value={{ appData, setAppData }}>

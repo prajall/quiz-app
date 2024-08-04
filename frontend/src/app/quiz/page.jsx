@@ -47,30 +47,32 @@ const page = () => {
         );
       } else {
         response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/question/random?limit=10`
+          `${process.env.NEXT_PUBLIC_API_URL}/question/random?limit=${questionLength}`
         );
       }
+      console.log(response);
       if (!response.data) {
         toast.error("Error Getting Questions");
         return;
       }
       if (response.status == 200) {
         setQuizData((prev) => ({ ...prev, questions: response?.data }));
+        setQuizData((prev) => ({
+          ...prev,
+          currentExam: examId,
+          quizSettings: {
+            ...prev.quizSettings,
+            time: time,
+            questionLength: questionLength,
+          },
+        }));
+        startTimer(time);
+        startQuiz();
+        console.log("Data before redirecting:", response);
+        router.push(`/quiz/${response?.data[0]?._id}`);
       } else {
         toast.error("Something Went Wrong");
       }
-      setQuizData((prev) => ({
-        ...prev,
-        currentExam: examId,
-        quizSettings: {
-          ...prev.quizSettings,
-          time: time,
-          questionLength: questionLength,
-        },
-      }));
-
-      startQuiz();
-      router.push(`/quiz/${response?.data[0]?._id}`);
     } catch (error) {
       if (error.message == "Network Error") {
         toast.error("Error Connecting to the Server");

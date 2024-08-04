@@ -21,7 +21,9 @@ const QuestionLayout = async ({ params, children }) => {
           <Timer />
           <Score />
         </div>
-        <ProgressBar />
+        <div className="mt-10">
+          <ProgressBar />
+        </div>
         <div className=" mx-auto space-y-4 md:space-y-8  sm:border-gray sm:border sm:shadow-md sm:p-4  md:p-6 lg:p-8 rounded-lg">
           <p className="font-semibold text-xl md:text-2xl text-black min-h-24 xl:min-h-16 flex items-center leading-[1.5]">
             Q. {question.name}

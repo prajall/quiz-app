@@ -1,37 +1,34 @@
-// import express from "express";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import userRoute from "../src/routes/userRoute.js";
+import questionRoute from "../src/routes/questionRoute.js";
+import scoreRoute from "../src/routes/scoreRoute.js";
+import leaderboardRoute from "../src/routes/leaderboardRoute.js";
+import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
-// import cors from "cors";
-// import cookieParser from "cookie-parser";
-// import userRoute from "./routes/userRoute.js";
-// import questionRoute from "./routes/questionRoute.js";
-// import scoreRoute from "./routes/scoreRoute.js";
-// import leaderboardRoute from "./routes/leaderboardRoute.js";
-// import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
+const app = express();
 
-// const app = express();
+app.use(express.json());
+app.use(cookieParser());
+console.log(process.env.CORS_ORIGIN);
 
-// app.get("/", (req, res) => {
-//   return res.send("Server is working");
-// });
+app.use(
+  cors({
+    origin: "https://quiz-frontend-work.vercel.app",
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 
-// export default app;
+// SETUP ROUTES
+app.use("/user", userRoute);
+app.use("/question", questionRoute);
+app.use("/score", scoreRoute);
+app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
 
-// app.use(
-//   cors({
-//     // origin: process.env.CORS_ORIGIN,
-//     origin: "http://localhost:3000",
-//     methods: ["GET", "POST", "PATCH", "DELETE"],
-//     credentials: true,
-//   })
-// );
-// app.use(express.json());
-// app.use(cookieParser());
+app.get("/", (req, res) => {
+  res.send("Server is working");
+});
 
-// // SETUP ROUTES
-// app.use("/user", userRoute);
-// app.use("/question", questionRoute);
-// app.use("/score", scoreRoute);
-// app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
-// app.get("/", (req, res) => {
-//   return res.send("Server is working");
-// });
+export default app;
