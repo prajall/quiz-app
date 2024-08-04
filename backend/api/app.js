@@ -9,10 +9,10 @@ import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
-console.log(process.env.CORS_ORIGIN);
 app.use(
   cors({
-    origin: ["https://quiz-app-frontend-six-tawny.vercel.app"],
+    // origin: ["https://quiz-app-frontend-six-tawny.vercel.app"],
+    oriting: "*",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
