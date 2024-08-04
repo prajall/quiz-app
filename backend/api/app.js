@@ -1,5 +1,4 @@
 import express from "express";
-
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "../src/routes/userRoute.js";
@@ -10,16 +9,14 @@ import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
-export default app;
-
 app.use(
   cors({
-    // origin: process.env.CORS_ORIGIN,
-    origin: "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -28,3 +25,9 @@ app.use("/user", userRoute);
 app.use("/question", questionRoute);
 app.use("/score", scoreRoute);
 app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
+
+app.get("/", (req, res) => {
+  res.send("Server is working");
+});
+
+export default app;

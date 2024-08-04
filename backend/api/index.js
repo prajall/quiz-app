@@ -5,13 +5,13 @@ import { scoreSchema } from "../src/models/scoreModel.js";
 import { userSchema } from "../src/models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 import app from "./app.js";
-dotenv.config();
-app.get("/", (req, res) => {
-  return res.send("Server is working");
-});
 
-app.listen(process.env.PORT, async () => {
-  console.log("Server is running on port", process.env.PORT);
+dotenv.config();
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log("Server is running on port", port);
 });
 
 let questionDB;
@@ -23,7 +23,6 @@ try {
   });
 
   quizDB = mongoose.createConnection(process.env.DATABASE2_URI);
-
   quizDB.on("connected", () => {
     console.log("Database2 Connected Successfully");
   });
@@ -35,10 +34,11 @@ try {
   console.log(err);
 }
 
-//assign each model to databases
+// Assign each model to databases
 export const Question = questionDB.model("Questions", questionSchema);
 export const Score = quizDB.model("Score", scoreSchema);
 export const User = quizDB.model("Users", userSchema);
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
