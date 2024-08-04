@@ -17,6 +17,7 @@ app.listen(port, () => {
 let questionDB;
 let quizDB;
 try {
+  console.log(process.env.PORT);
   questionDB = mongoose.createConnection(
     "mongodb+srv://mailgyannexus:08u37GXx3KMZvqFw@quiz.ajqftit.mongodb.net/?retryWrites=true&w=majority&appName=QUIZ"
   );

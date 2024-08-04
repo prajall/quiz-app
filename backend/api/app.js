@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: "https://quiz-app-backend-kappa.vercel.app/",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
