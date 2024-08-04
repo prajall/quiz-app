@@ -50,7 +50,6 @@ const page = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/question/random?limit=${questionLength}`
         );
       }
-      console.log(response);
       if (!response.data) {
         toast.error("Error Getting Questions");
         return;

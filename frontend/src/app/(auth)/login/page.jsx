@@ -33,7 +33,6 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
       if (response.status >= 200) {
         toast.success("Logged in successfully");
         setAppData((prev) => ({ ...prev, user: response.data }));
