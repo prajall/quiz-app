@@ -1,4 +1,3 @@
-import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute.js";
@@ -6,8 +5,7 @@ import questionRoute from "./routes/questionRoute.js";
 import scoreRoute from "./routes/scoreRoute.js";
 import leaderboardRoute from "./routes/leaderboardRoute.js";
 import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
-
-const app = express();
+import app from "./index.js";
 
 app.use(
   cors({

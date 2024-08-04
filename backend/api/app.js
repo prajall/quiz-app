@@ -1,9 +1,6 @@
-import express from "express";
-const app = express();
+import app from "./index";
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
-
-export default app;
 
 app.use(
   cors({
