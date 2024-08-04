@@ -1,4 +1,4 @@
-import { Score } from "../index.js";
+import { Score } from "../../api/index.js";
 import jwt from "jsonwebtoken";
 
 export const getOverallLeaderboard = async (req, res) => {

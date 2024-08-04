@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import multer from "multer";
 import jwt, { decode } from "jsonwebtoken";
-import { User, Score } from "../index.js";
+import { User, Score } from "../../api/index.js";
 import { uploadOnCloudinary } from "../cloudinary.js";
 
 // generate jwt token

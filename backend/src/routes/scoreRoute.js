@@ -8,5 +8,6 @@ const router = express.Router();
 router.patch("/", authorisedUser, updateScore);
 // router.patch("/", updateScore);
 router.get("/user/:userId", getUserScore);
+router.get("/", (req, res) => res.send("Score Route"));
 
 export default router;

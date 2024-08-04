@@ -1,5 +1,5 @@
 // import { Score } from "../models/scoreModel.js";
-import { Score, User } from "../index.js";
+import { Score, User } from "../../api/index.js";
 
 export const updateScore = async (req, res) => {
   // const { userId } = req.params;

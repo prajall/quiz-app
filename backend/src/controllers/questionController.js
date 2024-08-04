@@ -1,4 +1,4 @@
-import { Question } from "../index.js";
+import { Question } from "../../api/index.js";
 
 //Fetch random questions from one exam
 export const getExamQuestions = async (req, res) => {
