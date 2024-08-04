@@ -276,7 +276,7 @@ const QuizProvider = ({ children }) => {
   const endQuiz = async () => {
     setQuizData((prev) => ({ ...prev, isPlaying: false }));
     await uploadScore();
-    redirect("/quiz-end");
+    router.push("/quiz-end");
   };
 
   return (
