@@ -9,7 +9,10 @@ import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
+app.use(express.json());
+app.use(cookieParser());
 console.log(process.env.CORS_ORIGIN);
+
 app.use(
   cors({
     origin: "https://quiz-app-frontend-dbh62ezu3-prajalls-projects.vercel.app",
@@ -17,8 +20,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
-app.use(cookieParser());
 
 // SETUP ROUTES
 app.use("/user", userRoute);
