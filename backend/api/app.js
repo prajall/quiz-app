@@ -9,6 +9,7 @@ import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
+console.log(process.env.CORS_ORIGIN);
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
