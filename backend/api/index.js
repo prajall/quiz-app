@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import app from "./app.js";
 import { questionSchema } from "./models/questionModel.js";
 import { scoreSchema } from "./models/scoreModel.js";
 import { userSchema } from "./models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import app from "../src/app.js";
 
 dotenv.config();
 
