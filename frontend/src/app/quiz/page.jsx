@@ -95,6 +95,7 @@ const page = () => {
 
   useEffect(() => {
     if (!appData.user) {
+      console.log("redirecting from context");
       redirect("/login");
     }
   }, []);
