@@ -11,8 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    // origin: ["https://quiz-app-frontend-six-tawny.vercel.app"],
-    origin: "*",
+    origin: [process.env.CORS_ORIGIN],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
