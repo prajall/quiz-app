@@ -15,7 +15,7 @@ console.log(process.env.CORS_ORIGIN);
 
 app.use(
   cors({
-    origin: "https://quiz-app-frontend-dbh62ezu3-prajalls-projects.vercel.app",
+    origin: "https://quiz-app-frontend-six-tawny.vercel.app",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
