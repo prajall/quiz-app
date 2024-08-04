@@ -12,12 +12,11 @@ const app = express();
 console.log(process.env.CORS_ORIGIN);
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: "https://quiz-app-frontend-dbh62ezu3-prajalls-projects.vercel.app",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
-
 app.use(express.json());
 app.use(cookieParser());
 
