@@ -19,7 +19,7 @@ export const fetchQuestions = async (examId) => {
       toast.error("Error Connecting to the Server");
       return;
     }
-    if (error.response.data.data.data.data) {
+    if (error.response.data) {
       toast.error(error.response.data);
     } else if (error.message) {
       toast.error(error.message);
