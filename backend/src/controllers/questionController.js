@@ -2,10 +2,9 @@ import { Question } from "../../api/index.js";
 
 //Fetch random questions from one exam
 export const getExamQuestions = async (req, res) => {
+  const limit = parseInt(req.query.limit) || 50;
+  const { exam_id } = req.params;
   try {
-    const limit = parseInt(req.query.limit) || 50;
-    const { exam_id } = req.params;
-
     // Validation
     if (!exam_id) {
       return res.status(400).json({ message: "examId is required" });
@@ -16,12 +15,11 @@ export const getExamQuestions = async (req, res) => {
       { $match: { exam_id } },
       { $sample: { size: limit } },
     ]);
-    res
-      .json({ message: "Question Fetched Successfully", questions })
-      .status(200);
+    console.log(questions);
+    res.json(questions).status(200);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to fetch Question" });
+    res.status(500).send({ message: "Failed to fetch Question" });
   }
 };
 export const getRandomQuestions = async (req, res) => {

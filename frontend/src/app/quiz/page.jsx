@@ -39,6 +39,7 @@ const page = () => {
 
   const beginQuiz = async () => {
     setIsLoading(true);
+    console.log(examId, questionLength, time);
     let response;
     try {
       if (examId != "All") {
@@ -68,6 +69,9 @@ const page = () => {
         startTimer(time);
         startQuiz();
         console.log("Data before redirecting:", response);
+        if (!response?.data[0]?._id) {
+          return;
+        }
         router.push(`/quiz/${response?.data[0]?._id}`);
       } else {
         toast.error("Something Went Wrong");
