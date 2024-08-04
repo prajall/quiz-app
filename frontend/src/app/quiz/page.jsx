@@ -25,9 +25,9 @@ const page = () => {
   const { appData } = useContext(AppContext);
   const [examId, setExamId] = useState(quizData.currentExam);
   const [isLoading, setIsLoading] = useState(false);
-  const [time, setTime] = useState(quizData.time);
+  const [time, setTime] = useState(quizData.quizSettings.time);
   const [questionLength, setQuestionsLength] = useState(
-    quizData.questionLength
+    quizData.quizSettings.questionLength
   );
 
   const router = useRouter();
@@ -62,10 +62,13 @@ const page = () => {
       setQuizData((prev) => ({
         ...prev,
         currentExam: examId,
-        time,
-        questionLength,
+        quizSettings: {
+          ...prev.quizSettings,
+          time: time,
+          questionLength: questionLength,
+        },
       }));
-      startTimer(time);
+
       startQuiz();
       router.push(`/quiz/${response?.data[0]?._id}`);
     } catch (error) {
@@ -88,7 +91,6 @@ const page = () => {
     resetQuizData();
     stopTimer();
     resetScore();
-    console.log("----------------quizdata:---------------", quizData);
   }, []);
 
   useEffect(() => {
@@ -103,12 +105,12 @@ const page = () => {
         <h1 className="font-semibold text-2xl text-primary text-center lg:text-4xl ">
           Welcome To Quiz Pro
         </h1>
-        {/* <p className="opacity-90 text-sm">
-          This is a game of quiz with questions from different categories like
-          TSC, Loksewa, GK, etc.
-        </p> */}
+        <p className="opacity-90 text-sm text-center">
+          Challenge yourself to the game of quiz. Select topic and compete
+          against the time.
+        </p>
       </div>
-      <div className="space-y-6 rounded-xl w-full max-w-[450px] border p-4 md:p-6 shadow-sm shadow-black mx-auto ">
+      <div className="space-y-6 rounded-xl w-full max-w-[500px] border p-4  md:p-6 shadow-sm shadow-black mx-auto ">
         <h2 className="mb-8 text-2xl text-center font-semibold">
           Choose your Quiz Settings
         </h2>

@@ -13,6 +13,10 @@ const Timer = () => {
     }
   }, [runningTimer]);
 
+  useEffect(()=>{
+
+  },[])
+
   return (
     <>
       {/* {quizData.isPlaying && ( */}

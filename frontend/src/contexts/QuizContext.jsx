@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import { TimerContext } from "./TimerContext";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { ScoreContext } from "./ScoreContext";
 
 const defaultQuizData = {
@@ -275,9 +275,8 @@ const QuizProvider = ({ children }) => {
 
   const endQuiz = async () => {
     setQuizData((prev) => ({ ...prev, isPlaying: false }));
-    // alert("Quiz ended");
     await uploadScore();
-    router.push("/quiz-end");
+    redirect("/quiz-end");
   };
 
   return (

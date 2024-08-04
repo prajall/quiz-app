@@ -92,7 +92,7 @@ const Navbar = () => {
       <div className="md:w-11/12 w-full max-w-screen-xl px-2 md:px-0 mx-auto flex items-end justify-between">
         <div className="flex items-center">
           <Sheet open={sheetOpen} onOpenChange={(val) => setSheetOpen(val)}>
-            <SheetTrigger className="md:hidden text-white mr-1">
+            <SheetTrigger className="md:hidden text-white mr-2">
               <Menu />
             </SheetTrigger>
             <SheetContent
@@ -165,7 +165,7 @@ const Navbar = () => {
               </p>
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Avatar className="bg-gray border-2 border-white ">
+                  <Avatar className="border-2 border-gray ">
                     <AvatarImage src={user.image} />
                     <AvatarFallback>
                       {user.email?.charAt(0).toUpperCase()}
