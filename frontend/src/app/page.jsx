@@ -113,6 +113,7 @@ export default function Home() {
             learning experience together.
           </p>
         </div>
+{/*         hello */}
       </section>
     </>
   );
