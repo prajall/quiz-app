@@ -69,14 +69,14 @@ const Navbar = () => {
       link: "/",
     },
     {
+      name: "Play",
+      link: "/quiz",
+    },
+    {
       name: "Leaderboard",
       link: "/leaderboard",
     },
 
-    {
-      name: "About",
-      link: "/about",
-    },
     {
       name: "Contacts",
       link: "/contacts",

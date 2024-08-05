@@ -33,7 +33,7 @@ const page = () => {
   const router = useRouter();
 
   const handleExamChange = async (value) => {
-    setQuizData((prev) => ({ ...prev, currentQuestion: value }));
+    setQuizData((prev) => ({ ...prev, currentExam: value }));
     setExamId(value);
   };
 
@@ -109,12 +109,12 @@ const page = () => {
     <div className="h-[80vh] flex flex-col items-center justify-center space-y-6 text-black">
       <div className="space-y-1">
         <h1 className="font-semibold text-2xl text-primary text-center lg:text-4xl ">
-          Welcome To Quiz Pro
+          Play Quiz
         </h1>
-        <p className="opacity-90 text-sm text-center">
+        {/* <p className="opacity-90 text-sm text-center">
           Challenge yourself to the game of quiz. Select topic and compete
           against the time.
-        </p>
+        </p> */}
       </div>
       <div className="space-y-6 rounded-xl w-full max-w-[500px] border p-4  md:p-6 shadow-sm shadow-black mx-auto ">
         <h2 className="mb-8 text-2xl text-center font-semibold">
