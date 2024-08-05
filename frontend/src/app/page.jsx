@@ -1,7 +1,5 @@
-import friends from "@/assets/friends.png";
 import hero from "@/assets/hero.png";
 import leaderboard from "@/assets/leaderboard.png";
-import stars from "@/assets/stars.png";
 import { cn } from "@/lib/utils";
 import { Activity, Brain, SquareStack } from "lucide-react";
 import { Roboto_Slab } from "next/font/google";
@@ -99,7 +97,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className=" bg-primary text-white  flex flex-col mt-10 rounded-lg md:rounded-none md:flex-row gap-8 p-8 ">
+      {/* <section className=" bg-primary text-white  flex flex-col mt-10 rounded-lg md:rounded-none md:flex-row gap-8 p-8 ">
         <div className="w-full md:w-1/2 h-auto md:h-[300px] mx-auto aspect-square rounded-md flex items-center justify-center  p-4 ">
           <Image src={friends} width="200" height="200" className="m-auto" />
         </div>
@@ -113,8 +111,7 @@ export default function Home() {
             learning experience together.
           </p>
         </div>
-{/*         hello */}
-      </section>
+      </section> */}
     </>
   );
 }

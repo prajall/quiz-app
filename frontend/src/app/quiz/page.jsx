@@ -53,6 +53,7 @@ const page = () => {
       }
       if (!response.data) {
         toast.error("Error Getting Questions");
+        setIsLoading(false);
         return;
       }
       if (response.status == 200) {
@@ -87,7 +88,6 @@ const page = () => {
         toast.error("Something went wrong");
       }
       console.log(error);
-    } finally {
       setIsLoading(false);
     }
   };
