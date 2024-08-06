@@ -1,7 +1,7 @@
 export const exams = [
   {
     exam_id: "1001",
-    name: "शिक्षा सेवा आयोग (TSC)",
+    name: "शिक्षा सेवा आयोग",
   },
   {
     exam_id: "1002",
