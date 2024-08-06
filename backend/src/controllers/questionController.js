@@ -15,7 +15,6 @@ export const getExamQuestions = async (req, res) => {
       { $match: { exam_id } },
       { $sample: { size: limit } },
     ]);
-    console.log(questions);
     res.json(questions).status(200);
   } catch (err) {
     console.error(err);

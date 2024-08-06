@@ -17,7 +17,6 @@ import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const page = () => {
-  console.log("Rendered Quiz Setting");
   const { quizData, setQuizData, resetQuizData, startQuiz } =
     useContext(QuizContext);
   const { startTimer, stopTimer } = useContext(TimerContext);
@@ -39,7 +38,6 @@ const page = () => {
 
   const beginQuiz = async () => {
     setIsLoading(true);
-    console.log(examId, questionLength, time);
     let response;
     try {
       if (examId != "All") {
@@ -69,7 +67,6 @@ const page = () => {
         }));
         startTimer(time);
         startQuiz();
-        console.log("Data before redirecting:", response);
         if (!response?.data[0]?._id) {
           return;
         }
@@ -100,7 +97,6 @@ const page = () => {
 
   useEffect(() => {
     if (!appData.user) {
-      console.log("redirecting from context");
       redirect("/login");
     }
   }, []);

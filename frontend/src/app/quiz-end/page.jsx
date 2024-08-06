@@ -18,10 +18,8 @@ const page = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
 
-  console.log("rendered quiz-end page");
   const { score } = useContext(ScoreContext);
   const { quizData } = useContext(QuizContext);
-  console.log(quizData.currentExam);
   const quizQuestions = quizData.questions;
 
   const filteredScores = Object.keys(score).reduce((acc, key) => {
@@ -37,8 +35,6 @@ const page = () => {
 
     return acc;
   }, {});
-
-  console.log(filteredScores);
 
   const calculateTotalScore = () => {
     let tScore = 0;
@@ -73,7 +69,6 @@ const page = () => {
       }
       if (response.status == 200) {
         setCurrentLeaderboard(response.data);
-        console.log(response.data);
       } else {
         toast.error("Failed to load Leaderboard");
       }
@@ -96,7 +91,6 @@ const page = () => {
     if (typeof window !== "undefined") {
       fetchLeaderboard();
       calculateTotalScore();
-      console.log(score);
     } else {
       console.log("typeof window is undefined");
       toast.error("Something went wrong");

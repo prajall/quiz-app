@@ -21,7 +21,6 @@ const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
   };
 
   useEffect(() => {
-    console.log(selected);
     const currentIndex = ["Overall", "Exams"].indexOf(selected);
     if (buttonsRef.current[currentIndex]) {
       const currentButton = buttonsRef.current[currentIndex];
@@ -37,7 +36,6 @@ const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
     onChangeSelected(selected);
   }, [selected]);
   useEffect(() => {
-    console.log("adfasdf");
     onChangeSelectedExam(selectedExam);
   }, [selectedExam]);
 

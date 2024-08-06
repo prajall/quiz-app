@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const fetchQuestions = async (examId) => {
-  console.log(examId);
   try {
     if (examId != "random") {
       const response = await axios.get(
@@ -41,7 +40,6 @@ export const fetchLeaderboard = async () => {
     );
     if (response.status == 200) {
       return response.data.concat(response.data);
-      console.log(response.data);
     } else {
       toast.error("Failed to load Leaderboard");
     }

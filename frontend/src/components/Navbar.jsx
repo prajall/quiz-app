@@ -45,7 +45,6 @@ const Navbar = () => {
         }
       );
       if (response.status == 200) {
-        console.log(Cookies.get("token"));
         setAppData((prev) => ({ ...prev, user: null }));
         toast.success("Logged Out Successfully");
         router.push("/");

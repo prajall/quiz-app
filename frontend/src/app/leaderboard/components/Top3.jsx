@@ -18,7 +18,6 @@ const Top3 = ({ leaderboard }) => {
   const uniqueKey = leaderboard.map((item) => item.user + item.score).join("-");
 
   const top3 = leaderboard.slice(0, 3);
-  console.log(top3);
   return (
     <div
       key={uniqueKey}

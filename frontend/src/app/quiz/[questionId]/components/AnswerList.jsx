@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const AnswerList = ({ question }) => {
-  console.log("Rendered AnswerList");
   const { quizData, setQuizData, endQuiz } = useContext(QuizContext);
   const { score, incrementScore } = useContext(ScoreContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +22,6 @@ const AnswerList = ({ question }) => {
     if (question.opt_correct === option) {
       incrementScore(question.exam_id);
       setQuizData((prev) => ({ ...prev, correct: prev.correct + 1 }));
-      console.log(quizData);
     } else {
       setQuizData((prev) => ({ ...prev, incorrect: prev.incorrect + 1 }));
     }
@@ -57,7 +55,6 @@ const AnswerList = ({ question }) => {
   };
 
   useEffect(() => {
-    console.log("quizData during load:", quizData);
     if (!quizData.isPlaying) {
       console.log("Not playing redirecting /quiz");
       redirect("/quiz");

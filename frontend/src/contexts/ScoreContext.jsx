@@ -53,9 +53,7 @@ const ScoreProvider = ({ children }) => {
       }
     }
   };
-  useEffect(() => {
-    console.log("Score updated:", score);
-  }, [score]);
+  useEffect(() => {}, [score]);
 
   return (
     <ScoreContext.Provider

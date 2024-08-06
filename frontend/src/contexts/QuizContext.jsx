@@ -279,9 +279,7 @@ const QuizProvider = ({ children }) => {
     router.push("/quiz-end");
   };
 
-  useEffect(() => {
-    console.log("Quizdata updated:", quizData);
-  }, [quizData]);
+  useEffect(() => {}, [quizData]);
 
   return (
     <QuizContext.Provider

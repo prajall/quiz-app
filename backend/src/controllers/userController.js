@@ -50,7 +50,6 @@ const signupUser = async (req, res) => {
           req.file.buffer,
           "profile_pictures"
         );
-        console.log(cloudinaryResult);
         imageUrl = cloudinaryResult.url;
       }
 
@@ -61,7 +60,6 @@ const signupUser = async (req, res) => {
         image: imageUrl,
         interests: interests,
       });
-      console.log(createdUser);
 
       const userWithoutPassword = createdUser.toObject();
       delete userWithoutPassword.password;
@@ -103,7 +101,6 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   if (!email || !password) {
     return res.status(400).send("email and Password are required");
   }
@@ -123,7 +120,6 @@ const loginUser = async (req, res) => {
   const loggedInUser = await User.findOne({ email }).select("-password");
 
   const token = generateToken(user._id);
-  console.log(token);
 
   res.cookie(" token", token, {
     httpOnly: true,
@@ -162,7 +158,6 @@ export const logoutUser = async (req, res) => {
 
 export const getCookies = async (req, res) => {
   const cookie = req.cookies;
-  console.log(cookie);
   res.status(200).send(cookie);
 };
 

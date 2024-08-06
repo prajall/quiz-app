@@ -6,11 +6,8 @@ export const updateScore = async (req, res) => {
   const userData = req.userData;
   const userId = userData.id;
 
-  // console.log("cookies:", req.cookies);
-
   try {
     const { score } = req.body;
-    console.log(score);
 
     if (!score || !userId) {
       return res.status(400).json({ error: "Missing required fields" });

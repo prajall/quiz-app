@@ -41,7 +41,6 @@ const ImageCropper = ({ selectedImage, onSubmitCroppedImage }) => {
   };
   const onImageLoaded = (image) => {
     const { naturalWidth, naturalHeight } = image.currentTarget;
-    console.log(naturalHeight, naturalWidth);
 
     setImageRef(image.currentTarget);
     imgRef.current = image.currentTarget;

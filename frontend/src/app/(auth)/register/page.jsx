@@ -68,7 +68,6 @@ const Register = () => {
   };
   const onSubmitStep1 = async (data) => {
     setIsSubmitting(true);
-    console.log("Step 1 data:", data);
     try {
       if (data.password != data.confirmPassword) {
         setError("confirmPassword", {
@@ -101,20 +100,15 @@ const Register = () => {
   };
 
   const onSubmitStep2 = (data) => {
-    console.log("step 2 Data:", data);
     setStep(3);
   };
 
   const onSubmitStep3 = async (data) => {
-    console.log(data);
-    // if (data.interests.length == 0) {
     if (!data.interests || data.interests.length === 0) {
       setError("interests", { message: "Select atleast one field" });
       return;
     }
     setIsSubmitting(true);
-    console.log("Step 2 data:", data);
-    console.log("croppedImage: ", croppedImage);
     const formData = new FormData();
     formData.append("email", data.email);
     formData.append("password", data.password);
@@ -130,8 +124,6 @@ const Register = () => {
       });
     }
 
-    console.log(formData);
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/user/signup`,
@@ -142,7 +134,6 @@ const Register = () => {
           },
         }
       );
-      console.log(response.data);
       if (response.status == 200) {
         toast.success("User Created Successfully");
         router.push("/");

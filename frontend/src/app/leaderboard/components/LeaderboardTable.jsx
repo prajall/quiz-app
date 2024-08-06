@@ -24,7 +24,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
     }
     try {
       let url;
-      console.log(appData.user?._id, exam_id);
+      // console.log(appData.user?._id, exam_id);
       if (exam_id === "All") {
         url = `${process.env.NEXT_PUBLIC_API_URL}/leaderboard/user`;
       } else if (exam_id) {
@@ -36,7 +36,7 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
           withCredentials: true,
           headers: { apiKey: 123456789 },
         });
-        console.log("User Index response", response);
+        // console.log("User Index response", response);
         setUserIndex(response.data);
       }
     } catch (error) {
@@ -61,14 +61,14 @@ const LeaderboardTable = ({ leaderboard, isFetching, startFrom, exam_id }) => {
     findUserIndex();
   }, []);
 
-  useEffect(() => {
-    console.log(
-      "UserIndex: ",
-      userIndex,
-      "leaderboard.length:",
-      leaderboard?.length
-    );
-  }, [exam_id, leaderboard]);
+  // useEffect(() => {
+  //   console.log(
+  //     "UserIndex: ",
+  //     userIndex,
+  //     "leaderboard.length:",
+  //     leaderboard?.length
+  //   );
+  // }, [exam_id, leaderboard]);
 
   if (!leaderboard) {
     return null;

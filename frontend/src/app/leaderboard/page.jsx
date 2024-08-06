@@ -15,7 +15,6 @@ const LeaderboardPage = () => {
   const [exam_id, setExam_Id] = useState("All");
 
   const fetchOverallLeaderboard = async () => {
-    console.log(process.env.NEXT_PUBLIC_API_URL);
     setIsFetching(true);
     try {
       const response = await axios.get(
@@ -29,7 +28,6 @@ const LeaderboardPage = () => {
       if (response.status == 200) {
         setOverallLeaderboard(response.data);
         setLeaderboard(response.data);
-        // console.log(response.data);
       } else {
         toast.error("Failed to load Leaderboard");
       }
@@ -61,7 +59,6 @@ const LeaderboardPage = () => {
       );
       if (response.status == 200) {
         setExamsLeaderboard(response.data.concat(response.data));
-        console.log("ExamsLeaderboard:", response.data);
       } else {
         toast.error("Failed to load Leaderboard");
       }
@@ -86,7 +83,6 @@ const LeaderboardPage = () => {
   }, []);
 
   const onChangeSelected = (selected) => {
-    console.log(selected);
     if (selected === "Overall") {
       setLeaderboard(overallLeaderboard);
       setExam_Id("All");
@@ -97,14 +93,10 @@ const LeaderboardPage = () => {
     }
   };
   const onChangeSelectedExam = (selectedExam) => {
-    console.log(selectedExam);
     setLeaderboard(examsLeaderboard[selectedExam]?.leaderboard);
     setExam_Id(exams[selectedExam].exam_id);
   };
 
-  useEffect(() => {
-    console.log(leaderboard);
-  }, [leaderboard]);
   return (
     <div className="mt-4 ">
       <header className="py-2 max-w-screen-lg mx-auto md:flex justify-between">
