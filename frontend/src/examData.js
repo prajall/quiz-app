@@ -1,43 +1,43 @@
 export const exams = [
   {
     exam_id: "1001",
-    name: "TSC",
+    name: "शिक्षा सेवा आयोग (TSC)",
   },
   {
     exam_id: "1002",
-    name: "1002",
+    name: "बैंक",
   },
   {
     exam_id: "1003",
-    name: "1003",
+    name: "स्वास्थ्य",
   },
   {
     exam_id: "1004",
-    name: "1004",
+    name: "कृषि",
   },
   {
     exam_id: "1005",
-    name: "1005",
+    name: "पशु चिकित्सा",
   },
   {
     exam_id: "1006",
-    name: "1006",
+    name: "नेपाल टेलिकम",
   },
   {
     exam_id: "1007",
-    name: "1007",
+    name: "नासु खरिदार",
   },
   {
     exam_id: "1008",
-    name: "1008",
+    name: "वन रक्षक",
   },
   {
     exam_id: "1009",
-    name: "1009",
+    name: "भन्सार एजेन्ट",
   },
   {
     exam_id: "1010",
-    name: "GK",
+    name: "सामान्य ज्ञान (GK)",
   },
 ];
 
