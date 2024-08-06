@@ -96,6 +96,7 @@ const page = () => {
     if (typeof window !== "undefined") {
       fetchLeaderboard();
       calculateTotalScore();
+      console.log(score);
     } else {
       console.log("typeof window is undefined");
       toast.error("Something went wrong");
@@ -131,10 +132,11 @@ const page = () => {
                   className="flex justify-between p-2 border-b hover:bg-gray/30 duration-300"
                 >
                   <p>{examIdToName(item)} :</p>
-                  <p>{score[1000 + 1 + index]}</p>
+                  {/* <p>{item}</p> */}
+                  <p>{score[item]}</p>
                 </li>
               ))}
-              <li className="flex justify-between p-2 mt-1 text-primary font-semibold text-xl rounded-lg">
+              <li className="flex justify-between p-2 mt-3 text-primary font-semibold text-xl rounded-lg">
                 <p>Total:</p>
                 <p>{totalScore}</p>
               </li>
