@@ -5,10 +5,10 @@ import {
   getUserInfo,
   loginUser,
   logoutUser,
-  registerOTP,
+  registerVerificationCode,
   resetPassword,
   signupUser,
-  verifyOTP,
+  verifyCode,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -19,8 +19,8 @@ router.post("/signup", signupUser);
 router.post("/checkemail", emailChecker);
 router.get("/getcookie", getCookies);
 router.get("/getuser", getUserInfo);
-router.post("/register-otp", registerOTP);
-router.post("/verify-otp", verifyOTP);
+router.post("/register-code", registerVerificationCode);
+router.post("/verify-code", verifyCode);
 router.post("/reset-password", resetPassword);
 router.get("/", (req, res) => res.send("User Route"));
 

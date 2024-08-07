@@ -188,10 +188,10 @@ export const getUserInfo = async (req, res) => {
   }
 };
 
-export const registerOTP = async (req, res) => {
+export const registerVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
-    const verificationOTP = Math.floor(
+    const verificationCode = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
 
@@ -201,7 +201,7 @@ export const registerOTP = async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    user.verificationOTP = verificationOTP;
+    user.verificationCode = verificationCode;
     await user.save();
 
     const transporter = nodemailer.createTransport({
@@ -252,7 +252,7 @@ export const registerOTP = async (req, res) => {
                 text-align: center;
                 font-size: 14px;
             }
-            .otp {
+            .verificationCode {
                 font-size: 28px;
                 font-weight: bold;
                 color: #284b63;
@@ -268,7 +268,7 @@ export const registerOTP = async (req, res) => {
             <div class="content">
                 <p>Please use the following code to verify your email and change password for QuizPro. <br/>
                 If you did not request this, please ignore this email
-                <p class="otp">${verificationOTP}</p>
+                <p class="verificationCode">${verificationCode}</p>
                 </p>
             </div>
         </div>
@@ -298,12 +298,12 @@ export const registerOTP = async (req, res) => {
   }
 };
 
-export const verifyOTP = async (req, res) => {
+export const verifyCode = async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { email, verificationCode } = req.body;
 
-    if (!email || !otp) {
-      return res.status(400).send("Email and OTP are required.");
+    if (!email || !verificationCode) {
+      return res.status(400).send("Email and verificationCode are required.");
     }
 
     const user = await User.findOne({ email });
@@ -312,22 +312,22 @@ export const verifyOTP = async (req, res) => {
       return res.status(404).send("User not found.");
     }
 
-    if (user.verificationOTP !== otp) {
-      return res.status(400).send("Invalid OTP.");
+    if (user.verificationCode !== verificationCode) {
+      return res.status(400).send("Invalid Verification Code.");
     }
 
-    return res.status(200).send("OTP verified successfully.");
+    return res.status(200).send("Code verified successfully.");
   } catch (error) {
-    console.error("Error verifying OTP:", error);
+    console.error("Error verifying Code:", error);
     return res.status(500).send("Internal server error.");
   }
 };
 
 export const resetPassword = async (req, res) => {
   try {
-    const { email, newPassword, otp } = req.body;
+    const { email, newPassword, verificationCode } = req.body;
 
-    if (!email || !newPassword || !otp) {
+    if (!email || !newPassword || !verificationCode) {
       return res.status(400).send("Email and New password are required.");
     }
 
@@ -337,15 +337,15 @@ export const resetPassword = async (req, res) => {
       return res.status(404).send("User not found.");
     }
 
-    if (user.verificationOTP !== otp) {
-      return res.status(400).send("Invalid OTP.");
+    if (user.verificationCode !== verificationCode) {
+      return res.status(400).send("Invalid Verification Code.");
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     user.password = hashedPassword;
 
-    user.verificationOTP = null;
+    user.verificationCode = null;
     await user.save();
 
     return res.status(200).send("Password reset successfully.");

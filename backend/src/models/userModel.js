@@ -24,7 +24,7 @@ export const userSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
-    verificationOTP: String,
+    verificationCode: String,
   },
   { timestamps: true }
 );
