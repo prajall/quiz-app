@@ -37,7 +37,7 @@ export const exams = [
   },
   {
     exam_id: "1010",
-    name: "सामान्य ज्ञान (GK)",
+    name: "सामान्य ज्ञान",
   },
 ];
 

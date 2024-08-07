@@ -5,6 +5,7 @@ import {
   getUserInfo,
   loginUser,
   logoutUser,
+  registerOTP,
   signupUser,
 } from "../controllers/userController.js";
 
@@ -16,6 +17,7 @@ router.post("/signup", signupUser);
 router.post("/checkemail", emailChecker);
 router.get("/getcookie", getCookies);
 router.get("/getuser", getUserInfo);
+router.post("/register-otp", registerOTP);
 router.get("/", (req, res) => res.send("User Route"));
 
 export default router;

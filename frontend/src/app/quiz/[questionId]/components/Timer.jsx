@@ -1,4 +1,5 @@
 "use client";
+import MinuteSecond from "@/components/MinuteSecond";
 import { QuizContext } from "@/contexts/QuizContext";
 import { TimerContext } from "@/contexts/TimerContext";
 import React, { useContext, useEffect, useRef } from "react";
@@ -6,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Timer = () => {
   const { quizData, endQuiz } = useContext(QuizContext);
-  const { runningTimer, startTimer } = useContext(TimerContext);
+  const { runningTimer } = useContext(TimerContext);
 
   useEffect(() => {
     if (quizData.isPlaying && runningTimer <= 0) {
@@ -18,8 +19,11 @@ const Timer = () => {
   return (
     <>
       {/* {quizData.isPlaying && ( */}
-      <div className="font-semibold text-center text-black">
-        Time: <span className="text-lg text-primary">{runningTimer}</span>
+      <div className="font-semibold text-md text-center mx-auto flex gap-1 w-fit text-black">
+        <span>Time: </span>{" "}
+        <span className="font-semibold">
+          <MinuteSecond time={runningTimer} />
+        </span>
       </div>
       {/* )} */}
     </>

@@ -254,7 +254,7 @@ const defaultQuizData = {
   currentExam: "All",
   correct: 0,
   incorrect: 0,
-  quizSettings: { time: 60, questionLength: 10 },
+  quizSettings: { time: 120, questionLength: 20 },
 };
 
 export const QuizContext = createContext();

@@ -3,6 +3,10 @@ import multer from "multer";
 import jwt, { decode } from "jsonwebtoken";
 import { User, Score } from "../../api/index.js";
 import { uploadOnCloudinary } from "../cloudinary.js";
+import nodemailer from "nodemailer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // generate jwt token
 const generateToken = (id) => {
@@ -18,9 +22,6 @@ const verifyToken = (token) => {
     return false;
   }
 };
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
 //signup new user
 const signupUser = async (req, res) => {
@@ -98,7 +99,6 @@ const signupUser = async (req, res) => {
 };
 
 //login
-
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -143,6 +143,7 @@ export const emailChecker = async (req, res) => {
   res.send("continue").status(200);
 };
 
+//logout
 export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("token", {
@@ -184,6 +185,126 @@ export const getUserInfo = async (req, res) => {
   } catch (err) {
     console.error("Error fetching user info: ", err);
     return res.status(400).send(err.message);
+  }
+};
+
+export const registerOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const verificationOTP = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    user.verificationOTP = verificationOTP;
+    await user.save();
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASSWORD,
+      },
+    });
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f4f4f4;
+                  color: #333;
+                  margin: 0;
+                  padding: 0;
+              }
+              .container {
+                  width: 100%;
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #ffffff;
+                  border: 1px solid #ddd;
+                  border-radius: 5px;
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              }
+              .header {
+                  background-color: #007bff;
+                  color: #ffffff;
+                  padding: 10px;
+                  border-radius: 5px 5px 0 0;
+                  text-align: center;
+              }
+              .content {
+                  padding: 20px;
+                  text-align: center;
+              }
+              .footer {
+                  margin-top: 20px;
+                  padding: 10px;
+                  text-align: center;
+                  font-size: 12px;
+                  color: #777;
+              }
+              .button {
+                  display: inline-block;
+                  padding: 10px 20px;
+                  margin-top: 20px;
+                  background-color: #28a745;
+                  color: #ffffff;
+                  text-decoration: none;
+                  border-radius: 5px;
+              }
+              .otp {
+                  font-size: 24px;
+                  font-weight: bold;
+                  color: #007bff;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Email Verification</h1>
+              </div>
+              <div class="content">
+                  <p>Thank you for registering. Please use the following code to verify your email address:</p>
+                  <p class="otp">${verificationOTP}</p>
+                  <a href="#" class="button">Verify Email</a>
+              </div>
+              <div class="footer">
+                  <p>If you did not request this, please ignore this email.</p>
+              </div>
+          </div>
+      </body>
+      </html>
+    `;
+
+    const mailOptions = {
+      from: process.env.NODEMAILER_EMAIL,
+      to: email,
+      subject: "Email Verification",
+      html: htmlContent,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).send("Failed to send email");
+      } else {
+        console.log("Email sent:", info.response);
+        return res.status(200).send("Email sent successfully");
+      }
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send("Internal server error");
   }
 };
 

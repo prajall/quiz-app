@@ -15,6 +15,8 @@ import axios from "axios";
 import { redirect, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { calculateTime } from "@/clientSideFunctions";
+import MinuteSecond from "@/components/MinuteSecond";
 
 const page = () => {
   const { quizData, setQuizData, resetQuizData, startQuiz } =
@@ -124,20 +126,21 @@ const page = () => {
             className=""
           >
             <SelectTrigger className="w-32">
-              {time ? time : "60"}s
+              <MinuteSecond time={time} />
+              ``
             </SelectTrigger>
             <SelectContent>
-              <SelectItem className="text-sm" value={30}>
-                00:30
-              </SelectItem>
               <SelectItem className="text-sm" value={60}>
                 1:00
               </SelectItem>
-              <SelectItem className="text-sm" value={90}>
-                1:30
-              </SelectItem>
               <SelectItem className="text-sm" value={120}>
                 2:00
+              </SelectItem>
+              <SelectItem className="text-sm" value={300}>
+                5:00
+              </SelectItem>
+              <SelectItem className="text-sm" value={600}>
+                10:00
               </SelectItem>
             </SelectContent>
           </Select>

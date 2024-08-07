@@ -14,3 +14,9 @@ export const getCookiesClient = async () => {
     console.log("Failed to get cookies");
   }
 };
+
+export const calculateTime = (inputSeconds) => {
+  const seconds = inputSeconds % 60;
+  const minute = Math.floor(inputSeconds / 60);
+  return { seconds, minute };
+};

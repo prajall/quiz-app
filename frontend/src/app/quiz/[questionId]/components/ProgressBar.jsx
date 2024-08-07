@@ -7,32 +7,14 @@ const ProgressBar = () => {
   const { quizData } = useContext(QuizContext);
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-10">
       <p className="mb-1">
         Question:{" "}
         <span>
           {quizData.currentQuestion + 1}/{quizData.questions.length}
         </span>
       </p>
-      {/* <LinearProgress
-        variant="determinate"
-        value={
-          Math.floor(
-            ((quizData.currentQuestion + 1) / quizData.questions.length) * 100
-          ) || 0
-        }
-        sx={{
-          borderRadius: "5px",
-          height: 6,
-          [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor: "#d9d9d9",
-          },
-          [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: "#284b63",
-          },
-        }}
-      /> */}
+
       <Progress
         className="h-1 bg-gray "
         value={
