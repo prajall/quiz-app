@@ -120,9 +120,9 @@ const Login = () => {
               <input {...register("rememberMe")} type="checkbox" />
               <label className="text-sm ">Remember me</label>
             </div>
-            <a href="#" className="text-sm hover:underline ">
+            <Link href="/reset-password" className="text-sm hover:underline ">
               Forgot Password ?
-            </a>
+            </Link>
           </div>
           <Button
             variant="contained"

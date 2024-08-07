@@ -8,24 +8,20 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
 const Register = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [croppedImage, setCroppedImage] = useState(null);
-  const [interestedExams, setInterestedExams] = useState([]);
+  const [verificationCodeState, setVerificationCodeState] = useState();
   const [direction, setDirection] = useState("next");
 
-  const nextStep = () => {
-    setDirection("next");
-    setStep((prev) => prev + 1);
-  };
-
-  const prevStep = () => {
-    setDirection("back");
-    setStep((prev) => prev - 1);
-  };
   const {
     register,
     handleSubmit,
@@ -63,7 +59,6 @@ const Register = () => {
     } finally {
       setIsSubmitting(false);
     }
-    setStep(2);
   };
 
   const onSubmitStep2 = async (data) => {
@@ -94,7 +89,6 @@ const Register = () => {
     } finally {
       setIsSubmitting(false);
     }
-    setStep(3);
   };
 
   const onSubmitStep3 = async (data) => {
@@ -156,7 +150,9 @@ const Register = () => {
   };
 
   useEffect(() => {
-    console.log(step);
+    if (step == 2) {
+      register("verificationCode");
+    }
   }, [step]);
 
   return (
@@ -203,7 +199,7 @@ const Register = () => {
                 className="mt-4 bg-primary disabled:opacity-80 w-full text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Sending..." : "Send OTP Code"}
+                Send Verification Code
               </Button>
             </>
           )}
@@ -222,21 +218,11 @@ const Register = () => {
                     Enter the 6-digit Verification Code that has been sent to
                     your mail
                   </p>
-                  {/* <div className="my-1">
-                    <Button
-                      variant="link"
-                      onClick={() => {
-                        setStep(1);
-                      }}
-                      className="pl-0"
-                    >
-                      {"<< "}Back
-                    </Button>
-                  </div> */}
-                  <label className=" text-sm font-semibold mt-6 mb-2">
+
+                  {/* <label className=" text-sm font-semibold mt-6 mb-2">
                     Verification Code
-                  </label>
-                  <input
+                  </label> */}
+                  {/* <input
                     {...register("verificationCode", {
                       required: "Verification Code is Required",
                       minLength: {
@@ -250,12 +236,32 @@ const Register = () => {
                     })}
                     placeholder="6 digit Verification Code"
                     className="p-3 text-sm w-full mt-1  ring-1 ring-[#000] ring-opacity-20 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green focus:border-transparent"
-                  />
-                  {errors.verificationCode && (
-                    <p className="text-incorrect text-xs mt-1">
-                      {errors.verificationCode.message}
-                    </p>
-                  )}
+                  /> */}
+                  <div className="my-5">
+                    <InputOTP
+                      maxLength={6}
+                      pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                      value={verificationCodeState}
+                      onChange={(value) => {
+                        setVerificationCodeState(value);
+                        setValue("verificationCode", value);
+                      }}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                    {errors.verificationCode && (
+                      <p className="text-incorrect text-xs mt-1">
+                        {errors.verificationCode.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex justify-between mt-4 items-center">
