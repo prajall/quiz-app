@@ -24,7 +24,7 @@ const verifyToken = (token) => {
 };
 
 //signup new user
-const signupUser = async (req, res) => {
+export const signupUser = async (req, res) => {
   upload.single("profilePicture")(req, res, async (err) => {
     if (err) {
       return res.status(400).send("Error uploading file");
@@ -99,7 +99,7 @@ const signupUser = async (req, res) => {
 };
 
 //login
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).send("email and Password are required");
@@ -298,4 +298,59 @@ export const registerOTP = async (req, res) => {
   }
 };
 
-export { loginUser, signupUser };
+export const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).send("Email and OTP are required.");
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    if (user.verificationOTP !== otp) {
+      return res.status(400).send("Invalid OTP.");
+    }
+
+    return res.status(200).send("OTP verified successfully.");
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    return res.status(500).send("Internal server error.");
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword, otp } = req.body;
+
+    if (!email || !newPassword || !otp) {
+      return res.status(400).send("Email and New password are required.");
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    if (user.verificationOTP !== otp) {
+      return res.status(400).send("Invalid OTP.");
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    user.verificationOTP = null;
+    await user.save();
+
+    return res.status(200).send("Password reset successfully.");
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    return res.status(500).send("Internal server error.");
+  }
+};
