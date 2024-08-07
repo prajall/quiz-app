@@ -213,78 +213,68 @@ export const registerOTP = async (req, res) => {
     });
 
     const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-          <style>
-              body {
-                  font-family: Arial, sans-serif;
-                  background-color: #f4f4f4;
-                  color: #333;
-                  margin: 0;
-                  padding: 0;
-              }
-              .container {
-                  width: 100%;
-                  max-width: 600px;
-                  margin: 0 auto;
-                  padding: 20px;
-                  background-color: #ffffff;
-                  border: 1px solid #ddd;
-                  border-radius: 5px;
-                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-              }
-              .header {
-                  background-color: #007bff;
-                  color: #ffffff;
-                  padding: 10px;
-                  border-radius: 5px 5px 0 0;
-                  text-align: center;
-              }
-              .content {
-                  padding: 20px;
-                  text-align: center;
-              }
-              .footer {
-                  margin-top: 20px;
-                  padding: 10px;
-                  text-align: center;
-                  font-size: 12px;
-                  color: #777;
-              }
-              .button {
-                  display: inline-block;
-                  padding: 10px 20px;
-                  margin-top: 20px;
-                  background-color: #28a745;
-                  color: #ffffff;
-                  text-decoration: none;
-                  border-radius: 5px;
-              }
-              .otp {
-                  font-size: 24px;
-                  font-weight: bold;
-                  color: #007bff;
-              }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <div class="header">
-                  <h1>Email Verification</h1>
-              </div>
-              <div class="content">
-                  <p>Thank you for registering. Please use the following code to verify your email address:</p>
-                  <p class="otp">${verificationOTP}</p>
-                  <a href="#" class="button">Verify Email</a>
-              </div>
-              <div class="footer">
-                  <p>If you did not request this, please ignore this email.</p>
-              </div>
-          </div>
-      </body>
-      </html>
-    `;
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                background-color: #f9f9f9;
+                color: #333333;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .header {
+                background-color: #284b63;
+                color: #ffffff;
+                padding: 15px;
+                border-radius: 8px 8px 0 0;
+                text-align: center;
+            }
+            .content {
+                padding: 15px;
+                text-align: center;
+                font-size: 16px;
+            }
+            p {
+                margin-top: 20px;
+                padding: 10px;
+                text-align: center;
+                font-size: 14px;
+            }
+            .otp {
+                font-size: 28px;
+                font-weight: bold;
+                color: #284b63;
+                margin: 10px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Verify Email</h1>
+            </div>
+            <div class="content">
+                <p>Please use the following code to verify your email and change password for QuizPro. <br/>
+                If you did not request this, please ignore this email
+                <p class="otp">${verificationOTP}</p>
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>
+  `;
 
     const mailOptions = {
       from: process.env.NODEMAILER_EMAIL,
@@ -304,7 +294,7 @@ export const registerOTP = async (req, res) => {
     });
   } catch (error) {
     console.error("Error:", error);
-    return res.status(500).send("Internal server error");
+    return res.status(500).send("Internal Server Error");
   }
 };
 
