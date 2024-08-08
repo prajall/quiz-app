@@ -40,7 +40,6 @@ export const exams = [
     name: "सामान्य ज्ञान",
   },
 ];
-
 export const examIdToName = (id) => {
   return exams.find((exam) => exam.exam_id === id)?.name || id;
 };
