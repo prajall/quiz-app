@@ -90,7 +90,7 @@ export const signupUser = async (req, res) => {
         });
       }
 
-      return res.status(200).send(userWithoutPassword);
+      return res.status(200).json(userWithoutPassword);
     } catch (err) {
       console.log("Signup User error: ", err);
       return res.status(500).send("Internal Server Error");

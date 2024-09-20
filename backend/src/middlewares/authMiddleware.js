@@ -11,9 +11,12 @@ export const authorisedUser = async (req, res, next) => {
     const decodedData = jwt.decode(token, process.env.JWT_SECRET);
     req.userData = decodedData;
 
+    if (!req.userData) {
+      return res.send("Please Login").status(401);
+    }
     next();
   } catch (error) {
     console.log(error);
-    res.send("Internal Server Error").status(500);
+    res.status(500).send("Internal Server Error");
   }
 };

@@ -36,9 +36,9 @@ try {
 }
 
 // Assign each model to databases
-export const Question = questionDB.model("Questions", questionSchema);
+export const Question = questionDB.model("Question", questionSchema);
 export const Score = quizDB.model("Score", scoreSchema);
-export const User = quizDB.model("Users", userSchema);
+export const User = quizDB.model("User", userSchema);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

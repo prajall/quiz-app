@@ -17,7 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { exams } from "@/examData";
-import { Crop, CropIcon, Cross, Pen, X } from "lucide-react";
+import { Pen, X } from "lucide-react";
 import Link from "next/link";
 
 const Register = () => {
@@ -297,14 +297,6 @@ const Register = () => {
             )}
             {step === 2 && (
               <>
-                {/* // <motion.div
-          //   initial={{ x: 100, opacity: 0 }}
-          //   animate={{ x: 0, opacity: 1 }}
-          //   exit={"exit"}
-          //   variants={{
-          //     exit: { x: -100, opacity: 0, transition: { duration: 0.5 } },
-          //   }}
-          // > */}
                 <div className="relative w-full">
                   <label className="text-sm font-semibold mt-4 mb-2 text-black">
                     Your Name
@@ -414,7 +406,6 @@ const Register = () => {
                     Next {" >>"}
                   </Button>
                 </div>
-                {/* </motion.div> */}
               </>
             )}
 
