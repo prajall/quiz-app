@@ -55,37 +55,22 @@ export const getQuestionById = async (req, res) => {
 export const changeQuestionFormat = async (req, res) => {
   console.log("Updating Database");
   try {
-    // const updateResult = await Question.updateMany({}, [
-    //   {
-    //     $set: {
-    //       opt_A: {
-    //         name: "$opt_a",
-    //         type: "text",
-    //       },
-    //       opt_B: {
-    //         name: "$opt_b",
-    //         type: "text",
-    //       },
-    //       opt_C: {
-    //         name: "$opt_c",
-    //         type: "text",
-    //       },
-    //       opt_D: {
-    //         name: "$opt_d",
-    //         type: "text",
-    //       },
-    //     },
-    //   },
-    // ]);
-
-    const updateResult = await Question.updateMany(
-      {},
+    const updateResult = await Question.updateMany({}, [
       {
-        $unset: {
-          name: "",
+        $set: {
+          chapter: "",
         },
-      }
-    );
+      },
+    ]);
+
+    // const updateResult = await Question.updateMany(
+    //   {},
+    //   {
+    //     $unset: {
+    //       name: "",
+    //     },
+    //   }
+    // );
 
     console.log(updateResult);
 
@@ -251,6 +236,7 @@ export const addQuestion = async (req, res) => {
       }
       console.log("Successfully uploaded question image");
       questionData.image = result.secure_url;
+      questionData.image_public_id = result.public_id;
       fs.unlinkSync(req.files["question[image]"][0].path);
     }
 
@@ -279,6 +265,7 @@ export const addQuestion = async (req, res) => {
             req.files[fileKey][0].path
           );
           processedOptions[key].image = cloudinaryResult.secure_url;
+          processedOptions[key].image_public_id = cloudinaryResult.public_id;
           fs.unlinkSync(req.files[fileKey][0].path);
         } catch (error) {
           console.error(`Error uploading image for ${key}:`, error);
@@ -305,7 +292,7 @@ export const addQuestion = async (req, res) => {
     console.log("newQuestion", newQuestion);
 
     // const savedQuestion = await newQuestion.save();
-    res.status(201).json(newQuestion);
+    res.status(201).json(savedQuestion);
   } catch (error) {
     deleteLocalFiles(req);
     console.error("Error adding question:", error);
@@ -313,57 +300,212 @@ export const addQuestion = async (req, res) => {
   }
 };
 
+// export const updateQuestion = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const {
+//       exam_id,
+//       description,
+//       question,
+//       opt_A,
+//       opt_B,
+//       opt_C,
+//       opt_D,
+//       opt_correct,
+//     } = req.body;
+
+//     const updatedQuestion = await Question.findByIdAndUpdate(
+//       id,
+//       {
+//         exam_id,
+//         description,
+//         question: {
+//           name: question.name,
+//           type: question.type,
+//         },
+//         opt_A: {
+//           name: opt_A.name,
+//           type: opt_A.type,
+//         },
+//         opt_B: {
+//           name: opt_B.name,
+//           type: opt_B.type,
+//         },
+//         opt_C: {
+//           name: opt_C.name,
+//           type: opt_C.type,
+//         },
+//         opt_D: {
+//           name: opt_D.name,
+//           type: opt_D.type,
+//         },
+//         opt_correct,
+//       },
+//       { new: true, runValidators: true }
+//     );
+
+//     if (!updatedQuestion) {
+//       return res.status(404).json({ message: "Question not found" });
+//     }
+
+//     res.status(200).json(updatedQuestion);
+//   } catch (error) {
+//     console.error("Error updating question:", error);
+//     res.status(500).json({ message: "Failed to update question" });
+//   }
+// };
+
 export const updateQuestion = async (req, res) => {
+  const { questionId } = req.params;
+  const {
+    id,
+    exam_id,
+    description,
+    question,
+    opt_A,
+    opt_B,
+    opt_C,
+    opt_D,
+    opt_correct,
+  } = req.body;
+  const newFiles = req.files;
+  console.log("newFiles", newFiles);
+  console.log("Body: ", req.body);
+
   try {
-    const { id } = req.params;
-    const {
-      exam_id,
-      description,
-      question,
-      opt_A,
-      opt_B,
-      opt_C,
-      opt_D,
-      opt_correct,
-    } = req.body;
+    if (!questionId) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Question ID is required" });
+    }
 
-    const updatedQuestion = await Question.findByIdAndUpdate(
-      id,
-      {
-        exam_id,
-        description,
-        question: {
-          name: question.name,
-          type: question.type,
-        },
-        opt_A: {
-          name: opt_A.name,
-          type: opt_A.type,
-        },
-        opt_B: {
-          name: opt_B.name,
-          type: opt_B.type,
-        },
-        opt_C: {
-          name: opt_C.name,
-          type: opt_C.type,
-        },
-        opt_D: {
-          name: opt_D.name,
-          type: opt_D.type,
-        },
-        opt_correct,
-      },
-      { new: true, runValidators: true }
-    );
+    if (
+      !id ||
+      !exam_id ||
+      !question ||
+      !opt_A ||
+      !opt_B ||
+      !opt_C ||
+      !opt_D ||
+      !opt_correct
+    ) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
-    if (!updatedQuestion) {
+    const questionDoc = await Question.findById(questionId);
+    console.log("questionDoc", questionDoc);
+
+    if (!questionDoc) {
+      deleteLocalFiles(req);
       return res.status(404).json({ message: "Question not found" });
     }
 
-    res.status(200).json(updatedQuestion);
+    // Validate required fields
+
+    // Validate question type
+    if (question.type && !["text", "image"].includes(question.type)) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Invalid question type" });
+    }
+
+    // Validate options
+    const options = [opt_A, opt_B, opt_C, opt_D];
+    for (const [index, opt] of options.entries()) {
+      if (opt.type && !["text", "image"].includes(opt.type)) {
+        deleteLocalFiles(req);
+        return res.status(400).json({
+          message: `Invalid type for option ${String.fromCharCode(65 + index)}`,
+        });
+      }
+    }
+
+    // Validate correct option
+    if (!["A", "B", "C", "D"].includes(opt_correct)) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Invalid opt_correct value" });
+    }
+
+    // Update question data
+    let questionData = {
+      name: question.name,
+      type: question.type,
+    };
+
+    if (question.type === "image" && newFiles["question[image]"]) {
+      const questionImagePath = newFiles["question[image]"][0].path;
+      const result = await cloudinary.uploader.upload(questionImagePath);
+      if (!result) {
+        deleteLocalFiles(req);
+        return res
+          .status(400)
+          .json({ message: "Failed to upload question image" });
+      }
+
+      const publicId = questionDoc.question.image_public_id;
+
+      const deleted = await cloudinary.uploader.destroy(publicId);
+
+      if (deleted) {
+        questionData.image = result.secure_url;
+        questionData.image_public_id = result.public_id;
+      }
+      fs.unlinkSync(questionImagePath);
+    }
+
+    // Process options
+    const processedOptions = {};
+    const optionKeys = ["opt_A", "opt_B", "opt_C", "opt_D"];
+
+    for (const key of optionKeys) {
+      const option = req.body[key];
+      processedOptions[key] = {
+        name: option.name,
+        type: option.type || "text",
+      };
+      console.log("processedOptions", processedOptions);
+
+      if (option.type === "image" && newFiles[`${key}[image]`]) {
+        const fileKey = `${key}[image]`;
+        const optionImagePath = newFiles[fileKey][0].path;
+        const cloudinaryResult = await cloudinary.uploader.upload(
+          optionImagePath
+        );
+        // Delete old image from Cloudinary
+        if (questionDoc[key].image && questionDoc[key].image_public_id) {
+          const publicId = questionDoc[key].image_public_id;
+          const deleted = await cloudinary.uploader.destroy(publicId);
+          if (deleted) {
+            processedOptions[key].image = cloudinaryResult.secure_url;
+            processedOptions[key].image_public_id = cloudinaryResult.public_id;
+          }
+        }
+      } else if (option.type === "image" && !newFiles[`${key}[image]`]) {
+        processedOptions[key].image = questionDoc[key].image;
+        processedOptions[key].image_public_id =
+          questionDoc[key].image_public_id;
+      }
+    }
+
+    // Update the question document
+    questionDoc.id = id;
+    questionDoc.exam_id = exam_id;
+    questionDoc.description = description;
+    questionDoc.question = questionData;
+    questionDoc.opt_A = processedOptions.opt_A;
+    questionDoc.opt_B = processedOptions.opt_B;
+    questionDoc.opt_C = processedOptions.opt_C;
+    questionDoc.opt_D = processedOptions.opt_D;
+    questionDoc.opt_correct = opt_correct;
+
+    // const updatedQuestion = await questionDoc.save();
+    console.log("updated questionDoc:", questionDoc);
+    return res.status(200).json({
+      message: "Question updated successfully",
+      question: questionDoc,
+    });
   } catch (error) {
     console.error("Error updating question:", error);
-    res.status(500).json({ message: "Failed to update question" });
+    deleteLocalFiles(req);
+    return res.status(500).json({ message: "Failed to update question" });
   }
 };

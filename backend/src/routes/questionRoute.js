@@ -16,7 +16,7 @@ router.get("/random", getRandomQuestions);
 router.get("/:questionId", getQuestionById);
 router.get("/", (req, res) => res.send("Question Route"));
 router.put("/change-format", changeQuestionFormat);
-router.put("/update/:id", updateQuestion);
+// router.put("/update/:id", updateQuestion);
 router.post(
   "/add",
   upload.fields([
@@ -27,5 +27,16 @@ router.post(
     { name: "opt_D[image]", maxCount: 1 },
   ]),
   addQuestion
+);
+router.put(
+  "/update/:questionId",
+  upload.fields([
+    { name: "question[image]", maxCount: 1 },
+    { name: "opt_A[image]", maxCount: 1 },
+    { name: "opt_B[image]", maxCount: 1 },
+    { name: "opt_C[image]", maxCount: 1 },
+    { name: "opt_D[image]", maxCount: 1 },
+  ]),
+  updateQuestion
 );
 export default router;
