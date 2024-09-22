@@ -6,16 +6,20 @@ import Top3 from "./components/Top3";
 import LeaderboardTable from "./components/LeaderboardTable";
 import SwitchableComponent from "./components/Switch";
 import { exams } from "@/examData";
+import Spinner from "@/components/Spinner";
 
 const LeaderboardPage = () => {
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetchingOverallLeaderboard, setIsFetchingOverallLeaderboard] =
+    useState(true);
+  const [isFetchingExamsLeaderboard, setIsFetchingExamsLeaderboard] =
+    useState(true);
   const [leaderboard, setLeaderboard] = useState([]);
   const [overallLeaderboard, setOverallLeaderboard] = useState([]);
   const [examsLeaderboard, setExamsLeaderboard] = useState([]);
   const [exam_id, setExam_Id] = useState("All");
 
   const fetchOverallLeaderboard = async () => {
-    setIsFetching(true);
+    setIsFetchingOverallLeaderboard(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/leaderboard`,
@@ -42,12 +46,12 @@ const LeaderboardPage = () => {
         toast.error("Something went wrong");
       }
     } finally {
-      setIsFetching(false);
+      setIsFetchingOverallLeaderboard(false);
     }
   };
 
   const fetchExamsLeaderboard = async () => {
-    setIsFetching(true);
+    setIsFetchingExamsLeaderboard(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/leaderboard/allexams`,
@@ -73,7 +77,7 @@ const LeaderboardPage = () => {
         toast.error("Something went wrong");
       }
     } finally {
-      setIsFetching(false);
+      setIsFetchingExamsLeaderboard(false);
     }
   };
 
@@ -97,6 +101,15 @@ const LeaderboardPage = () => {
     setExam_Id(exams[selectedExam].exam_id);
   };
 
+  if (isFetchingOverallLeaderboard) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Spinner size={20} />
+        <p className="ml-2">Loading</p>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-4 ">
       <header className="py-2 max-w-screen-lg mx-auto md:flex justify-between">
@@ -115,7 +128,7 @@ const LeaderboardPage = () => {
 
         <LeaderboardTable
           leaderboard={leaderboard?.slice(3)}
-          isFetching={isFetching}
+          isFetching={isFetchingOverallLeaderboard}
           startFrom={4}
           exam_id={exam_id}
         />

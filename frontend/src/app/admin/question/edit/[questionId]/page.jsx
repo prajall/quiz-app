@@ -29,9 +29,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { examIdToName, exams } from "@/examData";
 
-export default function QuestionForm() {
+export default function QuestionForm({ params }) {
+  const questionId = params.questionId;
   const [imagePreviews, setImagePreviews] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [images, setImages] = useState({
     question: null,
     opt_A: null,
@@ -170,15 +172,40 @@ export default function QuestionForm() {
           },
         }
       );
-
-      reset();
     } catch (error) {
       console.error(error);
-      // Since toast.promise handles the error, we don't need additional error toasts here
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const fetchQuestionDetail = async () => {
+    try {
+      toast.promise(
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`),
+        {
+          pending: "Fetching question details...",
+          success: "Question details fetched successfully",
+          error: {
+            render({ data }) {
+              if (data.message === "Network Error") {
+                return "Failed to connect to the server";
+              } else if (data.response?.data) {
+                return data.response.data.message;
+              } else {
+                return "Something went wrong";
+              }
+            },
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchQuestionDetail();
+  }, []);
 
   const ImagePreview = ({ src, onRemove }) => (
     <div className="mt-2 relative w-fit">

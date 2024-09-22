@@ -127,7 +127,6 @@ const page = () => {
           >
             <SelectTrigger className="w-32">
               <MinuteSecond time={time} />
-              ``
             </SelectTrigger>
             <SelectContent>
               <SelectItem className="text-sm" value={60}>

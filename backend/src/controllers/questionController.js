@@ -123,7 +123,6 @@ export const addQuestion = async (req, res) => {
     } = req.body;
 
     if (
-      !id ||
       !exam_id ||
       !question ||
       !opt_A ||
@@ -154,21 +153,14 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Invalid exam_id" });
     }
 
-    // Validate question type
-    if (question.type && !["text", "image"].includes(question.type)) {
-      deleteLocalFiles(req);
-      return res.status(400).json({ message: "Invalid question type" });
-    }
+    // Removed validation for question type
 
-    // Validate image is present if type is image
-    if (
-      question.type === "image" &&
-      (!req.files || !req.files["question[image]"])
-    ) {
+    // Validate image is present if question image is provided
+    if (question.image && (!req.files || !req.files["question[image]"])) {
       deleteLocalFiles(req);
       return res
         .status(400)
-        .json({ message: "Question type is image but image is not provided" });
+        .json({ message: "Question image is provided but file is missing" });
     }
 
     // Validate question text or image is present
@@ -182,21 +174,16 @@ export const addQuestion = async (req, res) => {
     // Validate options
     const options = [opt_A, opt_B, opt_C, opt_D];
     for (const [index, opt] of options.entries()) {
-      if (opt.type && !["text", "image"].includes(opt.type)) {
-        deleteLocalFiles(req);
-        return res.status(400).json({
-          message: `Invalid type for option ${String.fromCharCode(65 + index)}`,
-        });
-      }
-      // checks opt_A[image] , opt_B[image],...
+      // Removed validation for option type
+      // Check if image is provided when opt.image is set
       if (
-        opt.type === "image" &&
+        opt.image &&
         (!req.files ||
           !req.files[`opt_${String.fromCharCode(65 + index)}[image]`])
       ) {
         deleteLocalFiles(req);
         return res.status(400).json({
-          message: `Type is Image but image is not provided for option ${String.fromCharCode(
+          message: `Image is set but file is not provided for option ${String.fromCharCode(
             65 + index
           )}`,
         });
@@ -220,10 +207,10 @@ export const addQuestion = async (req, res) => {
     // Prepare question data
     let questionData = {
       name: question.name,
-      type: question.type,
+      // Removed type field
     };
 
-    if (question.type === "image") {
+    if (question.image) {
       console.log("question image :", req.files["question[image]"][0].path);
       const result = await cloudinary.uploader.upload(
         req.files["question[image]"][0].path
@@ -248,10 +235,10 @@ export const addQuestion = async (req, res) => {
       const option = req.body[key];
       processedOptions[key] = {
         name: option.name,
-        type: option.type || "text",
+        // Removed type field
       };
 
-      if (option.type === "image") {
+      if (option.image) {
         const fileKey = `${key}[image]`;
         if (!req.files[fileKey]) {
           deleteLocalFiles(req);
@@ -292,7 +279,8 @@ export const addQuestion = async (req, res) => {
     console.log("newQuestion", newQuestion);
 
     // const savedQuestion = await newQuestion.save();
-    res.status(201).json(savedQuestion);
+    // res.status(201).json(savedQuestion);
+    res.status(201).json(newQuestion);
   } catch (error) {
     deleteLocalFiles(req);
     console.error("Error adding question:", error);
@@ -400,25 +388,6 @@ export const updateQuestion = async (req, res) => {
       return res.status(404).json({ message: "Question not found" });
     }
 
-    // Validate required fields
-
-    // Validate question type
-    if (question.type && !["text", "image"].includes(question.type)) {
-      deleteLocalFiles(req);
-      return res.status(400).json({ message: "Invalid question type" });
-    }
-
-    // Validate options
-    const options = [opt_A, opt_B, opt_C, opt_D];
-    for (const [index, opt] of options.entries()) {
-      if (opt.type && !["text", "image"].includes(opt.type)) {
-        deleteLocalFiles(req);
-        return res.status(400).json({
-          message: `Invalid type for option ${String.fromCharCode(65 + index)}`,
-        });
-      }
-    }
-
     // Validate correct option
     if (!["A", "B", "C", "D"].includes(opt_correct)) {
       deleteLocalFiles(req);
@@ -428,10 +397,9 @@ export const updateQuestion = async (req, res) => {
     // Update question data
     let questionData = {
       name: question.name,
-      type: question.type,
     };
 
-    if (question.type === "image" && newFiles["question[image]"]) {
+    if (newFiles["question[image]"]) {
       const questionImagePath = newFiles["question[image]"][0].path;
       const result = await cloudinary.uploader.upload(questionImagePath);
       if (!result) {
@@ -460,11 +428,10 @@ export const updateQuestion = async (req, res) => {
       const option = req.body[key];
       processedOptions[key] = {
         name: option.name,
-        type: option.type || "text",
       };
       console.log("processedOptions", processedOptions);
 
-      if (option.type === "image" && newFiles[`${key}[image]`]) {
+      if (newFiles[`${key}[image]`]) {
         const fileKey = `${key}[image]`;
         const optionImagePath = newFiles[fileKey][0].path;
         const cloudinaryResult = await cloudinary.uploader.upload(
@@ -479,7 +446,7 @@ export const updateQuestion = async (req, res) => {
             processedOptions[key].image_public_id = cloudinaryResult.public_id;
           }
         }
-      } else if (option.type === "image" && !newFiles[`${key}[image]`]) {
+      } else if (questionDoc[key].image) {
         processedOptions[key].image = questionDoc[key].image;
         processedOptions[key].image_public_id =
           questionDoc[key].image_public_id;
