@@ -111,6 +111,7 @@ export default function QuestionForm() {
   }, [questionImage, optAImage, optBImage, optCImage, optDImage]);
 
   const onSubmit = async (data) => {
+    console.log("Data: ", data);
     try {
       setIsSubmitting(true);
       const formData = new FormData();
@@ -128,11 +129,11 @@ export default function QuestionForm() {
                       "Invalid image type. Only JPEG,JPG and PNG are allowed.",
                   });
                 } else {
-                  formData.append(`${key}[${subKey}]`, images[key]);
+                  formData.append(`${key}Image`, images[key]);
                 }
               }
             } else {
-              formData.append(`${key}[${subKey}]`, String(subValue));
+              formData.append(`${key}`, String(subValue));
             }
           });
         } else {
@@ -142,7 +143,6 @@ export default function QuestionForm() {
 
       console.log("Form Data:", Object.fromEntries(formData));
 
-      // Wrap the axios post request in toast.promise
       await toast.promise(
         axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/question/add`,

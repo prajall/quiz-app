@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const questionSchema = new mongoose.Schema({
   id: {
     type: String,
-    required: true,
+    // required: true,
   },
   exam_id: {
     type: String,
@@ -28,12 +28,12 @@ export const questionSchema = new mongoose.Schema({
       type: String,
       // required: true,
     },
-    type: {
-      type: String,
-      enum: ["text", "image"],
-      required: true,
-      default: "text",
-    },
+    // type: {
+    //   type: String,
+    //   enum: ["text", "image"],
+    //   required: true,
+    //   default: "text",
+    // },
     image: {
       type: String,
     },
@@ -48,12 +48,12 @@ export const questionSchema = new mongoose.Schema({
       type: String,
       // required: true,
     },
-    type: {
-      type: String,
-      enum: ["text", "image"],
-      default: "text",
-      required: true,
-    },
+    // type: {
+    //   type: String,
+    //   enum: ["text", "image"],
+    //   default: "text",
+    //   required: true,
+    // },
     image: {
       type: String,
     },
@@ -65,12 +65,12 @@ export const questionSchema = new mongoose.Schema({
       type: String,
       // required: true,
     },
-    type: {
-      type: String,
-      enum: ["text", "image"],
-      default: "text",
-      required: true,
-    },
+    // type: {
+    //   type: String,
+    //   enum: ["text", "image"],
+    //   default: "text",
+    //   required: true,
+    // },
     image: {
       type: String,
     },
@@ -82,12 +82,12 @@ export const questionSchema = new mongoose.Schema({
       type: String,
       // required: true,
     },
-    type: {
-      type: String,
-      enum: ["text", "image"],
-      default: "text",
-      required: true,
-    },
+    // type: {
+    //   type: String,
+    //   enum: ["text", "image"],
+    //   default: "text",
+    //   required: true,
+    // },
     image: {
       type: String,
     },
@@ -99,12 +99,12 @@ export const questionSchema = new mongoose.Schema({
       type: String,
       // required: true,
     },
-    type: {
-      type: String,
-      enum: ["text", "image"],
-      default: "text",
-      required: true,
-    },
+    // type: {
+    //   type: String,
+    //   enum: ["text", "image"],
+    //   default: "text",
+    //   required: true,
+    // },
     image: {
       type: String,
     },

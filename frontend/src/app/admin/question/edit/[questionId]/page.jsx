@@ -28,12 +28,13 @@ import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { examIdToName, exams } from "@/examData";
+import { createDropdownMenuScope } from "@radix-ui/react-dropdown-menu";
 
 export default function QuestionForm({ params }) {
   const questionId = params.questionId;
   const [imagePreviews, setImagePreviews] = useState({});
+  const [prevData, setPrevData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
   const [images, setImages] = useState({
     question: null,
     opt_A: null,
@@ -51,33 +52,7 @@ export default function QuestionForm({ params }) {
     setValue,
     setError,
     reset,
-  } = useForm({
-    defaultValues: {
-      question: {
-        name: "This is a Test Question for testing the question form",
-        image: null,
-      },
-      description: "Description for the test question",
-      opt_A: {
-        name: "Option A for the test question",
-        image: null,
-      },
-      opt_B: {
-        name: "Option B for the test question",
-        image: null,
-      },
-      opt_C: {
-        name: "Option C for the test question",
-        image: null,
-      },
-      opt_D: {
-        name: "Option D for the test question",
-        image: null,
-      },
-      opt_correct: "B",
-      exam_id: "1001",
-    },
-  });
+  } = useForm({});
 
   const questionImage = watch("question.image");
   const optAImage = watch("opt_A.image");
@@ -113,6 +88,7 @@ export default function QuestionForm({ params }) {
   }, [questionImage, optAImage, optBImage, optCImage, optDImage]);
 
   const onSubmit = async (data) => {
+    console.log("Data: ", data);
     try {
       setIsSubmitting(true);
       const formData = new FormData();
@@ -130,11 +106,11 @@ export default function QuestionForm({ params }) {
                       "Invalid image type. Only JPEG,JPG and PNG are allowed.",
                   });
                 } else {
-                  formData.append(`${key}[${subKey}]`, images[key]);
+                  formData.append(`${key}Image`, images[key]);
                 }
               }
             } else {
-              formData.append(`${key}[${subKey}]`, String(subValue));
+              formData.append(`${key}`, String(subValue));
             }
           });
         } else {
@@ -172,37 +148,43 @@ export default function QuestionForm({ params }) {
           },
         }
       );
+
+      reset();
     } catch (error) {
       console.error(error);
+      // Since toast.promise handles the error, we don't need additional error toasts here
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const fetchQuestionDetail = async () => {
+    console.log("Fetching question details...");
+    console.log(questionId);
     try {
-      toast.promise(
-        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`),
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`,
         {
-          pending: "Fetching question details...",
-          success: "Question details fetched successfully",
-          error: {
-            render({ data }) {
-              if (data.message === "Network Error") {
-                return "Failed to connect to the server";
-              } else if (data.response?.data) {
-                return data.response.data.message;
-              } else {
-                return "Something went wrong";
-              }
-            },
+          headers: {
+            apiKey: 123456789,
           },
+          withCredentials: true,
         }
       );
+      console.log(response);
+
+      if (response.status === 200) {
+        const data = response.data;
+        console.log("Data: ", data);
+        reset(data);
+      }
+      return true;
     } catch (error) {
       console.error(error);
+      return false;
     }
   };
+
   useEffect(() => {
     fetchQuestionDetail();
   }, []);
@@ -538,6 +520,7 @@ export default function QuestionForm({ params }) {
             </DialogContent>
           </Dialog>
         </form>
+        <button onClick={fetchQuestionDetail}>fetch</button>
       </CardContent>
     </Card>
   );

@@ -20,22 +20,22 @@ router.put("/change-format", changeQuestionFormat);
 router.post(
   "/add",
   upload.fields([
-    { name: "question[image]", maxCount: 1 },
-    { name: "opt_A[image]", maxCount: 1 },
-    { name: "opt_B[image]", maxCount: 1 },
-    { name: "opt_C[image]", maxCount: 1 },
-    { name: "opt_D[image]", maxCount: 1 },
+    { name: "questionImage", maxCount: 1 },
+    { name: "opt_AImage", maxCount: 1 },
+    { name: "opt_BImage", maxCount: 1 },
+    { name: "opt_CImage", maxCount: 1 },
+    { name: "opt_DImage", maxCount: 1 },
   ]),
   addQuestion
 );
 router.put(
   "/update/:questionId",
   upload.fields([
-    { name: "question[image]", maxCount: 1 },
-    { name: "opt_A[image]", maxCount: 1 },
-    { name: "opt_B[image]", maxCount: 1 },
-    { name: "opt_C[image]", maxCount: 1 },
-    { name: "opt_D[image]", maxCount: 1 },
+    { name: "questionImage", maxCount: 1 },
+    { name: "opt_AImage", maxCount: 1 },
+    { name: "opt_BImage", maxCount: 1 },
+    { name: "opt_CImage", maxCount: 1 },
+    { name: "opt_DImage", maxCount: 1 },
   ]),
   updateQuestion
 );

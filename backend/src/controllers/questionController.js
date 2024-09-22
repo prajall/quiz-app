@@ -46,10 +46,11 @@ export const getQuestionById = async (req, res) => {
     if (!question) {
       return res.status(404).send({ message: "Question Not found" });
     }
-    return res
-      .status(200)
-      .json({ message: "Question fetched Successfully", question });
-  } catch (error) {}
+    return res.status(200).json(question);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to fetch question" });
+  }
 };
 
 export const changeQuestionFormat = async (req, res) => {
@@ -124,11 +125,11 @@ export const addQuestion = async (req, res) => {
 
     if (
       !exam_id ||
-      !question ||
-      !opt_A ||
-      !opt_B ||
-      !opt_C ||
-      !opt_D ||
+      // !question ||
+      // !opt_A ||
+      // !opt_B ||
+      // !opt_C ||
+      // !opt_D ||
       !opt_correct
     ) {
       deleteLocalFiles(req);
@@ -153,45 +154,25 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Invalid exam_id" });
     }
 
-    // Removed validation for question type
-
     // Validate image is present if question image is provided
-    if (question.image && (!req.files || !req.files["question[image]"])) {
+    if (!question && (!req.files || !req.files["questionImage"])) {
       deleteLocalFiles(req);
       return res
         .status(400)
-        .json({ message: "Question image is provided but file is missing" });
-    }
-
-    // Validate question text or image is present
-    if (!question.name && !question.image) {
-      deleteLocalFiles(req);
-      return res
-        .status(400)
-        .json({ message: "Question text or image is required" });
+        .json({ message: "Question Text or Image is required" });
     }
 
     // Validate options
     const options = [opt_A, opt_B, opt_C, opt_D];
     for (const [index, opt] of options.entries()) {
-      // Removed validation for option type
-      // Check if image is provided when opt.image is set
       if (
-        opt.image &&
+        !opt &&
         (!req.files ||
-          !req.files[`opt_${String.fromCharCode(65 + index)}[image]`])
+          !req.files[`opt_${String.fromCharCode(65 + index)}Image`])
       ) {
         deleteLocalFiles(req);
         return res.status(400).json({
-          message: `Image is set but file is not provided for option ${String.fromCharCode(
-            65 + index
-          )}`,
-        });
-      }
-      if (!opt.name && !opt.image) {
-        deleteLocalFiles(req);
-        return res.status(400).json({
-          message: `Text or image is required for option ${String.fromCharCode(
+          message: `Either Text or Image is required for option ${String.fromCharCode(
             65 + index
           )}`,
         });
@@ -206,14 +187,15 @@ export const addQuestion = async (req, res) => {
 
     // Prepare question data
     let questionData = {
-      name: question.name,
-      // Removed type field
+      name: question,
+      image: "",
+      image_public_id: "",
     };
 
-    if (question.image) {
-      console.log("question image :", req.files["question[image]"][0].path);
+    if (req.files.questionImage) {
+      console.log("question image :", req.files["questionImage"][0].path);
       const result = await cloudinary.uploader.upload(
-        req.files["question[image]"][0].path
+        req.files["questionImage"][0].path
       );
       if (!result) {
         deleteLocalFiles(req);
@@ -224,7 +206,7 @@ export const addQuestion = async (req, res) => {
       console.log("Successfully uploaded question image");
       questionData.image = result.secure_url;
       questionData.image_public_id = result.public_id;
-      fs.unlinkSync(req.files["question[image]"][0].path);
+      fs.unlinkSync(req.files["questionImage"][0].path);
     }
 
     // Process options
@@ -234,18 +216,12 @@ export const addQuestion = async (req, res) => {
     for (const key of optionKeys) {
       const option = req.body[key];
       processedOptions[key] = {
-        name: option.name,
-        // Removed type field
+        name: option,
       };
 
-      if (option.image) {
-        const fileKey = `${key}[image]`;
-        if (!req.files[fileKey]) {
-          deleteLocalFiles(req);
-          return res
-            .status(400)
-            .json({ message: `Image file not found for ${key}` });
-        }
+      if (req.files[`${key}Image`]) {
+        const fileKey = `${key}Image`;
+
         try {
           console.log("req file :", fileKey, req.files[fileKey]);
           const cloudinaryResult = await cloudinary.uploader.upload(
@@ -264,6 +240,9 @@ export const addQuestion = async (req, res) => {
       }
     }
 
+    console.log("processedOptions", processedOptions);
+    console.log("QuestionData", questionData);
+
     const newQuestion = new Question({
       id,
       exam_id,
@@ -278,9 +257,169 @@ export const addQuestion = async (req, res) => {
 
     console.log("newQuestion", newQuestion);
 
-    // const savedQuestion = await newQuestion.save();
-    // res.status(201).json(savedQuestion);
-    res.status(201).json(newQuestion);
+    const savedQuestion = await newQuestion.save();
+    return res.status(201).json(savedQuestion);
+    // return res.status(201).json(newQuestion);
+  } catch (error) {
+    deleteLocalFiles(req);
+    console.error("Error adding question:", error);
+    res.status(500).json({ message: "Failed to add question" });
+  }
+};
+export const updateQuestion = async (req, res) => {
+  const { questionId } = req.params;
+  console.log("files", req.files);
+  console.log("body", req.body);
+
+  try {
+    const {
+      id,
+      exam_id,
+      description,
+      question,
+      opt_A,
+      opt_B,
+      opt_C,
+      opt_D,
+      opt_correct,
+    } = req.body;
+    const newFiles = req.files;
+    console.log("Changed files", newFiles);
+
+    if (!exam_id || !opt_correct) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const questionDoc = await Question.findById(questionId);
+    console.log("questionDoc", questionDoc);
+
+    if (!questionDoc) {
+      deleteLocalFiles(req);
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    const validExamIds = [
+      "1001",
+      "1002",
+      "1003",
+      "1004",
+      "1005",
+      "1006",
+      "1007",
+      "1008",
+      "1009",
+      "1010",
+    ];
+
+    if (!validExamIds.includes(exam_id)) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Invalid exam_id" });
+    }
+
+    // Validate image is present if question image is provided
+    if (!question && (!req.files || !req.files["questionImage"])) {
+      deleteLocalFiles(req);
+      return res
+        .status(400)
+        .json({ message: "Question Text or Image is required" });
+    }
+
+    // Validate options
+    const options = [opt_A, opt_B, opt_C, opt_D];
+    for (const [index, opt] of options.entries()) {
+      if (
+        !opt &&
+        (!req.files ||
+          !req.files[`opt_${String.fromCharCode(65 + index)}Image`])
+      ) {
+        deleteLocalFiles(req);
+        return res.status(400).json({
+          message: `Either Text or Image is required for option ${String.fromCharCode(
+            65 + index
+          )}`,
+        });
+      }
+    }
+
+    // Validate correct option
+    if (!["A", "B", "C", "D"].includes(opt_correct)) {
+      deleteLocalFiles(req);
+      return res.status(400).json({ message: "Invalid opt_correct value" });
+    }
+
+    // Prepare question data
+    let questionData = {
+      name: question,
+      image: "",
+      image_public_id: "",
+    };
+
+    if (newFiles["questionImage"]) {
+      console.log("question image :", req.files["questionImage"][0].path);
+      const result = await cloudinary.uploader.upload(
+        newFiles["questionImage"][0].path
+      );
+      if (!result) {
+        deleteLocalFiles(req);
+        return res
+          .status(400)
+          .json({ message: "Failed to upload question image" });
+      }
+      console.log("Successfully uploaded question image");
+      questionData.image = result.secure_url;
+      questionData.image_public_id = result.public_id;
+      fs.unlinkSync(newFiles["questionImage"][0].path);
+    }
+
+    // Process options
+    const processedOptions = {};
+    const optionKeys = ["opt_A", "opt_B", "opt_C", "opt_D"];
+
+    for (const key of optionKeys) {
+      const option = req.body[key];
+      processedOptions[key] = {
+        name: option,
+      };
+
+      if (newFiles[`${key}Image`]) {
+        const fileKey = `${key}Image`;
+        const optionImagePath = newFiles[fileKey][0].path;
+        const cloudinaryResult = await cloudinary.uploader.upload(
+          optionImagePath
+        );
+        // Delete old image from Cloudinary
+        if (questionDoc[key].image && questionDoc[key].image_public_id) {
+          const publicId = questionDoc[key].image_public_id;
+          const deleted = await cloudinary.uploader.destroy(publicId);
+          if (deleted) {
+            processedOptions[key].image = cloudinaryResult.secure_url;
+            processedOptions[key].image_public_id = cloudinaryResult.public_id;
+          }
+        }
+      } else if (questionDoc[key].image) {
+        processedOptions[key].image = questionDoc[key].image;
+        processedOptions[key].image_public_id =
+          questionDoc[key].image_public_id;
+      }
+    }
+
+    // Update the question document
+    questionDoc.exam_id = exam_id;
+    questionDoc.description = description;
+    questionDoc.question = questionData;
+    questionDoc.opt_A = processedOptions.opt_A;
+    questionDoc.opt_B = processedOptions.opt_B;
+    questionDoc.opt_C = processedOptions.opt_C;
+    questionDoc.opt_D = processedOptions.opt_D;
+    questionDoc.opt_correct = opt_correct;
+
+    // const updatedQuestion = await questionDoc.save();
+    console.log("updated questionDoc:", questionDoc);
+    return res.status(200).json({
+      message: "Question updated successfully",
+      question: questionDoc,
+    });
   } catch (error) {
     deleteLocalFiles(req);
     console.error("Error adding question:", error);
@@ -343,7 +482,7 @@ export const addQuestion = async (req, res) => {
 //   }
 // };
 
-export const updateQuestion = async (req, res) => {
+export const updatedQuestion = async (req, res) => {
   const { questionId } = req.params;
   const {
     id,
@@ -431,8 +570,8 @@ export const updateQuestion = async (req, res) => {
       };
       console.log("processedOptions", processedOptions);
 
-      if (newFiles[`${key}[image]`]) {
-        const fileKey = `${key}[image]`;
+      if (newFiles[`${key}Image`]) {
+        const fileKey = `${key}Image`;
         const optionImagePath = newFiles[fileKey][0].path;
         const cloudinaryResult = await cloudinary.uploader.upload(
           optionImagePath
@@ -454,7 +593,6 @@ export const updateQuestion = async (req, res) => {
     }
 
     // Update the question document
-    questionDoc.id = id;
     questionDoc.exam_id = exam_id;
     questionDoc.description = description;
     questionDoc.question = questionData;
