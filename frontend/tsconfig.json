@@ -5,6 +5,10 @@
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": "src", // Set the base directory to the src folder
+    "paths": {
+      "@/*": ["*"] // Alias for all files inside src
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,

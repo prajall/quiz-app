@@ -28,6 +28,7 @@ import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { examIdToName, exams } from "@/examData";
+import imageCompression from "browser-image-compression";
 
 export default function QuestionForm() {
   const [imagePreviews, setImagePreviews] = useState({});
@@ -113,27 +114,110 @@ export default function QuestionForm() {
   const onSubmit = async (data) => {
     console.log("Data: ", data);
     try {
+      let uploadQuestion = true;
       setIsSubmitting(true);
       const formData = new FormData();
       const validImageTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+      const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
+      const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
+      console.log("Cloudinary URL:", cloudinaryUrl);
+      console.log("Cloudinary Preset:", cloudinaryPreset);
+
+      if (!cloudinaryUrl || !cloudinaryPreset) {
+        throw new Error(
+          "Cloudinary URL or preset is not set in environment variables"
+        );
+      }
+
+      const uploadImageToCloudinary = async (image) => {
+        // compress image
+        const options = {
+          maxSizeMB: 0.1,
+          useWebWorker: true,
+        };
+
+        try {
+          console.log("Before compression", image.size);
+          const compressedImage = await imageCompression(image, options);
+          console.log("After compression", compressedImage.size);
+
+          const imageFormData = new FormData();
+          imageFormData.append("file", compressedImage);
+          imageFormData.append("upload_preset", cloudinaryPreset);
+          imageFormData.append("api_key", "993734845948435");
+
+          console.log("Image Form Data:", Object.fromEntries(imageFormData));
+
+          const response = await axios.post(
+            "https://api.cloudinary.com/v1_1/dxxwcbybo/image/upload",
+            imageFormData
+          );
+          if (response.status === 200) {
+            console.log(
+              "Image uploaded to Cloudinary:",
+              response.data.secure_url
+            );
+            return response.data.secure_url;
+          } else {
+            console.error("Failed to upload image to Cloudinary:", response);
+            uploadQuestion = false;
+            return null;
+          }
+        } catch (error) {
+          toast.error("Error uploading image");
+          console.error("Error uploading image:", error);
+          uploadQuestion = false;
+          return null;
+        }
+      };
+
+      const imageUrls = {};
+
+      const uploadImages = async () => {
+        for (const [key, value] of Object.entries(data)) {
+          if (typeof value === "object" && value !== null) {
+            for (const [subKey, subValue] of Object.entries(value)) {
+              if (subKey === "image" && images[key]) {
+                console.log(`Image type for ${key}:`, images[key].type);
+                if (!validImageTypes.includes(images[key].type)) {
+                  console.log("Invalid image type");
+                  setError(`${key}.image`, {
+                    type: "manual",
+                    message:
+                      "Invalid image type. Only JPEG, JPG, and PNG are allowed.",
+                  });
+                  uploadQuestion = false;
+                  throw new Error("Invalid image type");
+                  return;
+                } else {
+                  // const secureUrl = await uploadImageToCloudinary(images[key]);
+                  // if (secureUrl) {
+                  //   imageUrls[key] = secureUrl;
+                  // } else {
+                  //   toast.error("Failed to upload image");
+                  //   uploadQuestion = false;
+                  //   return;
+                  // }
+                }
+              }
+            }
+          }
+        }
+      };
+
+      await toast.promise(uploadImages(), {
+        pending: "Uploading images. This may take a while...",
+        error: "Failed to upload images",
+      });
 
       Object.entries(data).forEach(([key, value]) => {
         if (typeof value === "object" && value !== null) {
           Object.entries(value).forEach(([subKey, subValue]) => {
             if (subKey === "image") {
-              if (images[key]) {
-                if (!validImageTypes.includes(images[key].type)) {
-                  setError(`${key}.image`, {
-                    type: "manual",
-                    message:
-                      "Invalid image type. Only JPEG,JPG and PNG are allowed.",
-                  });
-                } else {
-                  formData.append(`${key}Image`, images[key]);
-                }
-              }
+              formData.append(`${key}[${subKey}]`, imageUrls[key] || "");
             } else {
-              formData.append(`${key}`, String(subValue));
+              formData.append(`${key}[${subKey}]`, String(subValue));
             }
           });
         } else {
@@ -142,8 +226,11 @@ export default function QuestionForm() {
       });
 
       console.log("Form Data:", Object.fromEntries(formData));
-
-      await toast.promise(
+      if (!uploadQuestion) {
+        toast.error("Question uploading terminated");
+        return;
+      }
+      const response = await toast.promise(
         axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/question/add`,
           formData,
@@ -171,15 +258,20 @@ export default function QuestionForm() {
         }
       );
 
-      reset();
+      if (response.status === 201) {
+        console.log("Response:", response.data);
+        reset();
+      }
     } catch (error) {
-      console.error(error);
-      // Since toast.promise handles the error, we don't need additional error toasts here
+      if (error.message) {
+        toast.error(error.message);
+      } else {
+        console.error("Error in onSubmit:", error);
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
-
   const ImagePreview = ({ src, onRemove }) => (
     <div className="mt-2 relative w-fit">
       <img
@@ -235,7 +327,9 @@ export default function QuestionForm() {
               className="bg-white text-black mt-1"
             />
             {errors.question?.name && (
-              <p className="text-red-500">{errors.question.name.message}</p>
+              <p className="text-red-500 text-xs">
+                {errors.question.name.message}
+              </p>
             )}
 
             <Input
@@ -263,6 +357,11 @@ export default function QuestionForm() {
                 src={imagePreviews.question}
                 onRemove={() => removeImage("question")}
               />
+            )}
+            {errors.question?.image && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.question.image.message}
+              </p>
             )}
           </div>
 

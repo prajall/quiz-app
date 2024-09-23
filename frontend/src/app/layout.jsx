@@ -1,12 +1,12 @@
-import { Inter, Open_Sans, Poppins, Roboto } from "next/font/google";
-import "./globals.css";
-import QuizProvider from "@/contexts/QuizContext";
-import { TimerProvider } from "@/contexts/TimerContext";
-import ScoreProvider from "@/contexts/ScoreContext";
 import Navbar from "@/components/Navbar";
+import AppProvider from "@/contexts/AppContext";
+import ScoreProvider from "@/contexts/ScoreContext";
+import { TimerProvider } from "@/contexts/TimerContext";
+import { Poppins } from "next/font/google";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AppProvider from "@/contexts/AppContext";
+import "./globals.css";
+import QuizProvider from "@/contexts/QuizContext";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 

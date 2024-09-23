@@ -37,9 +37,9 @@ export const questionSchema = new mongoose.Schema({
     image: {
       type: String,
     },
-    image_public_id: {
-      type: String,
-    },
+    // image_public_id: {
+    //   type: String,
+    // },
     _id: false,
   },
 
@@ -57,7 +57,7 @@ export const questionSchema = new mongoose.Schema({
     image: {
       type: String,
     },
-    image_public_id: { type: String },
+    // image_public_id: { type: String },
     _id: false,
   },
   opt_B: {
@@ -74,7 +74,7 @@ export const questionSchema = new mongoose.Schema({
     image: {
       type: String,
     },
-    image_public_id: { type: String },
+    // image_public_id: { type: String },
     _id: false,
   },
   opt_C: {
@@ -91,7 +91,7 @@ export const questionSchema = new mongoose.Schema({
     image: {
       type: String,
     },
-    image_public_id: { type: String },
+    // image_public_id: { type: String },
     _id: false,
   },
   opt_D: {
@@ -108,7 +108,7 @@ export const questionSchema = new mongoose.Schema({
     image: {
       type: String,
     },
-    image_public_id: { type: String },
+    // image_public_id: { type: String },
     _id: false,
   },
   opt_correct: {
