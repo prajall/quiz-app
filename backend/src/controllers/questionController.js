@@ -157,7 +157,13 @@ export const addQuestion = async (req, res) => {
         .json({ message: "Question Text or Image is required" });
     }
 
+    let questionData = {
+      name: question.name || "",
+      image: question.image || "",
+    };
+
     // Validate options
+    const optionData = {};
     const options = { opt_A, opt_B, opt_C, opt_D };
     for (const [key, opt] of Object.entries(options)) {
       if (!opt.name && !opt.image) {
@@ -166,6 +172,11 @@ export const addQuestion = async (req, res) => {
             -1
           )}`,
         });
+      } else {
+        optionData[key] = {
+          name: opt.name || "",
+          image: opt.image || "",
+        };
       }
     }
 
@@ -173,36 +184,41 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Invalid opt_correct value" });
     }
 
-    let questionData = {
-      name: question.name || "",
-      image: question.image || "",
-    };
+    // // Process options
+    // const processedOptions = {};
+    // const optionKeys = ["opt_A", "opt_B", "opt_C", "opt_D"];
 
-    // Process options
-    const processedOptions = {};
-    const optionKeys = ["opt_A", "opt_B", "opt_C", "opt_D"];
+    // for (const key of optionKeys) {
+    //   const option = options[key];
+    //   processedOptions[key] = {
+    //     name: option.name,
+    //     image: option.image,
+    //   };
+    // }
 
-    for (const key of optionKeys) {
-      const option = options[key];
-      processedOptions[key] = {
-        name: option.name,
-        image: option.image,
-      };
-    }
-
-    // Create the question document
     const newQuestion = new Question({
       exam_id,
       description,
       question: questionData,
-      opt_A: processedOptions.opt_A,
-      opt_B: processedOptions.opt_B,
-      opt_C: processedOptions.opt_C,
-      opt_D: processedOptions.opt_D,
+      opt_A: optionData.opt_A,
+      opt_B: optionData.opt_B,
+      opt_C: optionData.opt_C,
+      opt_D: optionData.opt_D,
       opt_correct,
     });
 
     // const savedQuestion = await newQuestion.save();
+
+    // const savedQuestion = await Question.create({
+    //   exam_id,
+    //   description,
+    //   question: questionData,
+    //   opt_A: optionData.opt_A,
+    //   opt_B: optionData.opt_B,
+    //   opt_C: optionData.opt_C,
+    //   opt_D: optionData.opt_D,
+    //   opt_correct,
+    // });
     console.log("saved questionDoc:", newQuestion);
     return res.status(201).json(newQuestion);
   } catch (error) {
@@ -219,22 +235,23 @@ export const updateQuestion = async (req, res) => {
     const {
       exam_id,
       description,
-      question: questionString,
-      opt_A: opt_AString,
-      opt_B: opt_BString,
-      opt_C: opt_CString,
-      opt_D: opt_DString,
+      question,
+      opt_A,
+      opt_B,
+      opt_C,
+      opt_D,
       opt_correct,
     } = req.body;
 
-    // Parse the strings
-    const question = JSON.parse(questionString);
-    const opt_A = JSON.parse(opt_AString);
-    const opt_B = JSON.parse(opt_BString);
-    const opt_C = JSON.parse(opt_CString);
-    const opt_D = JSON.parse(opt_DString);
-
-    if (!exam_id || !opt_correct) {
+    if (
+      !exam_id ||
+      !question ||
+      !opt_A ||
+      !opt_B ||
+      !opt_C ||
+      !opt_D ||
+      !opt_correct
+    ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -333,6 +350,8 @@ export const updateQuestion = async (req, res) => {
     const updatedQuestion = await questionDoc.save();
     console.log("updated questionDoc:", updatedQuestion);
     return res.status(200).json(updatedQuestion);
+    console.log("updated questionDoc:", questionDoc);
+    return res.status(200).json(questionDoc);
   } catch (error) {
     console.error("Error updating question:", error);
     res.status(500).json({ message: "Failed to update question" });

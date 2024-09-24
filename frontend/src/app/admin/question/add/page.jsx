@@ -23,14 +23,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { examIdToName, exams } from "@/examData";
 import imageCompression from "browser-image-compression";
 
-export default function QuestionForm() {
+export default function QuestionAddForm({ params }) {
+  const [openDialog, setOpenDialog] = useState(false);
   const [imagePreviews, setImagePreviews] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState({
@@ -50,114 +51,42 @@ export default function QuestionForm() {
     setValue,
     setError,
     reset,
-  } = useForm({
-    defaultValues: {
-      question: {
-        name: "This is a Test Question for testing the question form",
-        image: null,
-      },
-      description: "Description for the test question",
-      opt_A: {
-        name: "Option A for the test question",
-        image: null,
-      },
-      opt_B: {
-        name: "Option B for the test question",
-        image: null,
-      },
-      opt_C: {
-        name: "Option C for the test question",
-        image: null,
-      },
-      opt_D: {
-        name: "Option D for the test question",
-        image: null,
-      },
-      opt_correct: "B",
-      exam_id: "1001",
-    },
-  });
-
-  const questionImage = watch("question.image");
-  const optAImage = watch("opt_A.image");
-  const optBImage = watch("opt_B.image");
-  const optCImage = watch("opt_C.image");
-  const optDImage = watch("opt_D.image");
-
-  useEffect(() => {
-    const updateImagePreview = (key, fileList) => {
-      if (fileList && fileList.length > 0) {
-        const file = fileList[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreviews((prev) => ({ ...prev, [key]: reader.result }));
-          setImages((prev) => ({ ...prev, [key]: file }));
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setImagePreviews((prev) => {
-          const newPreviews = { ...prev };
-          delete newPreviews[key];
-          return newPreviews;
-        });
-        setImages((prev) => ({ ...prev, [key]: null }));
-      }
-    };
-
-    updateImagePreview("question", questionImage);
-    updateImagePreview("opt_A", optAImage);
-    updateImagePreview("opt_B", optBImage);
-    updateImagePreview("opt_C", optCImage);
-    updateImagePreview("opt_D", optDImage);
-  }, [questionImage, optAImage, optBImage, optCImage, optDImage]);
+    clearErrors,
+  } = useForm({});
 
   const onSubmit = async (data) => {
     console.log("Data: ", data);
     try {
       let uploadQuestion = true;
+
       setIsSubmitting(true);
       const formData = new FormData();
       const validImageTypes = ["image/jpeg", "image/jpg", "image/png"];
 
       const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
       const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
-      console.log("Cloudinary URL:", cloudinaryUrl);
-      console.log("Cloudinary Preset:", cloudinaryPreset);
-
-      if (!cloudinaryUrl || !cloudinaryPreset) {
-        throw new Error(
-          "Cloudinary URL or preset is not set in environment variables"
-        );
-      }
 
       const uploadImageToCloudinary = async (image) => {
-        // compress image
-        const options = {
+        const compressionOptions = {
           maxSizeMB: 0.1,
           useWebWorker: true,
         };
 
         try {
-          console.log("Before compression", image.size);
-          const compressedImage = await imageCompression(image, options);
-          console.log("After compression", compressedImage.size);
+          console.log("Before Compression", image.size);
+          const compressedImage = await imageCompression(
+            image,
+            compressionOptions
+          );
+          console.log("After Compression", compressedImage.size);
 
           const imageFormData = new FormData();
           imageFormData.append("file", compressedImage);
           imageFormData.append("upload_preset", cloudinaryPreset);
           imageFormData.append("api_key", "993734845948435");
 
-          console.log("Image Form Data:", Object.fromEntries(imageFormData));
-
-          const response = await axios.post(
-            "https://api.cloudinary.com/v1_1/dxxwcbybo/image/upload",
-            imageFormData
-          );
+          const response = await axios.post(cloudinaryUrl, imageFormData);
           if (response.status === 200) {
-            console.log(
-              "Image uploaded to Cloudinary:",
-              response.data.secure_url
-            );
             return response.data.secure_url;
           } else {
             console.error("Failed to upload image to Cloudinary:", response);
@@ -175,65 +104,73 @@ export default function QuestionForm() {
       const imageUrls = {};
 
       const uploadImages = async () => {
-        for (const [key, value] of Object.entries(data)) {
-          if (typeof value === "object" && value !== null) {
-            for (const [subKey, subValue] of Object.entries(value)) {
-              if (subKey === "image" && images[key]) {
-                console.log(`Image type for ${key}:`, images[key].type);
-                if (!validImageTypes.includes(images[key].type)) {
-                  console.log("Invalid image type");
-                  setError(`${key}.image`, {
-                    type: "manual",
-                    message:
-                      "Invalid image type. Only JPEG, JPG, and PNG are allowed.",
-                  });
-                  uploadQuestion = false;
-                  throw new Error("Invalid image type");
-                  return;
-                } else {
-                  // const secureUrl = await uploadImageToCloudinary(images[key]);
-                  // if (secureUrl) {
-                  //   imageUrls[key] = secureUrl;
-                  // } else {
-                  //   toast.error("Failed to upload image");
-                  //   uploadQuestion = false;
-                  //   return;
-                  // }
-                }
+        for (const [key, image] of Object.entries(images)) {
+          if (image) {
+            if (!validImageTypes.includes(image.type)) {
+              setError(`${key}.image`, {
+                type: "manual",
+                message: `Invalid image type for ${key}. Only JPEG, JPG, and PNG are allowed.`,
+              });
+              console.log(`Invalid image type for ${key}`);
+              throw new Error("Invalid image type");
+            } else {
+              const secureUrl = await uploadImageToCloudinary(image);
+              if (secureUrl) {
+                imageUrls[key] = secureUrl;
+              } else {
+                uploadQuestion = false;
+                throw new Error("Failed to upload image");
               }
             }
           }
         }
       };
 
+      if (!uploadQuestion) {
+        toast.error("Question uploading terminated");
+        return;
+      }
+
       await toast.promise(uploadImages(), {
         pending: "Uploading images. This may take a while...",
         error: "Failed to upload images",
       });
 
-      Object.entries(data).forEach(([key, value]) => {
-        if (typeof value === "object" && value !== null) {
-          Object.entries(value).forEach(([subKey, subValue]) => {
-            if (subKey === "image") {
-              formData.append(`${key}[${subKey}]`, imageUrls[key] || "");
-            } else {
-              formData.append(`${key}[${subKey}]`, String(subValue));
-            }
-          });
-        } else {
-          formData.append(key, String(value));
-        }
+      let dataPayload = {
+        question: {
+          image: imageUrls.question || "",
+          name: data.question.name || "",
+        },
+        description: data.description || "",
+        opt_correct: data.opt_correct || "",
+        exam_id: data.exam_id || "",
+      };
+
+      const options = ["A", "B", "C", "D"];
+      options.forEach((option) => {
+        console.log("filling Datapayload: ", `opt_${option}`);
+        dataPayload[`opt_${option}`] = {
+          name: data[`opt_${option}`].name || "",
+          image: imageUrls[`opt_${option}`] || "",
+        };
       });
 
-      console.log("Form Data:", Object.fromEntries(formData));
+      console.log("Data Payload: ", dataPayload);
+
       if (!uploadQuestion) {
         toast.error("Question uploading terminated");
         return;
       }
+
+      // Log the formData
+      console.log("FormData: ");
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
       const response = await toast.promise(
         axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/question/add`,
-          formData,
+          dataPayload,
           {
             headers: {
               apiKey: 123456789,
@@ -243,7 +180,7 @@ export default function QuestionForm() {
         ),
         {
           pending: "Submitting your question...",
-          success: "Question added successfully",
+          success: "Question updated successfully",
           error: {
             render({ data }) {
               if (data.message === "Network Error") {
@@ -258,20 +195,30 @@ export default function QuestionForm() {
         }
       );
 
-      if (response.status === 201) {
-        console.log("Response:", response.data);
+      if (response.status === 200) {
+        console.log("Update Response: ", response.data);
         reset();
+        window.location.reload();
       }
     } catch (error) {
-      if (error.message) {
-        toast.error(error.message);
-      } else {
-        console.error("Error in onSubmit:", error);
-      }
+      console.log("Error: ", error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    console.log("Images: ", images);
+  }, [images]);
+  const createImageUrl = (image, key) => {
+    if (image) {
+      URL.revokeObjectURL(imagePreviews);
+    }
+    const newImageUrl = URL.createObjectURL(image);
+    setImagePreviews((prev) => ({ ...prev, [key]: newImageUrl }));
+    console.log("ImagePreviews: ", imagePreviews);
+  };
+
   const ImagePreview = ({ src, onRemove }) => (
     <div className="mt-2 relative w-fit">
       <img
@@ -290,12 +237,23 @@ export default function QuestionForm() {
   );
 
   const removeImage = (key) => {
-    setImagePreviews((prev) => {
-      const newPreviews = { ...prev };
-      delete newPreviews[key];
-      return newPreviews;
-    });
+    if (images[key]) {
+      setImages((prev) => {
+        const newPreviews = { ...prev };
+        delete newPreviews[key];
+        return newPreviews;
+      });
+    }
+    if (imagePreviews[key]) {
+      setImagePreviews((prev) => {
+        const newPreviews = { ...prev };
+        delete newPreviews[key];
+        return newPreviews;
+      });
+    }
+
     setImages((prev) => ({ ...prev, [key]: null }));
+
     setValue(`${key}.image`, null);
   };
 
@@ -322,15 +280,14 @@ export default function QuestionForm() {
             <Textarea
               id="question.name"
               {...register("question.name", {
-                required: "Question is required",
+                validate: (value) => {
+                  return value || imagePreviews[`question`]
+                    ? true
+                    : "Text or Image is required";
+                },
               })}
               className="bg-white text-black mt-1"
             />
-            {errors.question?.name && (
-              <p className="text-red-500 text-xs">
-                {errors.question.name.message}
-              </p>
-            )}
 
             <Input
               id="question.image"
@@ -338,6 +295,12 @@ export default function QuestionForm() {
               accept="image/*"
               {...register("question.image")}
               className="bg-white text-black hidden"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                clearErrors("question.name");
+                createImageUrl(file, "question");
+                setImages((prev) => ({ ...prev, question: file }));
+              }}
             />
             {!imagePreviews.question && (
               <Button
@@ -358,9 +321,10 @@ export default function QuestionForm() {
                 onRemove={() => removeImage("question")}
               />
             )}
-            {errors.question?.image && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.question.image.message}
+
+            {errors.question?.name && (
+              <p className="text-red-500 text-md mt-1">
+                {errors.question.name.message}
               </p>
             )}
           </div>
@@ -400,15 +364,14 @@ export default function QuestionForm() {
                 <Textarea
                   id={`opt_${option}.name`}
                   {...register(`opt_${option}.name`, {
-                    required: `Option ${option} is required`,
+                    validate: (value) => {
+                      return value || images[`opt_${option}`]
+                        ? true
+                        : "Text or Image is required";
+                    },
                   })}
                   className="bg-white text-black"
                 />
-                {errors[`opt_${option}`]?.name && (
-                  <p className="text-red-500">
-                    {errors[`opt_${option}`]?.name?.message}
-                  </p>
-                )}
 
                 <Input
                   id={`opt_${option}.image`}
@@ -416,7 +379,14 @@ export default function QuestionForm() {
                   accept="image/*"
                   {...register(`opt_${option}.image`)}
                   className="bg-white text-black hidden"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    clearErrors(`opt_${option}.name`);
+                    createImageUrl(file, `opt_${option}`);
+                    setImages((prev) => ({ ...prev, [`opt_${option}`]: file }));
+                  }}
                 />
+
                 {!imagePreviews[`opt_${option}`] && (
                   <Button
                     variant="outline"
@@ -430,12 +400,17 @@ export default function QuestionForm() {
                     Add Image
                   </Button>
                 )}
-
                 {imagePreviews[`opt_${option}`] && (
                   <ImagePreview
                     src={imagePreviews[`opt_${option}`]}
                     onRemove={() => removeImage(`opt_${option}`)}
+                    isNew={true}
                   />
+                )}
+                {errors[`opt_${option}`]?.name && (
+                  <p className="text-red-500">
+                    {errors[`opt_${option}`]?.name?.message}
+                  </p>
                 )}
               </div>
             ))}
@@ -514,7 +489,7 @@ export default function QuestionForm() {
             </div>
           </div>
 
-          <Dialog>
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button
                 variant="default"
@@ -541,11 +516,13 @@ export default function QuestionForm() {
                   </h3>
                   <p className="text-sm">{watch("question.name")}</p>
                   {imagePreviews.question && (
-                    <img
-                      src={imagePreviews.question}
-                      alt="Question"
-                      className=" max-w-full max-h-40 h-auto object-cover rounded-md shadow-md"
-                    />
+                    <div className="w-fit ">
+                      <img
+                        src={imagePreviews.question}
+                        alt="Question"
+                        className=" max-w-full max-h-40 h-auto object-cover rounded-md shadow-md"
+                      />
+                    </div>
                   )}
                 </div>
                 <div className="space-y-4">
@@ -567,11 +544,13 @@ export default function QuestionForm() {
                       </h4>
                       <p className="text-sm">{watch(`opt_${option}.name`)}</p>
                       {imagePreviews[`opt_${option}`] && (
-                        <img
-                          src={imagePreviews[`opt_${option}`]}
-                          alt={`Option ${option}`}
-                          className="max-w-full h-auto max-h-40 object-cover rounded-md shadow-sm"
-                        />
+                        <div className="w-fit ">
+                          <img
+                            src={imagePreviews[`opt_${option}`]}
+                            alt={`Option ${option}`}
+                            className="max-w-full h-auto max-h-40 object-cover rounded-md shadow-sm"
+                          />
+                        </div>
                       )}
                     </div>
                   ))}

@@ -11,11 +11,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
     origin: "https://quiz-frontend-work.vercel.app",
-    methods: ["GET", "POST", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
     credentials: true,
   })
 );
