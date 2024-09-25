@@ -180,30 +180,6 @@ export default function QuestionEditForm({ params }) {
       });
 
       console.log("Data Payload: ", dataPayload);
-      // console.log("imageUrls: ", imageUrls);
-      // formData.append("question[image]", imageUrls.question || "");
-      // formData.append("question[name]", data.question.name || "");
-      // formData.append("description", data.description || "");
-      // formData.append("opt_correct", data.opt_correct || "");
-      // formData.append("exam_id", data.exam_id || "");
-
-      // ["A", "B", "C", "D"].forEach((option) => {
-      //   formData.append(
-      //     `opt_${option}[name]`,
-      //     data[`opt_${option}`].name || ""
-      //   );
-      //   if (imageUrls[`opt_${option}`]) {
-      //     formData.append(
-      //       `opt_${option}[image]`,
-      //       imageUrls[`opt_${option}`] || ""
-      //     );
-      //   } else if (prevData?.[`opt_${option}`]?.image) {
-      //     formData.append(
-      //       `opt_${option}[image]`,
-      //       prevData[`opt_${option}`].image || ""
-      //     );
-      //   }
-      // });
 
       if (!uploadQuestion) {
         toast.error("Question uploading terminated");

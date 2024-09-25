@@ -4,19 +4,25 @@ import { v2 as cloudinary } from "cloudinary";
 
 //Fetch random questions from one exam
 export const getExamQuestions = async (req, res) => {
-  const limit = parseInt(req.query.limit) || 50;
+  const limit = 50;
   const { exam_id } = req.params;
+  const { level } = req.query || 1;
+
   try {
     // Validation
     if (!exam_id) {
       return res.status(400).json({ message: "examId is required" });
     }
 
-    // fetch question with category and limit
+    const skipQuestions = (level - 1) * limit;
+
     const questions = await Question.aggregate([
       { $match: { exam_id } },
-      { $sample: { size: limit } },
-    ]);
+      { $sort: { _id: 1 } },
+      { $skip: skipQuestions },
+      { $limit: limit },
+    ]).exec();
+
     res.json(questions).status(200);
   } catch (err) {
     console.error(err);

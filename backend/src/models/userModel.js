@@ -20,10 +20,10 @@ export const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    interests: {
-      type: [String],
-      default: [],
-    },
+    // interests: {
+    //   type: [String],
+    //   default: [],
+    // },
     verificationCode: String,
   },
   { timestamps: true }
