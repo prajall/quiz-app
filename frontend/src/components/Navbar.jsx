@@ -82,7 +82,7 @@ const Navbar = () => {
     },
     {
       name: "Admin",
-      link: "/admin/question/1001",
+      link: "/admin/question/exam/1001",
     },
   ];
 

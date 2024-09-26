@@ -2,6 +2,7 @@ import React from "react";
 import { examIdToName, exams } from "@/examData";
 
 const ExamCategory = ({ question }) => {
+  console.log("ExamCategory", question);
   const category = examIdToName(question.exam_id);
 
   return (

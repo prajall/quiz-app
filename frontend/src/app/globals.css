@@ -85,3 +85,8 @@
 .gradient-bg-3 {
   background: linear-gradient(to bottom, #043669, #0436699a, white);
 }
+
+ol,
+ul {
+  list-style: none;
+}

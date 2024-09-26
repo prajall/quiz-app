@@ -316,7 +316,10 @@ export const verifyCode = async (req, res) => {
       return res.status(400).send("Invalid Verification Code.");
     }
 
-    return res.status(200).send("Code verified successfully.");
+    user.verificationCode == "";
+    user.save();
+    res.status(200).send("Code verified successfully.");
+    return;
   } catch (error) {
     console.error("Error verifying Code:", error);
     return res.status(500).send("Internal server error.");

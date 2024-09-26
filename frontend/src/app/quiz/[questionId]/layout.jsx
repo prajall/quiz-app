@@ -15,13 +15,13 @@ const QuestionLayout = async ({ params, children }) => {
     `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`,
     { withCredentials: true, headers: { apiKey: "123456789" } }
   );
-  const question = response.data.question;
+  const question = response.data;
 
   return (
     <>
       <Head>
-        <title>{question?.name || "QuizPro"}</title>
-        <meta name="description" content={question.name} />
+        <title>{question?.question?.name || "QuizPro"}</title>
+        <meta name="description" content={question.question?.name} />
       </Head>
       <div className="my-4 space-y-6 ">
         <div className="grid grid-cols-3 pb-4 text-sm sm:text-md border-b border-opacity-50 border-black  ">
@@ -32,7 +32,7 @@ const QuestionLayout = async ({ params, children }) => {
         <ProgressBar />
         <div className=" mx-auto space-y-4 md:space-y-8  sm:border-gray sm:border sm:shadow-md sm:p-4  md:p-6 lg:p-8 rounded-lg">
           <p className="font-semibold text-xl md:text-2xl text-black min-h-24 xl:min-h-16 flex items-center leading-[1.5]">
-            Q. {question.name}
+            Q. {question?.question.name}
           </p>
           <div>{children}</div>
         </div>

@@ -327,10 +327,7 @@ export default function QuestionEditForm({ params }) {
           className="space-y-6"
         >
           <div className="">
-            <Label
-              className="font-semibold text-md text-primary "
-              htmlFor="question.name"
-            >
+            <Label className="font-semibold text-md" htmlFor="question.name">
               Question:
             </Label>
             <Textarea
@@ -392,10 +389,7 @@ export default function QuestionEditForm({ params }) {
           </div>
 
           <div>
-            <Label
-              className="font-semibold text-md text-primary "
-              htmlFor="description"
-            >
+            <Label className="font-semibold text-md  " htmlFor="description">
               Description:
             </Label>
             <Textarea
@@ -418,7 +412,7 @@ export default function QuestionEditForm({ params }) {
             {["A", "B", "C", "D"].map((option) => (
               <div key={option} className="space-y-2">
                 <Label
-                  className="font-semibold text-md text-primary"
+                  className="font-semibold text-md "
                   htmlFor={`opt_${option}.name`}
                 >
                   Option {option}

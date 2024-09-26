@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const Question = ({ question }) => {
   const truncateText = (text, lines) => {
@@ -28,12 +29,46 @@ const Question = ({ question }) => {
                 className="w-full h-40 object-cover mb-2 rounded"
               />
             )}
-            <ul className="list-disc list-inside mb-2">
-              <li>{truncateText(question.opt_A.name, 1)}</li>
-              <li>{truncateText(question.opt_B.name, 1)}</li>
-              <li>{truncateText(question.opt_C.name, 1)}</li>
-              <li>{truncateText(question.opt_D.name, 1)}</li>
-            </ul>
+            <ol type="A">
+              {["opt_A", "opt_B", "opt_C", "opt_D"].map((option, index) => {
+                return (
+                  // <li className={`flex gap-1 ${question.opt_correct===  }`}>
+                  <li
+                    className={cn(
+                      "flex gap-1",
+                      question.opt_correct == String.fromCharCode(65 + index)
+                        ? "text-green-500"
+                        : ""
+                    )}
+                  >
+                    <p
+                      className={cn(
+                        "",
+                        question.opt_correct == String.fromCharCode(65 + index)
+                          ? "text-green-400"
+                          : ""
+                      )}
+                    >
+                      {String.fromCharCode(65 + index)}.{" "}
+                    </p>
+                    <p>{truncateText(question[option].name, 1)}</p>
+                  </li>
+                );
+              })}
+
+              {/* <li className="flex gap-1">
+                <p>B. </p>
+                <p>{truncateText(question.opt_B.name, 1)}</p>
+              </li>
+              <li className="flex gap-1">
+                <p>C. </p>
+                <p>{truncateText(question.opt_C.name, 1)}</p>
+              </li>
+              <li className="flex gap-1">
+                <p>D. </p>
+                <p>{truncateText(question.opt_D.name, 1)}</p>
+              </li> */}
+            </ol>
             <p className="text-sm text-gray-600">
               {truncateText(question.description, 1)}
             </p>

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 const defaultAppData = {
   user: null,
+  isLoading: true,
 };
 
 export const AppContext = createContext();
@@ -30,6 +31,8 @@ const AppProvider = ({ children }) => {
         return;
       }
       console.log(error);
+    } finally {
+      setAppData((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
