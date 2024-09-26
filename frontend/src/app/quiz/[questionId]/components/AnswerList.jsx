@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const AnswerList = ({ question }) => {
+  console.log("Question: ", question);
   const { quizData, setQuizData, endQuiz } = useContext(QuizContext);
   const { score, incrementScore } = useContext(ScoreContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,19 +75,19 @@ const AnswerList = ({ question }) => {
   const buttons = [
     {
       option: "A",
-      opt: "opt_a",
+      opt: "opt_A",
     },
     {
       option: "B",
-      opt: "opt_b",
+      opt: "opt_B",
     },
     {
       option: "C",
-      opt: "opt_c",
+      opt: "opt_C",
     },
     {
       option: "D",
-      opt: "opt_d",
+      opt: "opt_D",
     },
   ];
 
@@ -95,6 +96,7 @@ const AnswerList = ({ question }) => {
       <div className="grid gap-3 grid-cols-1 md:grid-cols-2 ">
         {buttons.map((button) => (
           <button
+            key={button.opt}
             onClick={() => handleClick(button.option)}
             title={question[button.opt]}
             className={`relative text-md pl-4 m-1 flex items-center border-2 border-gray h-10 text-left rounded-lg  ${
@@ -113,7 +115,7 @@ const AnswerList = ({ question }) => {
             disabled={answered}
           >
             <p className="overflow-hidden whitespace-nowrap">
-              {question[button.opt]}
+              {question[button.opt].name}
             </p>
             <div
               className={`absolute left-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2  border-2 rounded-full z-20  w-6 h-6 flex items-center justify-center ${

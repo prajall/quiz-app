@@ -6,7 +6,7 @@ const Question = async ({ params }) => {
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`
   );
-  const question = response.data.question;
+  const question = response.data;
 
   return (
     <>

@@ -80,6 +80,10 @@ const Navbar = () => {
       name: "Contacts",
       link: "/contacts",
     },
+    {
+      name: "Admin",
+      link: "/admin/question/1001",
+    },
   ];
 
   useEffect(() => {

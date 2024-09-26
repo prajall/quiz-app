@@ -94,7 +94,6 @@ export const changeQuestionFormat = async (req, res) => {
 };
 
 const deleteLocalFiles = (req) => {
-  // Delete uploaded files if they exist
   if (req.files) {
     Object.values(req.files).forEach((fileArray) => {
       fileArray.forEach((file) => {
@@ -156,7 +155,6 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Invalid exam_id" });
     }
 
-    // Validate question
     if (!question.name && !question.image) {
       return res
         .status(400)
@@ -168,7 +166,6 @@ export const addQuestion = async (req, res) => {
       image: question.image || "",
     };
 
-    // Validate options
     const optionData = {};
     const options = { opt_A, opt_B, opt_C, opt_D };
     for (const [key, opt] of Object.entries(options)) {
@@ -190,18 +187,6 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Invalid opt_correct value" });
     }
 
-    // // Process options
-    // const processedOptions = {};
-    // const optionKeys = ["opt_A", "opt_B", "opt_C", "opt_D"];
-
-    // for (const key of optionKeys) {
-    //   const option = options[key];
-    //   processedOptions[key] = {
-    //     name: option.name,
-    //     image: option.image,
-    //   };
-    // }
-
     const newQuestion = new Question({
       exam_id,
       description,
@@ -213,20 +198,9 @@ export const addQuestion = async (req, res) => {
       opt_correct,
     });
 
-    // const savedQuestion = await newQuestion.save();
-
-    // const savedQuestion = await Question.create({
-    //   exam_id,
-    //   description,
-    //   question: questionData,
-    //   opt_A: optionData.opt_A,
-    //   opt_B: optionData.opt_B,
-    //   opt_C: optionData.opt_C,
-    //   opt_D: optionData.opt_D,
-    //   opt_correct,
-    // });
-    console.log("saved questionDoc:", newQuestion);
-    return res.status(201).json(newQuestion);
+    const savedQuestion = await newQuestion.save();
+    console.log("saved questionDoc:", savedQuestion);
+    return res.status(201).json(savedQuestion);
   } catch (error) {
     console.error("Error adding question:", error);
     res.status(500).json({ message: "Failed to add question" });
@@ -292,7 +266,6 @@ export const updateQuestion = async (req, res) => {
         .json({ message: "Question Text or Image is required" });
     }
 
-    // Validate options
     const options = { opt_A, opt_B, opt_C, opt_D };
     for (const [key, opt] of Object.entries(options)) {
       if (!opt.name && !opt.image) {
@@ -304,22 +277,25 @@ export const updateQuestion = async (req, res) => {
       }
     }
 
-    // Validate correct option
     if (!["A", "B", "C", "D"].includes(opt_correct)) {
       return res.status(400).json({ message: "Invalid opt_correct value" });
     }
 
-    // Prepare question data
     let questionData = {
       name: question.name,
       image: question.image,
     };
 
-    if (question.image !== questionDoc.question.image) {
+    console.log(question.image, questionDoc.question.image);
+    if (
+      questionDoc.question.image &&
+      question.image !== questionDoc.question.image
+    ) {
+      console.log("Deleting Previous Image");
       const publicId = questionDoc.question.image
         ? questionDoc.question.image.split("/").pop().split(".")[0]
         : "";
-      await cloudinary.uploader.destroy(publicId);
+      cloudinary.uploader.destroy(publicId); //no await here because we dont need the result
       questionData.image = question.image;
     }
 

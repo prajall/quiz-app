@@ -4,53 +4,51 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Question from "../components/Question";
 import axios from "axios";
-
-const exams = [
-  { exam_id: 1002, name: "Health" },
-  { exam_id: 1003, name: "Math" },
-  // Add more exams as needed
-];
+import { exams } from "@/examData";
 
 const levels = Array.from({ length: 50 }, (_, i) => i + 1);
 
 const QuestionList = ({ params }) => {
   const router = useRouter();
-  const query = router.query;
+  const { exam_id } = params;
 
   const [questions, setQuestions] = useState([]);
-  const examId = params.exam_id;
-  const currentLevel = 1;
+  const [examId, setExamId] = useState(exam_id);
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchQuestions(currentLevel);
+    if (examId && currentLevel) {
+      fetchQuestions(examId, currentLevel);
+    }
   }, [examId, currentLevel]);
 
-  const fetchQuestions = async (level) => {
+  const fetchQuestions = async (examId, level) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?level=${level}`
       );
       const data = response.data;
-      setQuestions(data.questions || []);
+      setQuestions(data || []);
     } catch (error) {
       console.error("Error fetching questions:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleExamChange = (e) => {
     const selectedExamId = e.target.value;
-    router.push({
-      pathname: `/questions/${selectedExamId}`,
-      query: { level: 1 }, // Reset level to 1 when exam changes
-    });
+    setExamId(selectedExamId);
+    setCurrentLevel(1);
+    router.push(`/admin/question/${selectedExamId}?level=1`);
   };
 
   const handleLevelChange = (e) => {
     const selectedLevel = e.target.value;
-    router.push({
-      pathname: `/questions/${examId}`,
-      query: { level: selectedLevel },
-    });
+    setCurrentLevel(selectedLevel);
+    router.push(`/admin/question/${examId}?level=${selectedLevel}`);
   };
 
   return (
@@ -66,7 +64,7 @@ const QuestionList = ({ params }) => {
               id="exam-select"
               value={examId}
               onChange={handleExamChange}
-              className="border rounded px-2 py-1"
+              className="border rounded px-2 py-1 text-sm"
             >
               {exams.map((exam) => (
                 <option key={exam.exam_id} value={exam.exam_id}>
@@ -83,7 +81,7 @@ const QuestionList = ({ params }) => {
               id="level-select"
               value={currentLevel}
               onChange={handleLevelChange}
-              className="border rounded px-2 py-1"
+              className="border rounded px-2 py-1 text-sm"
             >
               {levels.map((level) => (
                 <option key={level} value={level}>
@@ -95,18 +93,13 @@ const QuestionList = ({ params }) => {
         </div>
       </div>
 
-      {questions.map((question) => (
-        <Question question={question} key={question._id} />
-      ))}
-
-      <div className="flex justify-between mt-4">
+      <div className="flex gap-2 items-center justify-center mt-4 mb-2">
         <Button
+          variant="outline"
           onClick={() => {
             const prevLevel = Math.max(currentLevel - 1, 1);
-            router.push({
-              pathname: `/questions/${examId}`,
-              query: { level: prevLevel },
-            });
+            router.push(`/admin/question/${examId}?level=${prevLevel}`);
+            setCurrentLevel(prevLevel);
           }}
           disabled={currentLevel === 1}
         >
@@ -116,18 +109,30 @@ const QuestionList = ({ params }) => {
           Level {currentLevel} of {levels.length}
         </span>
         <Button
+          variant="outline"
           onClick={() => {
             const nextLevel = Math.min(currentLevel + 1, levels.length);
-            router.push({
-              pathname: `/questions/${examId}`,
-              query: { level: nextLevel },
-            });
+            router.push(`/admin/question/${examId}?level=${nextLevel}`);
+            setCurrentLevel(nextLevel);
           }}
           disabled={currentLevel === levels.length}
         >
           Next
         </Button>
       </div>
+
+      {/* Conditional rendering based on the loading state */}
+      {loading ? (
+        <div className="flex justify-center items-center h-[90vh]">
+          <p>Loading...</p>
+        </div>
+      ) : questions.length > 0 ? (
+        questions.map((question) => (
+          <Question question={question} key={question._id} />
+        ))
+      ) : (
+        <p>No questions available for this level.</p>
+      )}
     </div>
   );
 };

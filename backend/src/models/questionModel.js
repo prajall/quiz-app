@@ -73,8 +73,4 @@ export const questionSchema = new mongoose.Schema({
     enum: ["A", "B", "C", "D"],
     required: true,
   },
-  opt_a: String,
-  opt_b: String,
-  opt_c: String,
-  opt_d: String,
 });

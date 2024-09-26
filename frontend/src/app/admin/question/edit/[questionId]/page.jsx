@@ -43,6 +43,13 @@ export default function QuestionEditForm({ params }) {
     opt_C: null,
     opt_D: null,
   });
+  const [savedImageUrls, setSavedImageUrls] = useState({
+    question: null,
+    opt_A: null,
+    opt_B: null,
+    opt_C: null,
+    opt_D: null,
+  });
 
   const {
     register,
@@ -134,10 +141,14 @@ export default function QuestionEditForm({ params }) {
               });
               console.log(`Invalid image type for ${key}`);
               throw new Error("Invalid image type");
+            } else if (savedImageUrls[key]) {
+              console.log("Using saved image: ", savedImageUrls[key]);
+              imageUrls[key] = savedImageUrls[key];
             } else {
               const secureUrl = await uploadImageToCloudinary(image);
               if (secureUrl) {
                 imageUrls[key] = secureUrl;
+                setSavedImageUrls((prev) => ({ ...prev, [key]: secureUrl }));
               } else {
                 uploadQuestion = false;
                 throw new Error("Failed to upload image");
@@ -212,6 +223,8 @@ export default function QuestionEditForm({ params }) {
                 return "Failed to connect to the server";
               } else if (data.response?.data) {
                 return data.response.data.message;
+              } else if (data.response.statusCode >= 500) {
+                return "Internal Server Error";
               } else {
                 return "Something went wrong";
               }
