@@ -6,6 +6,7 @@ import questionRoute from "../src/routes/questionRoute.js";
 import scoreRoute from "../src/routes/scoreRoute.js";
 import leaderboardRoute from "../src/routes/leaderboardRoute.js";
 import examRoute from "../src/routes/examRoute.js";
+import gameRoute from "../src/routes/gameRoute.js";
 import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
@@ -26,8 +27,9 @@ app.use(
 app.use("/user", userRoute);
 app.use("/question", questionRoute);
 app.use("/score", scoreRoute);
+app.use("/game", gameRoute);
 app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
-app.use("/exam", examRoute);
+app.use("/exams", examRoute);
 
 app.get("/", (req, res) => {
   res.send("Server is working");

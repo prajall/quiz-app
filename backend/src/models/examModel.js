@@ -26,6 +26,9 @@ const examSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
+  subTitle: {
+    type: String,
+  },
 });
 
 export const Exam = mongoose.model("Exam", examSchema);

@@ -6,7 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 export const getExamQuestions = async (req, res) => {
   const limit = 50;
   const { exam_id } = req.params;
-  const { level } = req.query || 1;
+  const level = req.query.level || 1;
 
   try {
     // Validation

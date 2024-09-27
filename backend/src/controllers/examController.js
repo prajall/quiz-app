@@ -15,7 +15,7 @@ export const getAllExams = async (req, res) => {
 
 export const addExam = async (req, res) => {
   try {
-    const { exam_id, name, price, discount } = req.body;
+    const { exam_id, name, price, discount, totalQuestions } = req.body;
     if (!exam_id || !name || !price) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -25,13 +25,16 @@ export const addExam = async (req, res) => {
         .status(400)
         .json({ message: "Exam with this ID already exists" });
     }
+    const totalLevels = Math.ceil(totalQuestions / 50);
     const newExam = new Exam({
       exam_id,
       name,
       price,
+      totalQuestions,
+      totalLevels,
       discount,
     });
-    await newExam.save();
+    // await newExam.save();
     res.status(201).json(newExam);
   } catch (err) {
     console.error(err);
