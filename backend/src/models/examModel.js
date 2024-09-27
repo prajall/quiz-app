@@ -15,7 +15,7 @@ export const examSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  name: {
+  title: {
     type: String,
     required: true,
   },
@@ -30,6 +30,9 @@ export const examSchema = new mongoose.Schema({
   subTitle: {
     type: String,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
 });
-
-export const Exam = mongoose.model("Exam", examSchema);

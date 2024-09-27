@@ -31,7 +31,7 @@ app.use("/user", userRoute);
 app.use("/question", questionRoute);
 app.use("/score", scoreRoute);
 app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
-app.use("/exams", examRoute);
+app.use("/exam", examRoute);
 // app.use("/gamedata", gameDataRoute);
 
 export default app;

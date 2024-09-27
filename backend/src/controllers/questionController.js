@@ -1,6 +1,7 @@
 import { Question } from "../../api/index.js";
 import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
+import { Exam } from "../models/examModel.js";
 
 //Fetch random questions from one exam
 export const getExamQuestions = async (req, res) => {
@@ -117,6 +118,7 @@ export const addQuestion = async (req, res) => {
   try {
     const {
       exam_id,
+      examId,
       description,
       question,
       opt_A,
@@ -128,6 +130,7 @@ export const addQuestion = async (req, res) => {
 
     if (
       !exam_id ||
+      !examId ||
       !question ||
       !opt_A ||
       !opt_B ||
@@ -138,21 +141,10 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const validExamIds = [
-      "1001",
-      "1002",
-      "1003",
-      "1004",
-      "1005",
-      "1006",
-      "1007",
-      "1008",
-      "1009",
-      "1010",
-    ];
+    const examDoc = await Exam.findById(examId);
 
-    if (!validExamIds.includes(exam_id)) {
-      return res.status(400).json({ message: "Invalid exam_id" });
+    if (!examDoc) {
+      return res.status(400).json({ message: "Invalid Exam ID" });
     }
 
     if (!question.name && !question.image) {
@@ -199,6 +191,12 @@ export const addQuestion = async (req, res) => {
     });
 
     const savedQuestion = await newQuestion.save();
+    if (savedQuestion) {
+      examDoc.totalQuestions = examDoc.totalQuestions + 1;
+      examDoc.totalLevels = Math.ceil(examDoc.totalQuestions / 50);
+      await examDoc.save();
+    }
+
     console.log("saved questionDoc:", savedQuestion);
     return res.status(201).json(savedQuestion);
   } catch (error) {
@@ -214,6 +212,7 @@ export const updateQuestion = async (req, res) => {
   try {
     const {
       exam_id,
+      examId,
       description,
       question,
       opt_A,
@@ -242,21 +241,10 @@ export const updateQuestion = async (req, res) => {
       return res.status(404).json({ message: "Question not found" });
     }
 
-    const validExamIds = [
-      "1001",
-      "1002",
-      "1003",
-      "1004",
-      "1005",
-      "1006",
-      "1007",
-      "1008",
-      "1009",
-      "1010",
-    ];
+    const examDoc = await Exam.findById(examId);
 
-    if (!validExamIds.includes(exam_id)) {
-      return res.status(400).json({ message: "Invalid exam_id" });
+    if (!examDoc) {
+      return res.status(400).json({ message: "Invalid Exam ID" });
     }
 
     // Validate question
@@ -369,7 +357,7 @@ export const updateQuestion = async (req, res) => {
 //       return res.status(400).json({ message: "Missing required fields" });
 //     }
 
-//     const validExamIds = [
+//     const validExamId = [
 //       "1001",
 //       "1002",
 //       "1003",
@@ -382,7 +370,7 @@ export const updateQuestion = async (req, res) => {
 //       "1010",
 //     ];
 
-//     if (!validExamIds.includes(exam_id)) {
+//     if (!validExamId.includes(exam_id)) {
 //       deleteLocalFiles(req);
 //       return res.status(400).json({ message: "Invalid exam_id" });
 //     }

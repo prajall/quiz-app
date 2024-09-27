@@ -1,4 +1,4 @@
-import { Exam } from "../models/examModel.js";
+import { Exam } from "../../api/index.js";
 
 export const getAllExams = async (req, res) => {
   try {
@@ -15,8 +15,11 @@ export const getAllExams = async (req, res) => {
 
 export const addExam = async (req, res) => {
   try {
-    const { exam_id, name, price, discount, totalQuestions } = req.body;
-    if (!exam_id || !name || !price) {
+    console.log(req.body);
+    const { exam_id, title, price, discount, totalQuestions, subTitle } =
+      req.body;
+
+    if (!exam_id || !title || !price) {
       return res.status(400).json({ message: "Missing required fields" });
     }
     const existingExam = await Exam.findOne({ exam_id }).exec();
@@ -28,13 +31,14 @@ export const addExam = async (req, res) => {
     const totalLevels = Math.ceil(totalQuestions / 50);
     const newExam = new Exam({
       exam_id,
-      name,
+      title,
       price,
       totalQuestions,
       totalLevels,
       discount,
+      subTitle,
     });
-    // await newExam.save();
+    await newExam.save();
     res.status(201).json(newExam);
   } catch (err) {
     console.error(err);
