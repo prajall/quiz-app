@@ -143,7 +143,7 @@ export default function QuestionAddForm({ params }) {
         },
         description: data.description || "",
         opt_correct: data.opt_correct || "",
-        exam_id: data.exam_id || "",
+        examId: data.examId || "",
       };
 
       const options = ["A", "B", "C", "D"];
@@ -210,6 +210,21 @@ export default function QuestionAddForm({ params }) {
   useEffect(() => {
     console.log("Images: ", images);
   }, [images]);
+
+  useEffect(async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/exam`
+      );
+      if (response.status == 200) {
+        setExams(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to fetch Exams");
+    }
+  }, []);
+
   const createImageUrl = (image, key) => {
     if (image) {
       URL.revokeObjectURL(imagePreviews);
@@ -420,12 +435,12 @@ export default function QuestionAddForm({ params }) {
             <div className="flex flex-col w-full md:w-1/2 gap-1">
               <Label
                 className="font-semibold text-md text-primary"
-                htmlFor="exam_id"
+                htmlFor="examId"
               >
                 Exam Category:
               </Label>
               <Controller
-                name="exam_id"
+                name="examId"
                 control={control}
                 rules={{ required: "Exam ID is required" }}
                 render={({ field }) => {
@@ -439,8 +454,8 @@ export default function QuestionAddForm({ params }) {
                       </SelectTrigger>
                       <SelectContent>
                         {exams.map((exam) => (
-                          <SelectItem key={exam.exam_id} value={exam.exam_id}>
-                            {exam.name}
+                          <SelectItem key={exam._id} value={exam._id}>
+                            {exam.title}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -449,8 +464,8 @@ export default function QuestionAddForm({ params }) {
                 }}
               />
 
-              {errors.exam_id && (
-                <p className="text-red-500">{errors.exam_id.message}</p>
+              {errors.examId && (
+                <p className="text-red-500">{errors.examId.message}</p>
               )}
             </div>
 
@@ -565,7 +580,9 @@ export default function QuestionAddForm({ params }) {
                   <h4 className="text-md font-semibold  text-primary">
                     Exam Category:
                   </h4>
-                  <p className="text-md ">{examIdToName(watch("exam_id"))}</p>
+                  <p className="text-md ">
+                    {exams.find((exam) => exam._id === watch("examId"))}
+                  </p>
                 </div>
               </div>
               <DialogFooter className="mt-4 justify-end flex flex-row gap-2">

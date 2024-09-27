@@ -1,7 +1,7 @@
 import { Question } from "../../api/index.js";
 import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
-import { Exam } from "../models/examModel.js";
+import { Exam } from "../../api/index.js";
 
 //Fetch random questions from one exam
 export const getExamQuestions = async (req, res) => {

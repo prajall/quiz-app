@@ -27,7 +27,6 @@ import { Controller, useForm } from "react-hook-form";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { examIdToName, exams } from "@/examData";
 import imageCompression from "browser-image-compression";
 
 export default function QuestionEditForm({ params }) {
@@ -36,6 +35,7 @@ export default function QuestionEditForm({ params }) {
   const [isFetching, setIsFetching] = useState(false);
   const [imagePreviews, setImagePreviews] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [exams, setExams] = useState([]);
   const [images, setImages] = useState({
     question: null,
     opt_A: null,
@@ -79,8 +79,20 @@ export default function QuestionEditForm({ params }) {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     fetchQuestion();
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/exam`
+      );
+      if (response.status == 200) {
+        setExams(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to fetch Exams");
+    }
   }, []);
 
   const onSubmit = async (data) => {
@@ -175,7 +187,7 @@ export default function QuestionEditForm({ params }) {
         },
         description: data.description || "",
         opt_correct: data.opt_correct || "",
-        exam_id: data.exam_id || "",
+        examId: data.examId || "",
       };
 
       const options = ["A", "B", "C", "D"];
@@ -476,12 +488,12 @@ export default function QuestionEditForm({ params }) {
             <div className="flex flex-col w-full md:w-1/2 gap-1">
               <Label
                 className="font-semibold text-md text-primary"
-                htmlFor="exam_id"
+                htmlFor="examId"
               >
                 Exam Category:
               </Label>
               <Controller
-                name="exam_id"
+                name="examId"
                 control={control}
                 rules={{ required: "Exam ID is required" }}
                 render={({ field }) => {
@@ -495,8 +507,8 @@ export default function QuestionEditForm({ params }) {
                       </SelectTrigger>
                       <SelectContent>
                         {exams.map((exam) => (
-                          <SelectItem key={exam.exam_id} value={exam.exam_id}>
-                            {exam.name}
+                          <SelectItem key={exam._id} value={exam._id}>
+                            {exam.title}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -505,8 +517,8 @@ export default function QuestionEditForm({ params }) {
                 }}
               />
 
-              {errors.exam_id && (
-                <p className="text-red-500">{errors.exam_id.message}</p>
+              {errors.examId && (
+                <p className="text-red-500">{errors.examId.message}</p>
               )}
             </div>
 
@@ -641,7 +653,9 @@ export default function QuestionEditForm({ params }) {
                   <h4 className="text-md font-semibold  text-primary">
                     Exam Category:
                   </h4>
-                  <p className="text-md ">{examIdToName(watch("exam_id"))}</p>
+                  <p className="text-md ">
+                    {exams.find((exam) => exam._id === watch("examId"))}
+                  </p>
                 </div>
               </div>
               <DialogFooter className="mt-4 justify-end flex flex-row gap-2">
