@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import userRoute from "../src/routes/userRoute.js";
-import questionRoute from "../src/routes/questionRoute.js";
-import scoreRoute from "../src/routes/scoreRoute.js";
-import leaderboardRoute from "../src/routes/leaderboardRoute.js";
-import examRoute from "../src/routes/examRoute.js";
-import gameRoute from "../src/routes/gameRoute.js";
-import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
+import userRoute from "./routes/userRoute.js";
+import questionRoute from "./routes/questionRoute.js";
+import scoreRoute from "./routes/scoreRoute.js";
+import leaderboardRoute from "./routes/leaderboardRoute.js";
+import examRoute from "./routes/examRoute.js";
+import gameRoute from "./routes/gameDataRoute.js";
+import { apiKeyValidation } from "./middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
