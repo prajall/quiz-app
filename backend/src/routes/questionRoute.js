@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.get("/exam/:exam_id", getExamQuestions);
+router.get("/exam/:examId", getExamQuestions);
 router.get("/random", getRandomQuestions);
 router.get("/:questionId", getQuestionById);
 router.get("/", (req, res) => res.send("Question Route"));

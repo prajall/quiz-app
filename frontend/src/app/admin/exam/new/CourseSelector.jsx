@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import CourseSelector from "./CourseSelector";
 
@@ -26,6 +26,7 @@ export default function ExamForm() {
       price: "",
       discount: "",
       subTitle: "",
+      courses: [], // Initialize courses array
     },
   });
 
@@ -50,7 +51,7 @@ export default function ExamForm() {
       if (error.response?.data?.message) {
         toast.error(error.response?.data?.message);
       } else {
-        toast.error("Unexpected error occured");
+        toast.error("Unexpected error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -146,6 +147,21 @@ export default function ExamForm() {
               />
             </div>
 
+            <FormField
+              control={form.control}
+              name="courses"
+              rules={{ required: "Courses is required" }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="">Select Courses</FormLabel>
+                  <FormControl>
+                    <CourseSelector onCourseSelect={onCourseSelect} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button
               type="submit"
               className="w-full bg-primary text-white hover:bg-primary-dark"
@@ -155,16 +171,6 @@ export default function ExamForm() {
             </Button>
           </form>
         </Form>
-        <FormField
-          control={form.control}
-          name="courses"
-          rules={{
-            required: "Courses is required",
-            validate: (value) =>
-              Number(value) >= 0 || "Price must be a positive number",
-          }}
-        />
-        <CourseSelector onCourseSelect={onCourseSelect} />
       </div>
     </div>
   );

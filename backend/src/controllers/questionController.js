@@ -6,22 +6,22 @@ import { Exam } from "../../api/index.js";
 //Fetch random questions from one exam
 export const getExamQuestions = async (req, res) => {
   const limit = 50;
-  const { exam_id } = req.params;
+  const { examId } = req.params;
   const level = req.query.level || 1;
 
   try {
-    // Validation
-    if (!exam_id) {
+    if (!examId) {
       return res.status(400).json({ message: "examId is required" });
     }
 
     const skipQuestions = (level - 1) * limit;
 
     const questions = await Question.aggregate([
-      { $match: { exam_id } },
+      { $match: { exam: examId } },
       { $sort: { _id: 1 } },
       { $skip: skipQuestions },
       { $limit: limit },
+      { $sample: { size: limit } },
     ]).exec();
 
     res.json(questions).status(200);
@@ -32,7 +32,7 @@ export const getExamQuestions = async (req, res) => {
 };
 export const getRandomQuestions = async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 50;
+    const limit = 50;
 
     // fetch question with limit
     const questions = await Question.aggregate([{ $sample: { size: limit } }]);
@@ -117,7 +117,6 @@ export const addQuestion = async (req, res) => {
 
   try {
     const {
-      exam_id,
       examId,
       description,
       question,
@@ -129,7 +128,7 @@ export const addQuestion = async (req, res) => {
     } = req.body;
 
     if (
-      !exam_id ||
+      // !exam_id ||
       !examId ||
       !question ||
       !opt_A ||
@@ -141,8 +140,8 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const examDoc = await Exam.findById(examId);
-
+    const examDoc = await Exam.findById(examId).exec();
+    console.log(examDoc);
     if (!examDoc) {
       return res.status(400).json({ message: "Invalid Exam ID" });
     }
@@ -180,7 +179,8 @@ export const addQuestion = async (req, res) => {
     }
 
     const newQuestion = new Question({
-      exam_id,
+      exam_id: examDoc.exam_id,
+      exam: examId,
       description,
       question: questionData,
       opt_A: optionData.opt_A,
@@ -211,7 +211,6 @@ export const updateQuestion = async (req, res) => {
 
   try {
     const {
-      exam_id,
       examId,
       description,
       question,
@@ -223,7 +222,7 @@ export const updateQuestion = async (req, res) => {
     } = req.body;
 
     if (
-      !exam_id ||
+      !examId ||
       !question ||
       !opt_A ||
       !opt_B ||
@@ -232,6 +231,10 @@ export const updateQuestion = async (req, res) => {
       !opt_correct
     ) {
       return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    if (!questionId) {
+      return res.status(400).json({ message: "Missing Question Id" });
     }
 
     const questionDoc = await Question.findById(questionId);
@@ -254,6 +257,7 @@ export const updateQuestion = async (req, res) => {
         .json({ message: "Question Text or Image is required" });
     }
 
+    //checking if either image or name is present
     const options = { opt_A, opt_B, opt_C, opt_D };
     for (const [key, opt] of Object.entries(options)) {
       if (!opt.name && !opt.image) {
@@ -308,7 +312,8 @@ export const updateQuestion = async (req, res) => {
     }
 
     // Update the question document
-    questionDoc.exam_id = exam_id;
+    questionDoc.exam_id = examDoc.exam_id;
+    questionDoc.exam = examDoc._id;
     questionDoc.description = description;
     questionDoc.question = questionData;
     questionDoc.opt_A = processedOptions.opt_A;

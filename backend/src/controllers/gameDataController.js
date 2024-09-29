@@ -27,6 +27,7 @@ export const addGameData = async (req, res) => {
       totalCorrect == null ||
       !timerSet ||
       !submittedTime ||
+      !playedFrom ||
       !gameMode
     ) {
       return res

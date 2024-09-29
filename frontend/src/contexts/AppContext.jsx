@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const defaultAppData = {
   user: null,
   isLoading: true,
+  exams: null,
 };
 
 export const AppContext = createContext();
@@ -36,8 +37,23 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchExams = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/exam`
+      );
+      if (response.status == 200) {
+        setAppData((prev) => ({ ...prev, exams: response.data }));
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to fetch Exams");
+    }
+  };
+
   useEffect(() => {
     fetchUser();
+    fetchExams();
   }, []);
 
   useEffect(() => {

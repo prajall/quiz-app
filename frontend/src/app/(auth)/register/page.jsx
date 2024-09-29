@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import AppContext from "@/contexts/AppContext";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -16,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { exams } from "@/examData";
 import { Pen, X } from "lucide-react";
 import Link from "next/link";
 
@@ -27,6 +27,9 @@ const Register = () => {
   const [croppedImage, setCroppedImage] = useState(null);
   const [interestedExams, setInterestedExams] = useState([]);
   const [direction, setDirection] = useState("next");
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
 
   const nextStep = () => {
     setDirection("next");

@@ -4,20 +4,14 @@ export const questionSchema = new mongoose.Schema({
   id: {
     type: String,
   },
+  exam: {
+    type: mongoose.Types.ObjectId,
+    ref: "Exam",
+    required: true,
+  },
   exam_id: {
     type: String,
-    enum: [
-      "1001",
-      "1002",
-      "1003",
-      "1004",
-      "1005",
-      "1006",
-      "1007",
-      "1008",
-      "1009",
-      "1010",
-    ],
+    required: true,
   },
   description: {
     type: String,
@@ -41,6 +35,7 @@ export const questionSchema = new mongoose.Schema({
     },
     _id: false,
   },
+
   opt_B: {
     name: {
       type: String,
@@ -50,6 +45,7 @@ export const questionSchema = new mongoose.Schema({
     },
     _id: false,
   },
+
   opt_C: {
     name: {
       type: String,
@@ -59,6 +55,7 @@ export const questionSchema = new mongoose.Schema({
     },
     _id: false,
   },
+
   opt_D: {
     name: {
       type: String,
@@ -68,6 +65,7 @@ export const questionSchema = new mongoose.Schema({
     },
     _id: false,
   },
+
   opt_correct: {
     type: String,
     enum: ["A", "B", "C", "D"],

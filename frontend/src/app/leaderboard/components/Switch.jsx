@@ -6,15 +6,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { exams } from "@/examData";
+import { AppContext } from "@/contexts/AppContext";
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 const SwitchableComponent = ({ onChangeSelected, onChangeSelectedExam }) => {
   const [selected, setSelected] = useState("Overall");
   const [selectedExam, setSelectedExam] = useState(0);
   const [bgStyle, setBgStyle] = useState({});
   const buttonsRef = useRef([]);
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
 
   const handleExamSelection = (event) => {
     setSelectedExam(event.target?.value);

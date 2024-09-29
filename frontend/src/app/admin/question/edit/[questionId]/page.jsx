@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AppContext } from "@/contexts/AppContext";
 import {
   Select,
   SelectContent,
@@ -22,20 +23,25 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus, Loader2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { toast } from "react-toastify";
 import imageCompression from "browser-image-compression";
+import { get } from "http";
 
 export default function QuestionEditForm({ params }) {
+  console.log("Questions page");
   const { questionId } = params;
   const [prevData, setPrevData] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
   const [imagePreviews, setImagePreviews] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [exams, setExams] = useState([]);
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
+
   const [images, setImages] = useState({
     question: null,
     opt_A: null,
@@ -60,6 +66,7 @@ export default function QuestionEditForm({ params }) {
     setValue,
     setError,
     reset,
+    getValues,
   } = useForm({});
 
   const fetchQuestion = async () => {
@@ -69,9 +76,22 @@ export default function QuestionEditForm({ params }) {
         `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`
       );
       if (response.status === 200) {
-        setPrevData(response.data);
-        reset(response.data);
+        console.log(response.data);
+        const exam = exams.find(
+          (exam) => exam.exam_id == response.data.exam_id
+        );
+        console.log("Exam found: ", exam);
+        if (exam) {
+          setPrevData((prev) => ({
+            ...prev,
+            ...response.data,
+            examId: exam._id ? exam._id : "",
+          }));
+        } else {
+          setPrevData((prev) => ({ ...prev, ...response.data }));
+        }
       }
+      return;
     } catch (error) {
       console.error("Error fetching question:", error);
     } finally {
@@ -79,20 +99,12 @@ export default function QuestionEditForm({ params }) {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    console.log("prevData", prevData);
+    reset(prevData);
+  }, [prevData]);
+  useEffect(() => {
     fetchQuestion();
-
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/exam`
-      );
-      if (response.status == 200) {
-        setExams(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to fetch Exams");
-    }
   }, []);
 
   const onSubmit = async (data) => {
@@ -101,7 +113,6 @@ export default function QuestionEditForm({ params }) {
       let uploadQuestion = true;
       setIsSubmitting(true);
       const formData = new FormData();
-      const validImageTypes = ["image/jpeg", "image/jpg", "image/png"];
 
       const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
       const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
@@ -143,16 +154,17 @@ export default function QuestionEditForm({ params }) {
 
       const imageUrls = {};
 
+      const validImageTypes = ["image/jpeg", "image/jpg", "image/png"];
       const uploadImages = async () => {
         for (const [key, image] of Object.entries(images)) {
           if (image) {
             if (!validImageTypes.includes(image.type)) {
-              setError(`${key}.image`, {
+              setError(`${key}.name`, {
                 type: "manual",
                 message: `Invalid image type for ${key}. Only JPEG, JPG, and PNG are allowed.`,
               });
               console.log(`Invalid image type for ${key}`);
-              throw new Error("Invalid image type");
+              throw new Error({ message: `Invalid image type for ${key}` });
             } else if (savedImageUrls[key]) {
               console.log("Using saved image: ", savedImageUrls[key]);
               imageUrls[key] = savedImageUrls[key];
@@ -231,6 +243,7 @@ export default function QuestionEditForm({ params }) {
           success: "Question updated successfully",
           error: {
             render({ data }) {
+              console.log("Errooooor: ", data);
               if (data.message === "Network Error") {
                 return "Failed to connect to the server";
               } else if (data.response?.data) {
@@ -258,12 +271,11 @@ export default function QuestionEditForm({ params }) {
   };
 
   const createImageUrl = (image, key) => {
-    if (image) {
-      URL.revokeObjectURL(imagePreviews);
+    if (imagePreviews[key]) {
+      URL.revokeObjectURL(imagePreviews[key]);
     }
     const newImageUrl = URL.createObjectURL(image);
     setImagePreviews((prev) => ({ ...prev, [key]: newImageUrl }));
-    console.log("setImagePreviews: ", imagePreviews);
   };
 
   const ImagePreview = ({ src, onRemove, isNew }) => (
@@ -486,10 +498,7 @@ export default function QuestionEditForm({ params }) {
 
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col w-full md:w-1/2 gap-1">
-              <Label
-                className="font-semibold text-md text-primary"
-                htmlFor="examId"
-              >
+              <Label className="font-semibold text-md " htmlFor="examId">
                 Exam Category:
               </Label>
               <Controller
@@ -501,6 +510,7 @@ export default function QuestionEditForm({ params }) {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      value={watch("examId")}
                     >
                       <SelectTrigger className="bg-white text-black w-full mt-1">
                         <SelectValue placeholder="Select Exam Category" />
@@ -523,10 +533,7 @@ export default function QuestionEditForm({ params }) {
             </div>
 
             <div className="flex flex-col w-full md:w-1/2 gap-1">
-              <Label
-                className="font-semibold text-md text-primary"
-                htmlFor="opt_correct"
-              >
+              <Label className="font-semibold text-md " htmlFor="opt_correct">
                 Correct Option:
               </Label>
               <Controller
@@ -537,6 +544,7 @@ export default function QuestionEditForm({ params }) {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    value={watch("opt_correct")}
                   >
                     <SelectTrigger className="bg-white text-black w-full mt-1">
                       <SelectValue placeholder="Select Correct Option" />
@@ -654,7 +662,8 @@ export default function QuestionEditForm({ params }) {
                     Exam Category:
                   </h4>
                   <p className="text-md ">
-                    {exams.find((exam) => exam._id === watch("examId"))}
+                    {exams.find((exam) => exam._id === watch("examId"))
+                      ?.title || ""}
                   </p>
                 </div>
               </div>

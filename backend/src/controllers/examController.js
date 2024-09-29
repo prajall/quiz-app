@@ -16,8 +16,7 @@ export const getAllExams = async (req, res) => {
 export const addExam = async (req, res) => {
   try {
     console.log(req.body);
-    const { exam_id, title, price, discount, totalQuestions, subTitle } =
-      req.body;
+    const { exam_id, title, price, discount, subTitle } = req.body;
 
     if (!exam_id || !title || !price) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -28,7 +27,8 @@ export const addExam = async (req, res) => {
         .status(400)
         .json({ message: "Exam with this ID already exists" });
     }
-    const totalLevels = Math.ceil(totalQuestions / 50);
+    const totalQuestions = 0;
+    const totalLevels = 0;
     const newExam = new Exam({
       exam_id,
       title,
@@ -65,22 +65,28 @@ export const deleteExam = async (req, res) => {
 
 export const editExam = async (req, res) => {
   try {
-    const exam_id = req.params.exam_id;
+    const { exam_id } = req.params;
+    const { title, price, discount, subTitle } = req.body;
+
     if (!exam_id) {
-      return res.status(400).json({ message: "Exam ID is required" });
+      return res.status(400).json({ message: "exam_id is required" });
     }
-    const exam = await Exam.findOne({ exam_id }).exec();
-    if (!exam) {
+
+    const existingExam = await Exam.findOne({ exam_id }).exec();
+    if (!existingExam) {
       return res.status(404).json({ message: "Exam not found" });
     }
-    const { name, price, discount } = req.body;
-    if (name) exam.name = name;
-    if (price) exam.price = price;
-    if (discount) exam.discount = discount;
-    await exam.save();
-    res.json(exam);
+
+    if (title) existingExam.title = title;
+    if (price !== undefined) existingExam.price = price;
+    if (discount !== undefined) existingExam.discount = discount;
+    if (subTitle) existingExam.subTitle = subTitle;
+
+    await existingExam.save();
+
+    res.status(200).json(existingExam);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to edit exam" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

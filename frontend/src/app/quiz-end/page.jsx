@@ -125,7 +125,10 @@ const page = () => {
                   key={item}
                   className="flex justify-between p-2 border-b hover:bg-gray/30 duration-300"
                 >
-                  <p>{examIdToName(item)} :</p>
+                  <p>
+                    {exams.find((exam) => exam.exam_id === item)?.title ||
+                      "Exam Title"}
+                  </p>
                   {/* <p>{item}</p> */}
                   <p>{score[item]}</p>
                 </li>
@@ -149,6 +152,9 @@ const page = () => {
         <div className="flex gap-2 items-center  ">
           <p className="font-semibold  text-xl ">
             {examIdToName(quizData.currentExam)} leaderboard
+            {exams.find((exam) => exam.exam_id === quizData.currentExam)
+              ?.title || "Category"}{" "}
+            leaderboard
           </p>
           <Link
             href={"/leaderboard"}

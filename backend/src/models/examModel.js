@@ -1,12 +1,21 @@
 import mongoose from "mongoose";
 
 export const examSchema = new mongoose.Schema({
+  // _id:
   exam_id: {
     type: String,
     required: true,
     unique: true,
     index: true,
   },
+  //  courses:["39"],b
+  courses: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Course",
+      required: true,
+    },
+  ],
   totalQuestions: {
     type: Number,
     default: 0,

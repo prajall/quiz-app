@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Top3 from "./components/Top3";
 import LeaderboardTable from "./components/LeaderboardTable";
 import SwitchableComponent from "./components/Switch";
-import { exams } from "@/examData";
+import { AppContext } from "@/contexts/AppContext";
 import Spinner from "@/components/Spinner";
 
 const LeaderboardPage = () => {
@@ -17,6 +17,9 @@ const LeaderboardPage = () => {
   const [overallLeaderboard, setOverallLeaderboard] = useState([]);
   const [examsLeaderboard, setExamsLeaderboard] = useState([]);
   const [exam_id, setExam_Id] = useState("All");
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
 
   const fetchOverallLeaderboard = async () => {
     setIsFetchingOverallLeaderboard(true);

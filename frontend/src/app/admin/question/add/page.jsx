@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { AppContext } from "@/contexts/AppContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,12 +23,11 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus, Loader2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, set, useForm } from "react-hook-form";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { examIdToName, exams } from "@/examData";
 import imageCompression from "browser-image-compression";
 
 export default function QuestionAddForm({ params }) {
@@ -41,6 +41,9 @@ export default function QuestionAddForm({ params }) {
     opt_C: null,
     opt_D: null,
   });
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
 
   const {
     register,
@@ -107,9 +110,9 @@ export default function QuestionAddForm({ params }) {
         for (const [key, image] of Object.entries(images)) {
           if (image) {
             if (!validImageTypes.includes(image.type)) {
-              setError(`${key}.image`, {
+              setError(`${key}.name`, {
                 type: "manual",
-                message: `Invalid image type for ${key}. Only JPEG, JPG, and PNG are allowed.`,
+                message: `Invalid image. Only JPEG, JPG, and PNG are allowed.`,
               });
               console.log(`Invalid image type for ${key}`);
               throw new Error("Invalid image type");
@@ -144,6 +147,7 @@ export default function QuestionAddForm({ params }) {
         description: data.description || "",
         opt_correct: data.opt_correct || "",
         examId: data.examId || "",
+        // exam_id: data.exam_id || "",
       };
 
       const options = ["A", "B", "C", "D"];
@@ -167,6 +171,7 @@ export default function QuestionAddForm({ params }) {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
+      console.log("Data: ", dataPayload);
       const response = await toast.promise(
         axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/question/add`,
@@ -180,9 +185,10 @@ export default function QuestionAddForm({ params }) {
         ),
         {
           pending: "Submitting your question...",
-          success: "Question updated successfully",
+          success: "Question Added successfully",
           error: {
             render({ data }) {
+              console.log(data);
               if (data.message === "Network Error") {
                 return "Failed to connect to the server";
               } else if (data.response?.data) {
@@ -210,20 +216,6 @@ export default function QuestionAddForm({ params }) {
   useEffect(() => {
     console.log("Images: ", images);
   }, [images]);
-
-  useEffect(async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/exam`
-      );
-      if (response.status == 200) {
-        setExams(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to fetch Exams");
-    }
-  }, []);
 
   const createImageUrl = (image, key) => {
     if (image) {
@@ -447,7 +439,7 @@ export default function QuestionAddForm({ params }) {
                   return (
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={watch("examId")}
                     >
                       <SelectTrigger className="bg-white text-black w-full mt-1">
                         <SelectValue placeholder="Select Exam Category" />
@@ -581,7 +573,7 @@ export default function QuestionAddForm({ params }) {
                     Exam Category:
                   </h4>
                   <p className="text-md ">
-                    {exams.find((exam) => exam._id === watch("examId"))}
+                    {exams.find((exam) => exam._id === watch("examId"))?.title}
                   </p>
                 </div>
               </div>

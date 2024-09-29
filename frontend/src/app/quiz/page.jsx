@@ -10,7 +10,6 @@ import { AppContext } from "@/contexts/AppContext";
 import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
 import { TimerContext } from "@/contexts/TimerContext";
-import { examIdToName, exams } from "@/examData";
 import axios from "axios";
 import { redirect, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -21,6 +20,7 @@ import MinuteSecond from "@/components/MinuteSecond";
 const page = () => {
   const { quizData, setQuizData, resetQuizData, startQuiz } =
     useContext(QuizContext);
+
   const { startTimer, stopTimer } = useContext(TimerContext);
   const { resetScore } = useContext(ScoreContext);
   const { appData } = useContext(AppContext);
@@ -30,6 +30,8 @@ const page = () => {
   const [questionLength, setQuestionsLength] = useState(
     quizData.quizSettings.questionLength
   );
+
+  const exams = appData.exams ? appData.exams : [];
 
   const router = useRouter();
 

@@ -1,14 +1,19 @@
 import React from "react";
-import { examIdToName, exams } from "@/examData";
+import { AppContext } from "@/contexts/AppContext";
 
 const ExamCategory = ({ question }) => {
-  console.log("ExamCategory", question);
-  const category = examIdToName(question.exam_id);
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
 
   return (
     <div className="text-black  font-semibold ">
       Category:{" "}
-      <span className="text-primary font-semibold text-lg"> {category}</span>{" "}
+      <span className="text-primary font-semibold text-lg">
+        {" "}
+        {exams.find((exam) => exam.id === question.exam_id)?.title ||
+          "Category"}
+      </span>{" "}
     </div>
   );
 };

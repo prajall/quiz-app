@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Question from "../../components/Question";
 import axios from "axios";
-import { exams } from "@/examData";
+import { AppContext } from "@/contexts/AppContext";
 import {
   Select,
   SelectContent,
@@ -17,12 +17,14 @@ const levels = Array.from({ length: 50 }, (_, i) => i + 1);
 
 const QuestionList = ({ params }) => {
   const router = useRouter();
-  const { exam_id } = params;
 
   const [questions, setQuestions] = useState([]);
-  const [examId, setExamId] = useState(exam_id);
+  const [examId, setExamId] = useState(params.examId);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { appData } = useContext(AppContext);
+
+  const exams = appData.exams ? appData.exams : [];
 
   useEffect(() => {
     if (examId && currentLevel) {
@@ -32,6 +34,7 @@ const QuestionList = ({ params }) => {
 
   const fetchQuestions = async (examId, level) => {
     setLoading(true);
+    console.log("Fetching question:", examId, level);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?level=${level}`
@@ -76,8 +79,8 @@ const QuestionList = ({ params }) => {
               </SelectTrigger>
               <SelectContent>
                 {exams.map((exam) => (
-                  <SelectItem key={exam.exam_id} value={exam.exam_id}>
-                    {exam.name}
+                  <SelectItem key={exam._id} value={exam._id}>
+                    {exam.title}
                   </SelectItem>
                 ))}
               </SelectContent>

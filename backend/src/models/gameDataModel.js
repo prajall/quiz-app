@@ -50,9 +50,6 @@ export const gameDataSchema = new Schema({
   accuracy: {
     type: Number,
   },
-  time_taken: {
-    type: Number,
-  },
   playedFrom: {
     type: String,
     enum: ["app", "web"],
@@ -63,7 +60,7 @@ export const gameDataSchema = new Schema({
 });
 
 gameDataSchema.pre("save", function (next) {
-  console.log("pre save called");
+  console.log("pre save called for accuracy");
   if (this.total_solved > 0) {
     this.accuracy = (this.total_correct / this.total_solved) * 100;
   } else {

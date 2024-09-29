@@ -5,13 +5,13 @@ export const examSoldSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  exam: {
+  examId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Exam",
     required: true,
     index: true,
   },
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -23,7 +23,11 @@ export const examSoldSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
-  price: {
+  basePrice: {
+    type: Number,
+    required: true,
+  },
+  boughtPrice: {
     type: Number,
     required: true,
   },
