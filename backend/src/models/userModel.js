@@ -2,33 +2,28 @@ import mongoose from "mongoose";
 
 export const userSchema = new mongoose.Schema(
   {
-    email: {
+    etutorId: {
       type: String,
       required: true,
+      unique: true,
+      index: true,
+    },
+    phoneNumber: {
+      type: String,
       unique: true,
       lowercase: true,
       index: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
-    image: {
-      type: String,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    interests: {
-      type: [String],
-      default: [],
-    },
     coin: {
       type: Number,
-      default: 0,
+      default: 150,
+      required: true,
     },
-    verificationCode: String,
+    isPremium: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   { timestamps: true }
 );

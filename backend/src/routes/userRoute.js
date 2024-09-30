@@ -1,6 +1,7 @@
 import express from "express";
 import {
   emailChecker,
+  etutorLogin,
   getCookies,
   getUserInfo,
   loginUser,
@@ -23,5 +24,7 @@ router.post("/register-code", registerVerificationCode);
 router.post("/verify-code", verifyCode);
 router.post("/reset-password", resetPassword);
 router.get("/", (req, res) => res.send("User Route"));
+
+router.post("/etutor-login", etutorLogin);
 
 export default router;

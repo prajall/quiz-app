@@ -2,16 +2,14 @@ import { User, Exam, ExamSold } from "../../api";
 
 export const addExamSold = async (req, res) => {
   try {
-    const { exam_id, examId, userId, basePrice, boughtPrice, discount } =
-      req.body;
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const userId = user._id;
+    const { examId, basePrice, boughtPrice, discount } = req.body;
 
-    if (
-      !exam_id ||
-      !examId ||
-      !userId ||
-      basePrice == null ||
-      boughtPrice == null
-    ) {
+    if (!examId || !userId || basePrice == null || boughtPrice == null) {
       return res
         .status(400)
         .json({ message: "All required fields must be provided." });
@@ -28,7 +26,6 @@ export const addExamSold = async (req, res) => {
     }
 
     const newExamSold = new ExamSold({
-      exam_id,
       examId,
       userId,
       basePrice,

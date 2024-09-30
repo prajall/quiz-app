@@ -1,9 +1,10 @@
 import express from "express";
 import { addGameData, getLevels } from "../controllers/gameDataController.js";
+import { etutorUserAuth } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/add", addGameData);
-router.get("/levels/:userId", getLevels);
+router.post("/", addGameData);
+router.get("/levels/", etutorUserAuth, getLevels);
 
 export default router;

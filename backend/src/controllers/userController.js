@@ -357,3 +357,19 @@ export const resetPassword = async (req, res) => {
     return res.status(500).send("Internal server error.");
   }
 };
+
+export const etutorLogin = async (req, res) => {
+  const { etutorId } = req.body;
+  const user = await User.findOne({ etutorId });
+
+  if (user) {
+    return res.status(200).send(user);
+  } else {
+    const newUser = User.create({ etutorId });
+    if (newUser) {
+      res.status(201).send(newUser);
+    } else {
+      return res.status(500).send("Failed to create user.");
+    }
+  }
+};

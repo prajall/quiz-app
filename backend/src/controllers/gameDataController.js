@@ -4,11 +4,14 @@ import { GameData } from "../../api/index.js";
 import mongoose from "mongoose";
 
 export const addGameData = async (req, res) => {
-  console.log("Adding Game Data");
+  const user = req.user;
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const userId = user._id;
   try {
     const {
       level,
-      user,
       exam,
       totalSolved,
       totalCorrect,
@@ -22,7 +25,7 @@ export const addGameData = async (req, res) => {
 
     if (
       !level ||
-      !user ||
+      !userId ||
       !exam ||
       totalSolved == null ||
       totalCorrect == null ||
@@ -36,7 +39,7 @@ export const addGameData = async (req, res) => {
         .json({ message: "All required fields must be provided and valid." });
     }
 
-    const userExists = await User.findById(user);
+    const userExists = await User.findById(userId);
     if (!userExists) {
       return res.status(404).json({ message: "User not found." });
     }
@@ -60,21 +63,25 @@ export const addGameData = async (req, res) => {
 
     if (submittedTime > timerSet) {
       return res.status(400).json({
-        message: "submittedTime exceeds the timer set for the round.",
+        message: "submittedTime cannot exceed timerSet for the round.",
       });
     }
 
     if (!["normal", "descriptive"].includes(gameMode)) {
-      return res.status(400).json({ message: "Invalid gameMode value." });
+      return res
+        .status(400)
+        .json({ message: "gameMode must be 'normal' or 'descriptive' " });
     }
 
     if (playedFrom && !["app", "web"].includes(playedFrom)) {
-      return res.status(400).json({ message: "Invalid playedFrom value." });
+      return res
+        .status(400)
+        .json({ message: " playedFrom must be 'app' or 'web" });
     }
 
     const newGame = new GameData({
       level,
-      user,
+      user: userId,
       exam,
       totalSolved,
       totalCorrect,
@@ -97,7 +104,11 @@ export const addGameData = async (req, res) => {
 
 export const getLevels = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const userId = user._id;
     const { examId } = req.query;
 
     // Ensure the user exists

@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 export const examSoldSchema = new mongoose.Schema({
-  exam_id: {
-    type: Number,
-    required: true,
-  },
   examId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Exam",
