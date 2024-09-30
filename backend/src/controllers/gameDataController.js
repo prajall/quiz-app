@@ -117,21 +117,30 @@ export const getLevels = async (req, res) => {
     const examObjectId = new mongoose.Types.ObjectId(examId);
 
     const levelsData = await GameData.aggregate([
-      { $match: { user: userObjectId, exam: examObjectId } },
+      {
+        $match: {
+          user: userObjectId,
+          exam: examObjectId,
+        },
+      },
       {
         $group: {
           _id: "$level",
-          totalSolved: { $first: "$totalSolved" },
-          totalCorrect: { $first: "$totalCorrect" },
+          totalCorrect: { $max: "$totalCorrect" },
+          doc: { $first: "$$ROOT" },
         },
       },
-      { $sort: { _id: 1 } },
+      {
+        $sort: {
+          _id: 1,
+        },
+      },
       {
         $project: {
           _id: 0,
           level: "$_id",
-          totalSolved: 1,
-          totalCorrect: 1,
+          totalSolved: "$doc.totalSolved",
+          totalCorrect: "$doc.totalCorrect",
         },
       },
     ]);
