@@ -83,7 +83,7 @@ export default function CourseSelector({ onChangeCourses }) {
         {selectedCourses.map((course) => (
           <div
             key={course.id}
-            className="flex items-center border w-fit overflow-hidden mt-2 text-ellipsis whitespace-nowrap border-primary bg-blue-50 px-2 py-1 rounded-full text-sm"
+            className="flex items-center border w-fit overflow-hidden mt-2 text-ellipsis whitespace-nowrap border-primary bg-blue-50 px-2 pl-3 py-1 rounded-full text-sm"
           >
             <p className="">{course.name.slice(0, 25)}</p>
             <Button
@@ -119,12 +119,13 @@ export default function CourseSelector({ onChangeCourses }) {
               categoryDetails.courses.map((course) => (
                 <div
                   key={course.id}
-                  className="flex items-center space-x-2 pb-4"
+                  className="flex items-center space-x-2 p-2"
                 >
                   <Checkbox
                     id={`course-${course.id}`}
                     checked={selectedCourses.some((c) => c.id === course.id)}
                     onCheckedChange={() => handleCourseToggle(course)}
+                    className="text-white"
                   />
                   <label
                     htmlFor={`course-${course.id}`}
