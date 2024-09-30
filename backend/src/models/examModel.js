@@ -8,12 +8,16 @@ export const examSchema = new mongoose.Schema({
     unique: true,
     index: true,
   },
-  //  courses:["39"],b
+  // courses: [
+  //   {
+  //     type: mongoose.Types.ObjectId,
+  //     ref: "Course",
+  //     required: true,
+  //   },
+  // ],
   courses: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: "Course",
-      required: true,
+      type: String,
     },
   ],
   totalQuestions: {

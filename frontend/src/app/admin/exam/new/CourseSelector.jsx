@@ -1,176 +1,146 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
-import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { toast } from "react-toastify";
-import CourseSelector from "./CourseSelector";
 
-export default function ExamForm() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function CourseSelector({ onChangeCourses }) {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryDetails, setCategoryDetails] = useState(null);
+  const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const form = useForm({
-    defaultValues: {
-      exam_id: "1011",
-      title: "",
-      price: "",
-      discount: "",
-      subTitle: "",
-      courses: [], // Initialize courses array
-    },
-  });
-
-  const onSubmit = async (data) => {
-    setIsLoading(true);
-    console.log("Submitted data:", data);
-
+  const fetchCategories = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/exam`,
-        data
+      const response = await axios.get(
+        "https://etutorclass.com/api/v1/categories"
       );
-      console.log(response);
-      if (!response.status === 200) {
-        throw new Error("Failed to add exam");
-      }
-
-      toast.success("Exam added successfully");
-      form.reset();
+      console.log(response.data);
+      setCategories(response.data);
     } catch (error) {
       console.log(error);
-      if (error.response?.data?.message) {
-        toast.error(error.response?.data?.message);
-      } else {
-        toast.error("Unexpected error occurred");
-      }
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const onCourseSelect = (value) => {
-    form.setValue("courses", value);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategoryDetails = async (slug) => {
+    try {
+      const response = await axios.get(
+        `https://etutorclass.com/api/v1/category/${slug}`
+      );
+      console.log(response.data);
+      setCategoryDetails(response.data.category);
+    } catch (error) {
+      console.error("Error fetching category details:", error);
+    }
   };
 
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchCategoryDetails(selectedCategory);
+    }
+  }, [selectedCategory]);
+
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
+  };
+
+  const handleCourseToggle = (course) => {
+    setSelectedCourses((prev) => {
+      const exists = prev.some((c) => c.id === course.id);
+      if (exists) {
+        return prev.filter((c) => c.id !== course.id);
+      } else {
+        return [...prev, { id: course.id, name: course.name }];
+      }
+    });
+  };
+
+  const removeCourse = (id) => {
+    setSelectedCourses((prev) => prev.filter((course) => course.id !== id));
+  };
+
+  useEffect(() => {
+    console.log(selectedCourses);
+    onChangeCourses(selectedCourses);
+  }, [selectedCourses]);
   return (
-    <div className="mx-auto mt-10 px-4 py-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div className=" p-6">
-          <h2 className="text-3xl font-bold ">Add New Exam</h2>
-        </div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="p-6 space-y-6"
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-x-2">
+        {selectedCourses.map((course) => (
+          <div
+            key={course.id}
+            className="flex items-center border w-fit overflow-hidden mt-2 text-ellipsis whitespace-nowrap border-primary bg-blue-50 px-2 py-1 rounded-full text-sm"
           >
-            <FormField
-              className="w-full"
-              control={form.control}
-              name="title"
-              rules={{ required: "Title is required" }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="">Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              className="w-full"
-              control={form.control}
-              name="subTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="">Subtitle</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="price"
-                rules={{
-                  required: "Price is required",
-                  validate: (value) =>
-                    Number(value) >= 0 || "Price must be a positive number",
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="">Price</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" className="" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="discount"
-                rules={{
-                  validate: (value) =>
-                    !value ||
-                    Number(value) >= 0 ||
-                    "Discount must be a positive number",
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="">
-                      Discount (Rs){" "}
-                      <span className="text-muted-foreground text-xs">
-                        (optional)
-                      </span>{" "}
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" className="" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="courses"
-              rules={{ required: "Courses is required" }}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="">Select Courses</FormLabel>
-                  <FormControl>
-                    <CourseSelector onCourseSelect={onCourseSelect} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            <p className="">{course.name.slice(0, 25)}</p>
             <Button
-              type="submit"
-              className="w-full bg-primary text-white hover:bg-primary-dark"
-              disabled={isLoading}
+              variant="ghost"
+              size="icon"
+              className="ml-2 h-4 w-4 flex items-center justify-center hover:bg-primary hover:text-white rounded-full"
+              onClick={() => removeCourse(course.id)}
             >
-              {isLoading ? "Adding..." : "Add Exam"}
+              <X size={12} />
             </Button>
-          </form>
-        </Form>
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+        <div className="w-full sm:w-1/2">
+          <Select onValueChange={handleCategoryChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.slug}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="w-full sm:w-1/2">
+          <ScrollArea className="h-[150px] w-full border rounded-md p-2">
+            {categoryDetails ? (
+              categoryDetails.courses.map((course) => (
+                <div
+                  key={course.id}
+                  className="flex items-center space-x-2 pb-4"
+                >
+                  <Checkbox
+                    id={`course-${course.id}`}
+                    checked={selectedCourses.some((c) => c.id === course.id)}
+                    onCheckedChange={() => handleCourseToggle(course)}
+                  />
+                  <label
+                    htmlFor={`course-${course.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {course.name}
+                  </label>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Select a category to view courses
+              </p>
+            )}
+          </ScrollArea>
+        </div>
       </div>
     </div>
   );

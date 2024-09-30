@@ -16,7 +16,7 @@ export const getAllExams = async (req, res) => {
 export const addExam = async (req, res) => {
   try {
     console.log(req.body);
-    const { exam_id, title, price, discount, subTitle } = req.body;
+    const { exam_id, title, price, discount, subTitle, courses } = req.body;
 
     if (!exam_id || !title || !price) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -37,6 +37,7 @@ export const addExam = async (req, res) => {
       totalLevels,
       discount,
       subTitle,
+      courses,
     });
     await newExam.save();
     res.status(201).json(newExam);

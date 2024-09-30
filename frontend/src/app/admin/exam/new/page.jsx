@@ -21,7 +21,7 @@ export default function ExamForm() {
 
   const form = useForm({
     defaultValues: {
-      exam_id: "1011",
+      exam_id: "",
       title: "",
       price: "",
       discount: "",
@@ -31,18 +31,20 @@ export default function ExamForm() {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    console.log("Submitted data:", data);
 
     try {
+      const courseIds = data.courses.map((course) => course.id.toString());
+      const dataPayload = {
+        ...data,
+        courses: courseIds,
+      };
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/exam`,
-        data
+        dataPayload
       );
-      console.log(response);
       if (!response.status === 200) {
         throw new Error("Failed to add exam");
       }
-
       toast.success("Exam added successfully");
       form.reset();
     } catch (error) {
@@ -57,23 +59,21 @@ export default function ExamForm() {
     }
   };
 
-  const onCourseSelect = (value) => {
+  const onChangeCourses = (value) => {
+    console.log("Selected Course: ", value);
     form.setValue("courses", value);
   };
 
   return (
-    <div className="mx-auto mt-10 px-4 py-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <div className=" p-6">
+    <div className="mx-auto py-8">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden">
+        <div className=" py-6">
           <h2 className="text-3xl font-bold ">Add New Exam</h2>
         </div>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="p-6 space-y-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
-              className="w-full"
+              className="w-full md:w-1/2"
               control={form.control}
               name="title"
               rules={{ required: "Title is required" }}
@@ -81,26 +81,43 @@ export default function ExamForm() {
                 <FormItem>
                   <FormLabel className="">Title</FormLabel>
                   <FormControl>
-                    <Input {...field} className="" />
+                    <Input {...field} className="w-full" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              className="w-full"
-              control={form.control}
-              name="subTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="">Subtitle</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex flex-col md:flex-row gap-6 w-full">
+              <FormField
+                className="w-full md:w-1/2"
+                control={form.control}
+                name="subTitle"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="">Subtitle</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                className="w-full md:w-1/2"
+                control={form.control}
+                name="exam_id"
+                rules={{ required: "Exam Id is required" }}
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="">Exam Id</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-6">
               <FormField
                 control={form.control}
@@ -145,26 +162,20 @@ export default function ExamForm() {
                 )}
               />
             </div>
+            <div className="">
+              <h3 className="text-sm">Courses:</h3>
+              <CourseSelector onChangeCourses={onChangeCourses} />
+            </div>
 
             <Button
               type="submit"
-              className="w-full bg-primary text-white hover:bg-primary-dark"
+              className="w-full bg-primary text-white hover:bg-primary"
               disabled={isLoading}
             >
               {isLoading ? "Adding..." : "Add Exam"}
             </Button>
           </form>
         </Form>
-        <FormField
-          control={form.control}
-          name="courses"
-          rules={{
-            required: "Courses is required",
-            validate: (value) =>
-              Number(value) >= 0 || "Price must be a positive number",
-          }}
-        />
-        <CourseSelector onCourseSelect={onCourseSelect} />
       </div>
     </div>
   );
