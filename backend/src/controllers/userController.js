@@ -370,9 +370,12 @@ export const etutorLogin = async (req, res) => {
     if (user) {
       return res.status(200).json({ message: "User Exists" });
     } else {
-      const newUser = await User.create({ etutor_id });
-
+      const newUser = new User({
+        etutor_id,
+      });
+      console.log(newUser);
       if (newUser) {
+        await newUser.save();
         console.log("New User Created", newUser);
         res.status(201).json({ message: "New User Created" });
       } else {
