@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { User } from "../../api/index.js";
 
 export const authorisedUser = async (req, res, next) => {
   try {
@@ -23,15 +24,18 @@ export const authorisedUser = async (req, res, next) => {
 
 export const etutorUserAuth = async (req, res, next) => {
   try {
-    const { etutorId } = req.body;
-    if (!etutorId) {
-      return res.status(400).json({ message: "Etutor Id is required" });
+    const { etutor_id } = req.headers;
+    if (!etutor_id) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized. Missing Etutor Id" });
     }
 
-    const userDoc = await User.findOne({ etutorId });
+    const userDoc = await User.findOne({ etutor_id });
     if (!userDoc) {
       return res.status(404).json({ message: "Quiz user not found" });
     }
+
     req.user = userDoc;
     next();
   } catch (error) {

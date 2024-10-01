@@ -359,46 +359,46 @@ export const resetPassword = async (req, res) => {
 };
 
 export const etutorLogin = async (req, res) => {
-  const { etutorId } = req.body;
-  const user = await User.findOne({ etutorId });
-
-  if (user) {
-    return res.status(200).send(user);
-  } else {
-    const newUser = User.create({ etutorId });
-    if (newUser) {
-      res.status(201).send(newUser);
+  const { etutor_id } = req.body;
+  console.log(etutor_id);
+  const user = await User.findOne({ etutor_id });
+  console.log("User Doc", user);
+  try {
+    if (user) {
+      return res.status(200).json({ message: "User Exists" });
     } else {
-      return res.status(500).send("Failed to create user.");
+      const newUser = await User.create({ etutor_id });
+
+      if (newUser) {
+        console.log("New User Created", newUser);
+        res.status(201).json({ message: "New User Created" });
+      } else {
+        return res.status(500).send("Failed to create user.");
+      }
     }
+  } catch (error) {
+    console.log("Error in etutorLogin controller", error);
+    return res.status(500).send("Internal server error");
   }
 };
 
 export const makeUserPremium = async (req, res) => {
   try {
-    //TODO:  Get Admin Id
+    //TODO:  This should be done by admin
 
-    // const { user } = req.user;
-    // const adminUserId = user._id;
+    const user = req.user;
 
-    const { userId } = req.params;
-
-    // if(!adminUserId) {
-    //   return res.status(401).send("Unauthorized Admin");
-    // }
-
-    const userDoc = await User.findById(userId);
-    if (!userDoc) {
-      return res.status(404).send("User not found");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-    if (userDoc.isPremium) {
-      return res.status(400).send("User is already premium");
+    if (user.isPremium) {
+      return res.status(200).json({ message: "User is already premium" });
     }
-    userDoc.isPremium = true;
-    await userDoc.save();
-    return res.status(200).send("User is now premium");
+    user.isPremium = true;
+    await user.save();
+    return res.status(200).json({ message: "User is now premium" });
   } catch (error) {
     console.log("Error in makeUserPremium", error);
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

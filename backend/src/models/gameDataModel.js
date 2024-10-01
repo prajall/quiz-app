@@ -39,7 +39,7 @@ export const gameDataSchema = new Schema({
   },
   submittedTime: {
     //when user ended the round (from timerSet)
-    type: Date,
+    type: Number,
     required: true,
   },
   gameMode: {

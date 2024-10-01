@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export const userSchema = new mongoose.Schema(
   {
-    etutorId: {
+    etutor_id: {
       type: String,
       required: true,
       unique: true,
@@ -10,11 +10,10 @@ export const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      unique: true,
       lowercase: true,
       index: true,
     },
-    coin: {
+    coins: {
       type: Number,
       default: 150,
       required: true,

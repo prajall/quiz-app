@@ -1,4 +1,4 @@
-import { Question } from "../../api/index.js";
+import { Question, User } from "../../api/index.js";
 import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 import { Exam } from "../../api/index.js";
@@ -8,6 +8,13 @@ export const getExamQuestions = async (req, res) => {
   const limit = 50;
   const { examId } = req.params;
   const level = req.query.level || 1;
+  const user = req.user;
+
+  console.log(typeof user);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
 
   try {
     if (!examId) {
@@ -24,7 +31,10 @@ export const getExamQuestions = async (req, res) => {
       { $sample: { size: limit } },
     ]).exec();
 
-    res.json(questions).status(200);
+    user.coins = user.coins - 5;
+    await user.save();
+
+    return res.json(questions).status(200);
   } catch (err) {
     console.error(err);
     res.status(500).send({ message: "Failed to fetch Question" });
