@@ -361,6 +361,9 @@ export const resetPassword = async (req, res) => {
 export const etutorLogin = async (req, res) => {
   const { etutor_id } = req.body;
   console.log(etutor_id);
+  if (!etutor_id) {
+    return res.status(400).json({ message: "Etutor Id is required" });
+  }
   const user = await User.findOne({ etutor_id });
   console.log("User Doc", user);
   try {
