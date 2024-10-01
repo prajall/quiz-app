@@ -110,7 +110,9 @@ export const getLevels = async (req, res) => {
     }
     const userId = user._id;
     const { examId } = req.query;
-
+    if (!examId) {
+      return res.status(404).json({ message: "Exam Id is required" });
+    }
     // Ensure the user exists
     const userExists = await User.findById(userId);
     if (!userExists) {
