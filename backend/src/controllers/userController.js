@@ -373,3 +373,32 @@ export const etutorLogin = async (req, res) => {
     }
   }
 };
+
+export const makeUserPremium = async (req, res) => {
+  try {
+    //TODO:  Get Admin Id
+
+    // const { user } = req.user;
+    // const adminUserId = user._id;
+
+    const { userId } = req.params;
+
+    // if(!adminUserId) {
+    //   return res.status(401).send("Unauthorized Admin");
+    // }
+
+    const userDoc = await User.findById(userId);
+    if (!userDoc) {
+      return res.status(404).send("User not found");
+    }
+    if (userDoc.isPremium) {
+      return res.status(400).send("User is already premium");
+    }
+    userDoc.isPremium = true;
+    await userDoc.save();
+    return res.status(200).send("User is now premium");
+  } catch (error) {
+    console.log("Error in makeUserPremium", error);
+    return res.status(500).send("Internal server error");
+  }
+};

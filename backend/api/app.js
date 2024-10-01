@@ -25,12 +25,13 @@ app.use(
 );
 
 // SETUP ROUTES
-app.use("/user", userRoute);
-app.use("/question", questionRoute);
-app.use("/score", scoreRoute);
-app.use("/gamedata", gameDataRoute);
-app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
-app.use("/exam", examRoute);
+// app.use("/api/v1");
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/question", questionRoute);
+app.use("/api/v1/score", scoreRoute);
+app.use("/api/v1/gamedata", gameDataRoute);
+app.use("/api/v1/leaderboard", apiKeyValidation, leaderboardRoute);
+app.use("/api/v1/exam", examRoute);
 // app.use("/examsold", examSoldRoute);
 
 app.get("/", (req, res) => {

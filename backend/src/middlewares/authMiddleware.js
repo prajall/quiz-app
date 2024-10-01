@@ -25,12 +25,12 @@ export const etutorUserAuth = async (req, res, next) => {
   try {
     const { etutorId } = req.body;
     if (!etutorId) {
-      return res.status(400).send("Etutor Id is required");
+      return res.status(400).json({ message: "Etutor Id is required" });
     }
 
     const userDoc = await User.findOne({ etutorId });
     if (!userDoc) {
-      return res.status(404).send("Quiz user not found");
+      return res.status(404).json({ message: "Quiz user not found" });
     }
     req.user = userDoc;
     next();

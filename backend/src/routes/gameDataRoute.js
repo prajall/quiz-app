@@ -4,7 +4,7 @@ import { etutorUserAuth } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", addGameData);
+router.post("/", etutorUserAuth, addGameData);
 router.get("/levels/", etutorUserAuth, getLevels);
 
 export default router;
