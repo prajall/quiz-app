@@ -166,6 +166,10 @@ export const getLevels = async (req, res) => {
       totalCorrect: 0,
     }));
 
+    if (levelsArray.length > 0) {
+      levelsArray[0].unlocked = true;
+    }
+
     // Update levelsArray with data from levelsData
     levelsData.forEach((levelData) => {
       const levelIndex = levelData.level - 1;
