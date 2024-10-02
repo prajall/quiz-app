@@ -1,4 +1,4 @@
-import { Exam } from "../../api/index.js";
+import { Exam, UserExam } from "../../api/index.js";
 
 export const getAllExams = async (req, res) => {
   try {
