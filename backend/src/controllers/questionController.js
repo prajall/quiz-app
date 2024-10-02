@@ -40,6 +40,41 @@ export const getExamQuestions = async (req, res) => {
     res.status(500).send({ message: "Failed to fetch Question" });
   }
 };
+export const getExamQuestionsAdmin = async (req, res) => {
+  const limit = 50;
+  const { examId } = req.params;
+  const level = req.query.level || 1;
+  // const user = req.user;
+
+  // console.log(typeof user);
+
+  // if (!user) {
+  //   return res.status(404).json({ message: "User not found" });
+  // }
+
+  try {
+    if (!examId) {
+      return res.status(400).json({ message: "examId is required" });
+    }
+
+    const skipQuestions = (level - 1) * limit;
+
+    const questions = await Question.aggregate([
+      { $match: { exam: examId } },
+      { $sort: { _id: 1 } },
+      { $skip: skipQuestions },
+      { $limit: limit },
+    ]).exec();
+
+    // user.coins = user.coins - 5;
+    // await user.save();
+
+    return res.json(questions).status(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: "Failed to fetch Question" });
+  }
+};
 export const getRandomQuestions = async (req, res) => {
   try {
     const limit = 50;

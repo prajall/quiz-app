@@ -3,6 +3,7 @@ import {
   addQuestion,
   changeQuestionFormat,
   getExamQuestions,
+  getExamQuestionsAdmin,
   getQuestionById,
   getRandomQuestions,
   updateQuestion,
@@ -13,6 +14,7 @@ import { coinChecker } from "../middlewares/userChecker.js";
 const router = express.Router();
 
 router.get("/exam/:examId", etutorUserAuth, coinChecker(5), getExamQuestions);
+router.get("/exam/:examId/admin", getExamQuestionsAdmin);
 router.get("/random", getRandomQuestions);
 router.get("/:questionId", getQuestionById);
 router.get("/", (req, res) => res.send("Question Route"));

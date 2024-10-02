@@ -42,6 +42,7 @@ const AppProvider = ({ children }) => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/exam`
       );
+
       if (response.status == 200) {
         setAppData((prev) => ({ ...prev, exams: response.data }));
       }

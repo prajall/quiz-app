@@ -279,7 +279,7 @@ export default function QuestionAddForm({ params }) {
         >
           <div className="">
             <Label
-              className="font-semibold text-md text-primary "
+              className="font-semibold text-md text-black"
               htmlFor="question.name"
             >
               Question:
@@ -338,7 +338,7 @@ export default function QuestionAddForm({ params }) {
 
           <div>
             <Label
-              className="font-semibold text-md text-primary "
+              className="font-semibold text-md text-black"
               htmlFor="description"
             >
               Description:
@@ -363,7 +363,7 @@ export default function QuestionAddForm({ params }) {
             {["A", "B", "C", "D"].map((option) => (
               <div key={option} className="space-y-2">
                 <Label
-                  className="font-semibold text-md text-primary"
+                  className="font-semibold text-md text-black"
                   htmlFor={`opt_${option}.name`}
                 >
                   Option {option}
@@ -397,7 +397,7 @@ export default function QuestionAddForm({ params }) {
                 {!imagePreviews[`opt_${option}`] && (
                   <Button
                     variant="outline"
-                    className=" flex items-center justify-center gap-1 text-primary"
+                    className=" flex items-center justify-center gap-1 "
                     onClick={(e) => {
                       e.preventDefault();
                       document.getElementById(`opt_${option}.image`).click();
@@ -426,7 +426,7 @@ export default function QuestionAddForm({ params }) {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col w-full md:w-1/2 gap-1">
               <Label
-                className="font-semibold text-md text-primary"
+                className="font-semibold text-md text-black"
                 htmlFor="examId"
               >
                 Exam Category:
@@ -463,7 +463,7 @@ export default function QuestionAddForm({ params }) {
 
             <div className="flex flex-col w-full md:w-1/2 gap-1">
               <Label
-                className="font-semibold text-md text-primary"
+                className="font-semibold text-md text-black"
                 htmlFor="opt_correct"
               >
                 Correct Option:

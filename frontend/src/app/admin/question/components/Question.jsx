@@ -37,15 +37,16 @@ const Question = ({ question }) => {
                     className={cn(
                       "flex gap-1",
                       question.opt_correct == String.fromCharCode(65 + index)
-                        ? "text-green-500"
+                        ? "text-blue-500"
                         : ""
                     )}
+                    key={option}
                   >
                     <p
                       className={cn(
                         "",
                         question.opt_correct == String.fromCharCode(65 + index)
-                          ? "text-green-400"
+                          ? "text-blue-400"
                           : ""
                       )}
                     >

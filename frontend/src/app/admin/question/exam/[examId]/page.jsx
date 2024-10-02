@@ -12,22 +12,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const levels = Array.from({ length: 50 }, (_, i) => i + 1);
+import { toast } from "react-toastify";
+import { set } from "react-hook-form";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 const QuestionList = ({ params }) => {
-  const router = useRouter();
-
-  const [questions, setQuestions] = useState([]);
   const [examId, setExamId] = useState(params.examId);
+
+  const router = useRouter();
+  const [questions, setQuestions] = useState([]);
   const [currentLevel, setCurrentLevel] = useState(1);
+  const [maxLevel, setMaxLevel] = useState(0);
   const [loading, setLoading] = useState(false);
   const { appData } = useContext(AppContext);
 
   const exams = appData.exams ? appData.exams : [];
 
   useEffect(() => {
-    if (examId && currentLevel) {
+    if (!appData.isLoading && examId && currentLevel) {
+      const maxLevelVar = Number(
+        exams.find((exam) => exam._id === examId)?.totalLevels || 0
+      );
+      setMaxLevel(maxLevelVar);
       fetchQuestions(examId, currentLevel);
     }
   }, [examId, currentLevel]);
@@ -37,12 +44,21 @@ const QuestionList = ({ params }) => {
     console.log("Fetching question:", examId, level);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?level=${level}`
+        `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}/admin?level=${level}`,
+        // {},
+        {
+          headers: {
+            etutor_id: "96712",
+          },
+        }
       );
       const data = response.data;
       console.log("Questions:", data);
       setQuestions(data || []);
     } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Unauthorized");
+      }
       console.error("Error fetching questions:", error);
     } finally {
       setLoading(false);
@@ -63,7 +79,18 @@ const QuestionList = ({ params }) => {
   return (
     <div className="mx-auto py-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
-        <h1 className="text-3xl font-bold">Questions</h1>
+        <div className="flex gap-4 items-center">
+          <h1 className="text-3xl font-bold">Questions</h1>
+          <Link href="/admin/question/add">
+            <Button
+              variant="outline"
+              title="Add New Question"
+              className=" h-10 w-10 p-0 "
+            >
+              <Plus size={14} />
+            </Button>
+          </Link>
+        </div>
 
         <div className="w-full md:w-64 flex items-center gap-4 justify-between md:justify-end ">
           <div className="w-full">
@@ -100,11 +127,13 @@ const QuestionList = ({ params }) => {
                 <SelectValue placeholder="Choose level" />
               </SelectTrigger>
               <SelectContent>
-                {levels.map((level) => (
-                  <SelectItem key={level} value={level}>
-                    {level}
-                  </SelectItem>
-                ))}
+                {Array.from({ length: maxLevel }, (_, i) => i + 1).map(
+                  (level) => (
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
+                  )
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -124,16 +153,16 @@ const QuestionList = ({ params }) => {
           Previous
         </Button>
         <span>
-          Level {currentLevel} of {levels.length}
+          Level {currentLevel} of {maxLevel}
         </span>
         <Button
           variant="link"
           onClick={() => {
-            const nextLevel = Math.min(currentLevel + 1, levels.length);
+            const nextLevel = Math.min(currentLevel + 1, maxLevel);
             router.push(`/admin/question/exam/${examId}?level=${nextLevel}`);
             setCurrentLevel(nextLevel);
           }}
-          disabled={currentLevel === levels.length}
+          disabled={currentLevel === maxLevel}
         >
           Next
         </Button>
@@ -165,16 +194,16 @@ const QuestionList = ({ params }) => {
             Previous
           </Button>
           <span>
-            Level {currentLevel} of {levels.length}
+            Level {currentLevel} of {maxLevel}
           </span>
           <Button
             variant="link"
             onClick={() => {
-              const nextLevel = Math.min(currentLevel + 1, levels.length);
+              const nextLevel = Math.min(currentLevel + 1, maxLevel);
               router.push(`/admin/question/exam/${examId}?level=${nextLevel}`);
               setCurrentLevel(nextLevel);
             }}
-            disabled={currentLevel === levels.length}
+            disabled={currentLevel === maxLevel}
           >
             Next
           </Button>
