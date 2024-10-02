@@ -23,6 +23,11 @@ export const userSchema = new mongoose.Schema(
       default: false,
       required: true,
     },
+    totalScore: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

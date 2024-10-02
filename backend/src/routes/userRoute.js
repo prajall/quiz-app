@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addCoins,
   emailChecker,
   etutorLogin,
   getCookies,
@@ -29,5 +30,6 @@ router.get("/", (req, res) => res.send("User Route"));
 
 router.post("/etutor-login", etutorLogin);
 router.patch("/make-premium", etutorUserAuth, makeUserPremium);
+router.post("/add-coins", etutorUserAuth, addCoins);
 
 export default router;

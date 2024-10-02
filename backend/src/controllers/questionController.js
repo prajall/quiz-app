@@ -31,7 +31,7 @@ export const getExamQuestions = async (req, res) => {
       { $sample: { size: limit } },
     ]).exec();
 
-    user.coins = user.coins - 5;
+    user.coins = user.coins - 50;
     await user.save();
 
     return res.json(questions).status(200);

@@ -6,9 +6,42 @@ export const getAllExams = async (req, res) => {
     if (!exams) {
       return res.status(404).json({ message: "No Exams" });
     }
+
     return res.status(200).json(exams);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const getAllExamsWithScores = async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  try {
+    const exams = await Exam.find().exec();
+    if (!exams || exams.length === 0) {
+      return res.status(404).json({ message: "No Exams found" });
+    }
+    const userExamDoc = await UserExam.find({ user: user._id }).exec();
+    console.log(userExamDoc);
+    const userExamMap = {};
+    userExamDoc.forEach((userExam) => {
+      userExamMap[userExam.exam.toString()] = userExam.score;
+    });
+
+    const examsWithUserScore = exams.map((exam) => {
+      const userScore = userExamMap[exam._id.toString()] || 0;
+      return {
+        ...exam.toObject(),
+        userScore,
+      };
+    });
+
+    return res.status(200).json(examsWithUserScore);
+  } catch (err) {
+    console.error("Error fetching exams or user exam data:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

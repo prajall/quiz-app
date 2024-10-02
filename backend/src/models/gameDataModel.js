@@ -47,6 +47,10 @@ export const gameDataSchema = new Schema({
     enum: ["normal", "descriptive"],
     required: true,
   },
+  score: {
+    type: Number,
+    required: true,
+  },
   accuracy: {
     type: Number,
   },
@@ -57,14 +61,4 @@ export const gameDataSchema = new Schema({
   location: {
     type: String,
   },
-});
-
-gameDataSchema.pre("save", function (next) {
-  console.log("pre save called for accuracy");
-  if (this.total_solved > 0) {
-    this.accuracy = (this.total_correct / this.total_solved) * 100;
-  } else {
-    this.accuracy = 0;
-  }
-  next();
 });

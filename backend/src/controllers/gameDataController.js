@@ -1,4 +1,4 @@
-import { User } from "../../api/index.js";
+import { User, UserExam } from "../../api/index.js";
 import { Exam } from "../../api/index.js";
 import { GameData } from "../../api/index.js";
 import mongoose from "mongoose";
@@ -9,6 +9,7 @@ export const addGameData = async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
   const userId = user._id;
+
   try {
     const {
       level,
@@ -22,6 +23,8 @@ export const addGameData = async (req, res) => {
       playedFrom,
       location,
     } = req.body;
+
+    console.log("body: ", req.body);
 
     if (
       !level ||
@@ -39,8 +42,8 @@ export const addGameData = async (req, res) => {
         .json({ message: "All required fields must be provided and valid." });
     }
 
-    const userExists = await User.findById(userId);
-    if (!userExists) {
+    const userDoc = await User.findById(userId);
+    if (!userDoc) {
       return res.status(404).json({ message: "User not found." });
     }
 
@@ -76,8 +79,21 @@ export const addGameData = async (req, res) => {
     if (playedFrom && !["app", "web"].includes(playedFrom)) {
       return res
         .status(400)
-        .json({ message: " playedFrom must be 'app' or 'web" });
+        .json({ message: "playedFrom must be 'app' or 'web" });
     }
+
+    const calculateScore = (totalCorrect, totalSolved, level) => {
+      const levelMultiplier = 1 + level * 0.0015;
+      return Math.round((totalCorrect + totalSolved * 0.01) * levelMultiplier);
+    };
+
+    const score = calculateScore(totalCorrect, totalSolved, level);
+
+    let accuracy = 0;
+    if (totalSolved > 0) {
+      accuracy = (totalCorrect / totalSolved) * 100;
+    }
+    console.log("Accuracy: ", accuracy);
 
     const newGame = new GameData({
       level,
@@ -91,10 +107,41 @@ export const addGameData = async (req, res) => {
       gameMode,
       playedFrom,
       location,
+      accuracy,
+      score,
     });
 
-    const savedGame = await newGame.save();
+    // Update the user's exam performance in UserExamData
+    const userExamDoc = await UserExam.findOne({
+      user: userId,
+      exam: exam,
+    });
 
+    if (userExamDoc) {
+      if (totalCorrect > userExamDoc.highestCorrect) {
+        userExamDoc.highestCorrect = totalCorrect;
+      }
+      userExamDoc.totalAttempts += totalSolved;
+      userExamDoc.score += score;
+
+      const updatedUserExamDoc = await userExamDoc.save({ new: true });
+      console.log("Updated UserExam document:", updatedUserExamDoc);
+    } else {
+      const newUserExamDoc = await UserExam.create({
+        user: userId,
+        exam,
+        totalAttempts: 1,
+        highestCorrect: totalCorrect,
+        score,
+      });
+      console.log("New UserExam created:", newUserExamDoc);
+    }
+
+    userDoc.coins += totalCorrect;
+    await userDoc.save();
+
+    const savedGame = await newGame.save({ new: true });
+    console.log("Saved Game document:", savedGame);
     res.status(201).json(savedGame);
   } catch (error) {
     console.error("Error saving gamePlayed document:", error);
