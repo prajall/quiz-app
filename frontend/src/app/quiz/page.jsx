@@ -155,7 +155,7 @@ const page = () => {
           >
             <SelectTrigger className="w-32">
               {" "}
-              {examIdToName(examId)}{" "}
+              {/* {examIdToName(examId)}{" "} */}
             </SelectTrigger>
 
             <SelectContent>

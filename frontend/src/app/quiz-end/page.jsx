@@ -1,7 +1,7 @@
 "use client";
 import { QuizContext } from "@/contexts/QuizContext";
 import { ScoreContext } from "@/contexts/ScoreContext";
-import { examIdToName } from "@/examData";
+// import { examIdToName } from "@/examData";
 import axios from "axios";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -151,7 +151,7 @@ const page = () => {
       <section className="max-w-screen-lg my-4 mt-10 mx-auto">
         <div className="flex gap-2 items-center  ">
           <p className="font-semibold  text-xl ">
-            {examIdToName(quizData.currentExam)} leaderboard
+            {/* {examIdToName(quizData.currentExam)} leaderboard */}
             {exams.find((exam) => exam.exam_id === quizData.currentExam)
               ?.title || "Category"}{" "}
             leaderboard
