@@ -49,6 +49,8 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       toast.error("Failed to fetch Exams");
+    } finally {
+      setAppData((prev) => ({ ...prev, isLoading: false }));
     }
   };
 

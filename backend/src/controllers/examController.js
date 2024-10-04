@@ -54,8 +54,8 @@ export const addExam = async (req, res) => {
     if (!exam_id || !title || !price) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-    const existingExam = await Exam.findOne({ exam_id }).exec();
-    if (existingExam) {
+    const examDoc = await Exam.findOne({ exam_id }).exec();
+    if (examDoc) {
       return res
         .status(400)
         .json({ message: "Exam with this ID already exists" });
@@ -82,12 +82,12 @@ export const addExam = async (req, res) => {
 
 export const deleteExam = async (req, res) => {
   try {
-    const exam_id = req.params.exam_id;
-    if (!exam_id) {
+    const examId = req.params.examId;
+    if (!examId) {
       return res.status(400).json({ message: "Exam ID is required" });
     }
-    const exam = await Exam.findOneAndDelete({ exam_id }).exec();
-    if (!exam) {
+    const examDoc = await Exam.findOneAndDelete({ examId }).exec();
+    if (!examDoc) {
       return res.status(404).json({ message: "Exam not found" });
     }
     res.status(200).json({ message: "Exam deleted successfully" });
@@ -99,28 +99,49 @@ export const deleteExam = async (req, res) => {
 
 export const editExam = async (req, res) => {
   try {
-    const { exam_id } = req.params;
+    const examId = req.params.examId;
     const { title, price, discount, subTitle } = req.body;
 
-    if (!exam_id) {
-      return res.status(400).json({ message: "exam_id is required" });
+    if (!examId) {
+      return res.status(400).json({ message: "examId is required" });
     }
 
-    const existingExam = await Exam.findOne({ exam_id }).exec();
-    if (!existingExam) {
+    const examDoc = await Exam.findById(examId).exec();
+    if (!examDoc) {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    if (title) existingExam.title = title;
-    if (price !== undefined) existingExam.price = price;
-    if (discount !== undefined) existingExam.discount = discount;
-    if (subTitle) existingExam.subTitle = subTitle;
+    if (title) examDoc.title = title;
+    if (price !== undefined) examDoc.price = price;
+    if (discount !== undefined) examDoc.discount = discount;
+    if (subTitle) examDoc.subTitle = subTitle;
 
-    await existingExam.save();
+    await examDoc.save();
 
-    res.status(200).json(existingExam);
+    res.status(200).json(examDoc);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getExamDetails = async (req, res) => {
+  try {
+    const { examId } = req.params;
+
+    if (!examId) {
+      return res.status(400).json({ message: "Exam ID is required" });
+    }
+
+    const exam = await Exam.findById(examId).exec();
+
+    if (!exam) {
+      return res.status(404).json({ message: "Exam not found" });
+    }
+
+    return res.status(200).json(exam);
+  } catch (error) {
+    console.error("Error fetching exam details:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

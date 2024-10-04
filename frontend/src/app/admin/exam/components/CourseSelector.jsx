@@ -14,11 +14,13 @@ import { X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
 
-export default function CourseSelector({ onChangeCourses }) {
+export default function CourseSelector({ onChangeCourses, selectedCourses }) {
+  console.log("Selected: ", selectedCourses);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState(null);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [localSelectedCourses, setLocalSelectedCourses] =
+    useState(selectedCourses);
 
   const fetchCategories = async () => {
     try {
@@ -59,7 +61,7 @@ export default function CourseSelector({ onChangeCourses }) {
   };
 
   const handleCourseToggle = (course) => {
-    setSelectedCourses((prev) => {
+    setLocalSelectedCourses((prev) => {
       const exists = prev.some((c) => c.id === course.id);
       if (exists) {
         return prev.filter((c) => c.id !== course.id);
@@ -70,17 +72,20 @@ export default function CourseSelector({ onChangeCourses }) {
   };
 
   const removeCourse = (id) => {
-    setSelectedCourses((prev) => prev.filter((course) => course.id !== id));
+    setLocalSelectedCourses((prev) =>
+      prev.filter((course) => course.id !== id)
+    );
   };
 
   useEffect(() => {
-    console.log(selectedCourses);
-    onChangeCourses(selectedCourses);
-  }, [selectedCourses]);
+    console.log(localSelectedCourses);
+    onChangeCourses(localSelectedCourses);
+  }, [localSelectedCourses]);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-x-2">
-        {selectedCourses.map((course) => (
+        {localSelectedCourses.map((course) => (
           <div
             key={course.id}
             className="flex items-center border w-fit overflow-hidden mt-2 text-ellipsis whitespace-nowrap border-primary bg-blue-50 px-2 pl-3 py-1 rounded-full text-sm"
@@ -97,6 +102,7 @@ export default function CourseSelector({ onChangeCourses }) {
           </div>
         ))}
       </div>
+
       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
         <div className="w-full sm:w-1/2">
           <Select onValueChange={handleCategoryChange}>
@@ -123,7 +129,9 @@ export default function CourseSelector({ onChangeCourses }) {
                 >
                   <Checkbox
                     id={`course-${course.id}`}
-                    checked={selectedCourses.some((c) => c.id === course.id)}
+                    checked={localSelectedCourses.some(
+                      (c) => c.id === course.id
+                    )}
                     onCheckedChange={() => handleCourseToggle(course)}
                     className="text-white"
                   />

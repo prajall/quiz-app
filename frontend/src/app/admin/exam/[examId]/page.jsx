@@ -11,13 +11,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import CourseSelector from "../components/CourseSelector";
 import { useRouter } from "next/navigation";
+import CourseSelector from "../components/CourseSelector";
 
-export default function ExamForm() {
+export default function EditExamForm({ params }) {
+  const { examId } = params;
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,34 +29,68 @@ export default function ExamForm() {
       price: "",
       discount: "",
       subTitle: "",
+      courses: [],
     },
   });
 
+  useEffect(() => {
+    const fetchExamDetails = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/exam/${examId}`
+        );
+        if (response.status == 200) {
+          const examData = response.data;
+          form.reset({
+            exam_id: examData.exam_id,
+            title: examData.title,
+            price: examData.price,
+            discount: examData.discount,
+            subTitle: examData.subTitle,
+            courses: examData.courses,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching exam details:", error);
+        toast.error("Failed to fetch exam details.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchExamDetails();
+  }, [examId]);
+
+  // Update exam on form submit
   const onSubmit = async (data) => {
     setIsLoading(true);
 
     try {
+      // Prepare courses array for the PATCH request
       const courseIds = data.courses.map((course) => course.id.toString());
+
       const dataPayload = {
         ...data,
-        courses: courseIds,
+        courses: courseIds, // Make sure courses is an array of IDs
       };
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/exam`,
+
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/exam/${examId}`,
         dataPayload
       );
+
       if (!response.status === 200) {
-        throw new Error("Failed to add exam");
+        throw new Error("Failed to update exam");
       }
-      toast.success("Exam added successfully");
-      router.push("/admin/exam");
-      form.reset();
+      toast.success("Exam updated successfully");
+      router.push(`/exam/${examId}`); // Redirect to exam page
     } catch (error) {
-      console.log(error);
+      console.error("Error updating exam:", error);
       if (error.response?.data?.message) {
         toast.error(error.response?.data?.message);
       } else {
-        toast.error("Unexpected error occured");
+        toast.error("Unexpected error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -71,7 +106,7 @@ export default function ExamForm() {
     <div className="mx-auto py-8">
       <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden">
         <div className=" py-6">
-          <h2 className="text-3xl font-bold ">Add New Exam</h2>
+          <h2 className="text-3xl font-bold ">Edit Exam</h2>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -167,7 +202,10 @@ export default function ExamForm() {
             </div>
             <div className="">
               <h3 className="text-sm">Courses:</h3>
-              <CourseSelector onChangeCourses={onChangeCourses} />
+              <CourseSelector
+                onChangeCourses={onChangeCourses}
+                selectedCourses={form.watch("courses")}
+              />
             </div>
 
             <Button
@@ -175,7 +213,7 @@ export default function ExamForm() {
               className="w-full bg-primary text-white hover:bg-primary"
               disabled={isLoading}
             >
-              {isLoading ? "Adding..." : "Add Exam"}
+              {isLoading ? "Updating..." : "Update Exam"}
             </Button>
           </form>
         </Form>
