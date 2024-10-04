@@ -53,7 +53,7 @@ const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    // fetchUser();
     fetchExams();
   }, []);
 
