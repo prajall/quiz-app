@@ -7,6 +7,7 @@ import {
   getUserInfo,
   loginUser,
   logoutUser,
+  makeUserNonPremium,
   makeUserPremium,
   registerVerificationCode,
   resetPassword,
@@ -31,6 +32,7 @@ router.post("/reset-password", resetPassword);
 router.post("/etutor-login", etutorLogin);
 router.get("/info", etutorUserAuth, getUserInfo);
 router.patch("/make-premium", etutorUserAuth, makeUserPremium);
+router.patch("/make-non-premium", etutorUserAuth, makeUserNonPremium);
 router.post("/add-coins", etutorUserAuth, addCoins);
 
 export default router;

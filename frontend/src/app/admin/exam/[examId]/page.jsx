@@ -48,7 +48,6 @@ export default function EditExamForm({ params }) {
             price: examData.price,
             discount: examData.discount,
             subTitle: examData.subTitle,
-            courses: examData.courses,
           });
         }
       } catch (error) {
@@ -62,17 +61,15 @@ export default function EditExamForm({ params }) {
     fetchExamDetails();
   }, [examId]);
 
-  // Update exam on form submit
   const onSubmit = async (data) => {
     setIsLoading(true);
 
     try {
-      // Prepare courses array for the PATCH request
       const courseIds = data.courses.map((course) => course.id.toString());
 
       const dataPayload = {
         ...data,
-        courses: courseIds, // Make sure courses is an array of IDs
+        courses: courseIds,
       };
 
       const response = await axios.patch(
@@ -84,7 +81,7 @@ export default function EditExamForm({ params }) {
         throw new Error("Failed to update exam");
       }
       toast.success("Exam updated successfully");
-      router.push(`/exam/${examId}`); // Redirect to exam page
+      router.push(`/exam/${examId}`);
     } catch (error) {
       console.error("Error updating exam:", error);
       if (error.response?.data?.message) {
@@ -98,7 +95,6 @@ export default function EditExamForm({ params }) {
   };
 
   const onChangeCourses = (value) => {
-    console.log("Selected Course: ", value);
     form.setValue("courses", value);
   };
 

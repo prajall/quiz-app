@@ -404,6 +404,27 @@ export const makeUserPremium = async (req, res) => {
   }
 };
 
+export const makeUserNonPremium = async (req, res) => {
+  try {
+    //TODO:  This should be done by admin
+
+    const user = req.user;
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!user.isPremium) {
+      return res.status(200).json({ message: "User is already Non-Premium" });
+    }
+    user.isPremium = false;
+    await user.save();
+    return res.status(200).json({ message: "User is now Non-Premium" });
+  } catch (error) {
+    console.log("Error in makeUserPremium", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const addCoins = async (req, res) => {
   try {
     const user = req.user;

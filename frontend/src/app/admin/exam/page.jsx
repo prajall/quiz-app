@@ -60,9 +60,11 @@ export default function ExamCards() {
             className="cursor-pointer min-w-[300px] w-full"
           >
             <CardHeader>
-              <CardTitle>{exam.title}</CardTitle>
+              <CardTitle className="text-lg">{exam.title}</CardTitle>
               {exam.subTitle && (
-                <CardDescription>{exam.subTitle}</CardDescription>
+                <CardDescription className="text-sm">
+                  {exam.subTitle}
+                </CardDescription>
               )}
             </CardHeader>
             <CardContent className="text-muted-foreground">

@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sheet";
 import { AppContext } from "@/contexts/AppContext";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { LogOut, Menu, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -69,7 +68,7 @@ const Navbar = () => {
     },
     {
       name: "Play",
-      link: "/quiz",
+      link: "/",
     },
     {
       name: "Leaderboard",
@@ -78,7 +77,7 @@ const Navbar = () => {
 
     {
       name: "Contacts",
-      link: "/contacts",
+      link: "/",
     },
     {
       name: "Admin",
