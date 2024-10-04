@@ -176,6 +176,13 @@ export const getLevels = async (req, res) => {
     const userObjectId = new mongoose.Types.ObjectId(userId);
     const examObjectId = new mongoose.Types.ObjectId(examId);
 
+    const userExamData = await UserExam.findOne({
+      user: userObjectId,
+      exam: examObjectId,
+    });
+
+    const levelsUnlocked = userExamData ? userExamData.levelsUnlocked : 1;
+
     const levelsData = await GameData.aggregate([
       {
         $match: {
@@ -188,6 +195,7 @@ export const getLevels = async (req, res) => {
           _id: "$level",
           totalCorrect: { $max: "$totalCorrect" },
           doc: { $first: "$$ROOT" },
+          attempts: { $sum: 1 },
         },
       },
       {
@@ -201,6 +209,7 @@ export const getLevels = async (req, res) => {
           level: "$_id",
           totalSolved: "$doc.totalSolved",
           totalCorrect: "$doc.totalCorrect",
+          attempts: 1,
         },
       },
     ]);
@@ -210,9 +219,10 @@ export const getLevels = async (req, res) => {
     // Initialize an array with totalLevels and default values
     const levelsArray = Array.from({ length: totalLevels }, (_, index) => ({
       level: index + 1,
-      unlocked: false,
+      unlocked: index + 1 <= levelsUnlocked,
       totalSolved: 0,
       totalCorrect: 0,
+      attempts: 0,
     }));
 
     if (levelsArray.length > 0) {
@@ -226,7 +236,6 @@ export const getLevels = async (req, res) => {
         levelsArray[levelIndex] = {
           ...levelsArray[levelIndex],
           ...levelData,
-          unlocked: true,
         };
       }
     });

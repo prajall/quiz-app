@@ -163,19 +163,14 @@ export const getCookies = async (req, res) => {
 };
 
 export const getUserInfo = async (req, res) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).send("Please Login");
+  const user = req.user;
+  if (!user || !user._id) {
+    return res.status(404).send("User Id is required");
   }
 
   try {
-    const decodedData = verifyToken(token);
-    if (!decodedData) {
-      return res.status(404).send("Invalid Token");
-    }
-    const user = await User.findById(decodedData.id).select(
-      "-password -interests -createdAt -updatedAt"
+    const userDoc = await User.findById(user._id).select(
+      "-createdAt -updatedAt"
     );
     if (!user) {
       return res.status(404).send("User not found");
