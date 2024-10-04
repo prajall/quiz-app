@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["https://quiz-frontend-work.vercel.app", "http://localhost:3000"],
+    origin: ["https://etutorquiz.vercel.app", "http://localhost:3000"],
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
     credentials: true,
   })

@@ -40,7 +40,7 @@ const AppProvider = ({ children }) => {
   const fetchExams = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/exam`
+        `${process.env.NEXT_PUBLIC_API_URL}/exam/admin`
       );
 
       if (response.status == 200) {

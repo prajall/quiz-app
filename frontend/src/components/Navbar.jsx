@@ -171,13 +171,13 @@ const Navbar = () => {
                   <Avatar className="border-2 border-gray ">
                     <AvatarImage src={user.image} />
                     <AvatarFallback>
-                      {user.email?.charAt(0).toUpperCase()}
+                      {user?.email?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>
-                    {user.name ? user.name : user.email}
+                    {user?.name ? user.name : user.email}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
