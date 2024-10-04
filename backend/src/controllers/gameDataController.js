@@ -137,7 +137,7 @@ export const addGameData = async (req, res) => {
       console.log("New UserExam created:", newUserExamDoc);
     }
 
-    userDoc.coins += totalCorrect;
+    userDoc.totalScore += totalCorrect;
     await userDoc.save();
 
     const savedGame = await newGame.save({ new: true });
