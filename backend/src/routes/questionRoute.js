@@ -13,7 +13,7 @@ import { coinChecker } from "../middlewares/userChecker.js";
 
 const router = express.Router();
 
-router.get("/exam/:examId", etutorUserAuth, coinChecker(5), getExamQuestions);
+router.get("/exam/:examId", etutorUserAuth, coinChecker(50), getExamQuestions);
 router.get("/exam/:examId/admin", getExamQuestionsAdmin);
 router.get("/random", getRandomQuestions);
 router.get("/:questionId", getQuestionById);

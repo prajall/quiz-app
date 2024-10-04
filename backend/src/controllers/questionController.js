@@ -16,6 +16,10 @@ export const getExamQuestions = async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
+  // if (!user.isPremium && user.coins < 50) {
+  //   return res.status(400).json({ message: "Not enough coins" });
+  // }
+
   try {
     if (!examId) {
       return res.status(400).json({ message: "examId is required" });

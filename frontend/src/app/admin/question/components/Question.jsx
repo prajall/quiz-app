@@ -9,6 +9,7 @@ const Question = ({ question }) => {
     const truncated = words.slice(0, lines * 10).join(" ");
     return truncated.length < text.length ? `${truncated}...` : truncated;
   };
+
   return (
     <div>
       <Card key={question._id} className="mb-4">
@@ -18,7 +19,7 @@ const Question = ({ question }) => {
               {truncateText(question.question.name, 3)}
             </h2>
             {question.question.description && (
-              <p className="text-sm text-gray-600 mb-2">
+              <p className="text-sm text-muted-foreground mb-2">
                 {truncateText(question.question.description, 1)}
               </p>
             )}
@@ -29,50 +30,43 @@ const Question = ({ question }) => {
                 className="w-full h-40 object-cover mb-2 rounded"
               />
             )}
-            <ol type="A">
+            <ol type="A" className="list-decimal pl-5">
               {["opt_A", "opt_B", "opt_C", "opt_D"].map((option, index) => {
+                const opt = question[option];
+                const isCorrect =
+                  question.opt_correct === String.fromCharCode(65 + index);
                 return (
-                  // <li className={`flex gap-1 ${question.opt_correct===  }`}>
                   <li
-                    className={cn(
-                      "flex gap-1",
-                      question.opt_correct == String.fromCharCode(65 + index)
-                        ? "text-blue-500"
-                        : ""
-                    )}
+                    className={cn("mb-4", isCorrect ? "text-blue-500" : "")}
                     key={option}
                   >
-                    <p
-                      className={cn(
-                        "",
-                        question.opt_correct == String.fromCharCode(65 + index)
-                          ? "text-blue-400"
-                          : ""
-                      )}
-                    >
-                      {String.fromCharCode(65 + index)}.{" "}
-                    </p>
-                    <p>{truncateText(question[option].name, 1)}</p>
+                    <div className="flex items-center gap-2">
+                      <p
+                        className={cn(
+                          "font-medium",
+                          isCorrect ? "text-blue-400" : ""
+                        )}
+                      >
+                        {String.fromCharCode(65 + index)}.
+                      </p>
+                      <p>{truncateText(opt.name, 1)}</p>
+                    </div>
+                    {opt.image && (
+                      <img
+                        src={opt.image}
+                        alt={`Option ${String.fromCharCode(65 + index)}`}
+                        className="w-full h-32 object-cover mt-2 rounded"
+                      />
+                    )}
                   </li>
                 );
               })}
-
-              {/* <li className="flex gap-1">
-                <p>B. </p>
-                <p>{truncateText(question.opt_B.name, 1)}</p>
-              </li>
-              <li className="flex gap-1">
-                <p>C. </p>
-                <p>{truncateText(question.opt_C.name, 1)}</p>
-              </li>
-              <li className="flex gap-1">
-                <p>D. </p>
-                <p>{truncateText(question.opt_D.name, 1)}</p>
-              </li> */}
             </ol>
-            <p className="text-sm text-gray-600">
-              {truncateText(question.description, 1)}
-            </p>
+            {question.description && (
+              <p className="text-sm text-muted-foreground mt-4">
+                {truncateText(question.description, 3)}
+              </p>
+            )}
           </Link>
         </CardContent>
       </Card>

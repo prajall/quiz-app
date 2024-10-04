@@ -20,10 +20,9 @@ export const coinChecker = (requestedCoin) => {
       return res.status(404).send("User not found");
     }
 
-    if (user.coins >= requestedCoin) {
-      next();
-    } else {
+    if (!user.isPremium && user.coins < requestedCoin) {
       return res.status(403).json({ message: "Not enough coins" });
     }
+    next();
   };
 };
