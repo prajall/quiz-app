@@ -31,14 +31,14 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/question", questionRoute);
 app.use("/api/v1/score", scoreRoute);
 app.use("/api/v1/gamedata", gameDataRoute);
-app.use("/api/v1/leaderboard", apiKeyValidation, leaderboardRoute);
+app.use("/api/v1/leaderboard", leaderboardRoute);
 app.use("/api/v1/exam", examRoute);
 app.use("/api/v1/userexam", userExamRoute);
 app.use("/api/v1/examsold", examSoldRoute);
 // app.use("/examsold", examSoldRoute);
 
 app.get("/", (req, res) => {
-  res.send("Server is is working");
+  res.send("Server is working");
 });
 
 export default app;

@@ -45,12 +45,12 @@ export const getUsersExams = async (req, res) => {
         score: 0,
       };
 
-      const unlocked = examSoldMap[exam._id.toString()] || false;
+      const premium = examSoldMap[exam._id.toString()] || false;
 
       return {
         ...exam.toObject(),
         userScore: userExamData.score,
-        unlocked,
+        premium,
       };
     });
 
