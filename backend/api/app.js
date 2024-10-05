@@ -8,7 +8,7 @@ import leaderboardRoute from "../src/routes/leaderboardRoute.js";
 import examRoute from "../src/routes/examRoute.js";
 import gameDataRoute from "../src/routes/gameDataRoute.js";
 import userExamRoute from "../src/routes/userExamRoute.js";
-// import examSoldRoute from "../src/routes/examSoldRoute.js";
+import examSoldRoute from "../src/routes/examsoldRoute.js";
 import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
@@ -34,6 +34,7 @@ app.use("/api/v1/gamedata", gameDataRoute);
 app.use("/api/v1/leaderboard", apiKeyValidation, leaderboardRoute);
 app.use("/api/v1/exam", examRoute);
 app.use("/api/v1/userexam", userExamRoute);
+app.use("/api/v1/examsold", examSoldRoute);
 // app.use("/examsold", examSoldRoute);
 
 app.get("/", (req, res) => {

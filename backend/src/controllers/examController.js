@@ -1,4 +1,4 @@
-import { Exam, UserExam } from "../../api/index.js";
+import { Exam, ExamSold, UserExam } from "../../api/index.js";
 
 export const getAllExams = async (req, res) => {
   try {
@@ -13,7 +13,8 @@ export const getAllExams = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-export const getAllExamsWithScores = async (req, res) => {
+
+export const getUsersExams = async (req, res) => {
   const user = req.user;
   if (!user) {
     return res.status(404).json({ message: "User not found" });
@@ -24,22 +25,36 @@ export const getAllExamsWithScores = async (req, res) => {
     if (!exams || exams.length === 0) {
       return res.status(404).json({ message: "No Exams found" });
     }
+
     const userExamDoc = await UserExam.find({ user: user._id }).exec();
-    console.log(userExamDoc);
     const userExamMap = {};
     userExamDoc.forEach((userExam) => {
-      userExamMap[userExam.exam.toString()] = userExam.score;
-    });
-
-    const examsWithUserScore = exams.map((exam) => {
-      const userScore = userExamMap[exam._id.toString()] || 0;
-      return {
-        ...exam.toObject(),
-        userScore,
+      userExamMap[userExam.exam.toString()] = {
+        score: userExam.score,
       };
     });
 
-    return res.status(200).json(examsWithUserScore);
+    const examSoldDoc = await ExamSold.find({ user: user._id }).exec();
+    const examSoldMap = {};
+    examSoldDoc.forEach((examSold) => {
+      examSoldMap[examSold.exam.toString()] = true;
+    });
+
+    const examsWithUserData = exams.map((exam) => {
+      const userExamData = userExamMap[exam._id.toString()] || {
+        score: 0,
+      };
+
+      const unlocked = examSoldMap[exam._id.toString()] || false;
+
+      return {
+        ...exam.toObject(),
+        userScore: userExamData.score,
+        unlocked,
+      };
+    });
+
+    return res.status(200).json(examsWithUserData);
   } catch (err) {
     console.error("Error fetching exams or user exam data:", err);
     res.status(500).json({ message: "Internal Server Error" });

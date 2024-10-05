@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 export const examSoldSchema = new mongoose.Schema({
-  examId: {
+  exam: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Exam",
     required: true,
     index: true,
   },
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,

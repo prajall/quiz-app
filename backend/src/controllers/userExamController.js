@@ -53,3 +53,46 @@ export const addUserExamData = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const unlockExam = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const { examId } = req.params;
+
+    let userExam = await UserExam.findOne({
+      user: mongoose.Types.ObjectId(userId),
+      exam: mongoose.Types.ObjectId(examId),
+    });
+
+    if (!userExam) {
+      userExam = new UserExam({
+        user: mongoose.Types.ObjectId(userId),
+        exam: mongoose.Types.ObjectId(examId),
+        totalAttempts: 0,
+        highestCorrect: 0,
+        levelsUnlocked: 1,
+        score: 0,
+        unlocked: true,
+      });
+
+      await userExam.save();
+
+      return res
+        .status(201)
+        .json({ message: "New exam record created and unlocked", userExam });
+    }
+
+    if (userExam.unlocked) {
+      return res.status(400).json({ message: "Exam is already unlocked" });
+    }
+
+    userExam.unlocked = true;
+    await userExam.save();
+
+    res.status(200).json({ message: "Exam unlocked successfully", userExam });
+  } catch (error) {
+    console.error("Error unlocking exam:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};

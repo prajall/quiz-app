@@ -1,4 +1,4 @@
-import { User, Exam, ExamSold } from "../../api";
+import { User, Exam, ExamSold } from "../../api/index.js";
 
 export const addExamSold = async (req, res) => {
   try {
@@ -26,7 +26,8 @@ export const addExamSold = async (req, res) => {
     }
 
     const newExamSold = new ExamSold({
-      examId,
+      user: user._id,
+      exam: examId,
       userId,
       basePrice,
       boughtPrice,
