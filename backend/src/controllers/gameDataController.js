@@ -236,6 +236,7 @@ export const getLevels = async (req, res) => {
         levelsArray[levelIndex] = {
           ...levelsArray[levelIndex],
           ...levelData,
+          unlocked: true,
         };
       }
     });
