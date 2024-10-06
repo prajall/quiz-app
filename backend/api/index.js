@@ -9,6 +9,7 @@ import { examSoldSchema } from "../src/models/examSoldModel.js";
 import { examSchema } from "../src/models/examModel.js";
 import { gameDataSchema } from "../src/models/gameDataModel.js";
 import { userExamSchema } from "../src/models/userExamModel.js";
+import { customFieldsSchema } from "../src/models/customFieldModel.js";
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ export const Exam = quizDB.model("Exams", examSchema);
 export const ExamSold = quizDB.model("ExamSolds", examSoldSchema);
 export const GameData = quizDB.model("GameDatas", gameDataSchema);
 export const UserExam = quizDB.model("UserExams", userExamSchema);
+export const CustomField = quizDB.model("CustomFields", customFieldsSchema);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

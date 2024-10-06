@@ -72,7 +72,7 @@ const Navbar = () => {
     },
     {
       name: "Leaderboard",
-      link: "/leaderboard",
+      link: "/",
     },
 
     {

@@ -435,6 +435,11 @@ export const addCoins = async (req, res) => {
     if (!coins) {
       return res.status(404).json({ message: "Coins not found" });
     }
+    if (typeof coins !== "number" || coins < 0) {
+      return res
+        .status(404)
+        .json({ message: "Coins must be a positive number" });
+    }
     user.coins += coins;
     await user.save();
     return res.status(200).json({ message: "Coins added successfully" });
