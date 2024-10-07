@@ -1,4 +1,7 @@
 import { CustomField } from "../../api/index.js";
+import logger from "../../logger.js";
+
+const log = logger("customFieldController.js");
 
 export const addCustomField = async (req, res) => {
   try {
@@ -39,7 +42,7 @@ export const addCustomField = async (req, res) => {
 
     return res.status(201).json(newCustomField);
   } catch (error) {
-    console.error("Error creating custom field:", error);
+    log.error("Error creating custom field:", JSON.stringify(error));
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -62,6 +65,7 @@ export const getCustomField = async (req, res) => {
 
     return res.status(200).json(customField);
   } catch (error) {
+    log.error("Error Getting custom Field:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

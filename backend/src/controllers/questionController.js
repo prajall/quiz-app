@@ -2,23 +2,19 @@ import { Question, User } from "../../api/index.js";
 import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 import { Exam } from "../../api/index.js";
+import logger from "../../logger.js";
 
-//Fetch random questions from one exam
+const log = logger("questionController.js");
+
 export const getExamQuestions = async (req, res) => {
   const limit = 50;
   const { examId } = req.params;
   const level = req.query.level || 1;
   const user = req.user;
 
-  console.log(typeof user);
-
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-
-  // if (!user.isPremium && user.coins < 50) {
-  //   return res.status(400).json({ message: "Not enough coins" });
-  // }
 
   try {
     if (!examId) {
@@ -39,8 +35,8 @@ export const getExamQuestions = async (req, res) => {
     await user.save();
 
     return res.json(questions).status(200);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error Getting Exam Question:", JSON.stringify(error));
     res.status(500).send({ message: "Failed to fetch Question" });
   }
 };
@@ -48,13 +44,6 @@ export const getExamQuestionsAdmin = async (req, res) => {
   const limit = 50;
   const { examId } = req.params;
   const level = req.query.level || 1;
-  // const user = req.user;
-
-  // console.log(typeof user);
-
-  // if (!user) {
-  //   return res.status(404).json({ message: "User not found" });
-  // }
 
   try {
     if (!examId) {
@@ -74,8 +63,8 @@ export const getExamQuestionsAdmin = async (req, res) => {
     // await user.save();
 
     return res.json(questions).status(200);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error getting Exam Question for admin", JSON.stringify(error));
     res.status(500).send({ message: "Failed to fetch Question" });
   }
 };
@@ -89,8 +78,8 @@ export const getRandomQuestions = async (req, res) => {
       res.send("No Questions Found");
     }
     res.send(questions).status(200);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error fetching random questions", JSON.stringify(error));
     res.status(500).json({ message: "Failed to fetch random data" });
   }
 };
@@ -149,9 +138,9 @@ const deleteLocalFiles = (req) => {
       fileArray.forEach((file) => {
         const filePath = file.path;
         console.log("Deleting file", filePath);
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error(`Error deleting file ${filePath}:`, err);
+        fs.unlink(filePath, (error) => {
+          if (error) {
+            console.error(`Error deleting file ${filePath}:`, error);
           } else {
             console.log(`Successfully deleted file: ${filePath}`);
           }
@@ -190,7 +179,6 @@ export const addQuestion = async (req, res) => {
     }
 
     const examDoc = await Exam.findById(examId).exec();
-    console.log(examDoc);
     if (!examDoc) {
       return res.status(400).json({ message: "Invalid Exam ID" });
     }
@@ -246,17 +234,15 @@ export const addQuestion = async (req, res) => {
       await examDoc.save();
     }
 
-    console.log("saved questionDoc:", savedQuestion);
     return res.status(201).json(savedQuestion);
   } catch (error) {
-    console.error("Error adding question:", error);
+    log.error("Error adding question:", JSON.stringify(error));
     res.status(500).json({ message: "Failed to add question" });
   }
 };
 
 export const updateQuestion = async (req, res) => {
   const { questionId } = req.params;
-  console.log("body", req.body);
 
   try {
     const {
@@ -287,7 +273,6 @@ export const updateQuestion = async (req, res) => {
     }
 
     const questionDoc = await Question.findById(questionId);
-    console.log("questionDoc", questionDoc);
 
     if (!questionDoc) {
       return res.status(404).json({ message: "Question not found" });
@@ -327,12 +312,10 @@ export const updateQuestion = async (req, res) => {
       image: question.image,
     };
 
-    console.log(question.image, questionDoc.question.image);
     if (
       questionDoc.question.image &&
       question.image !== questionDoc.question.image
     ) {
-      console.log("Deleting Previous Image");
       const publicId = questionDoc.question.image
         ? questionDoc.question.image.split("/").pop().split(".")[0]
         : "";
@@ -372,12 +355,9 @@ export const updateQuestion = async (req, res) => {
     questionDoc.opt_correct = opt_correct;
 
     const updatedQuestion = await questionDoc.save();
-    console.log("updated questionDoc:", updatedQuestion);
     return res.status(200).json(updatedQuestion);
-    console.log("updated questionDoc:", questionDoc);
-    return res.status(200).json(questionDoc);
   } catch (error) {
-    console.error("Error updating question:", error);
+    log.error("Error updating question:", JSON.stringify(error));
     res.status(500).json({ message: "Failed to update question" });
   }
 };

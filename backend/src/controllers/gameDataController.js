@@ -2,6 +2,9 @@ import { User, UserExam } from "../../api/index.js";
 import { Exam } from "../../api/index.js";
 import { GameData } from "../../api/index.js";
 import mongoose from "mongoose";
+import logger from "../../logger.js";
+
+const log = logger("gameDataController.js");
 
 export const addGameData = async (req, res) => {
   const user = req.user;
@@ -23,8 +26,6 @@ export const addGameData = async (req, res) => {
       playedFrom,
       location,
     } = req.body;
-
-    console.log("body: ", req.body);
 
     if (
       !level ||
@@ -144,7 +145,7 @@ export const addGameData = async (req, res) => {
     console.log("Saved Game document:", savedGame);
     res.status(201).json(savedGame);
   } catch (error) {
-    console.error("Error saving gamePlayed document:", error);
+    log.error("Error saving gamePlayed document:", JSON.stringify(error));
     res.status(500).json({ message: "Failed to save game data" });
   }
 };
@@ -214,8 +215,6 @@ export const getLevels = async (req, res) => {
       },
     ]);
 
-    console.log("levelsData:", levelsData);
-
     // Initialize an array with totalLevels and default values
     const levelsArray = Array.from({ length: totalLevels }, (_, index) => ({
       level: index + 1,
@@ -243,7 +242,7 @@ export const getLevels = async (req, res) => {
 
     res.status(200).json(levelsArray);
   } catch (error) {
-    console.error("Error fetching level data:", error);
+    log.error("Error fetching level data:", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

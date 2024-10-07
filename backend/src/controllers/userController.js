@@ -4,10 +4,12 @@ import jwt, { decode } from "jsonwebtoken";
 import { User, Score } from "../../api/index.js";
 import { uploadOnCloudinary } from "../cloudinary.js";
 import nodemailer from "nodemailer";
+import logger from "../../logger.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+const log = logger("userController.js");
 // generate jwt token
 const generateToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET);
@@ -355,12 +357,10 @@ export const resetPassword = async (req, res) => {
 
 export const etutorLogin = async (req, res) => {
   const { etutor_id } = req.body;
-  console.log(etutor_id);
   if (!etutor_id) {
     return res.status(400).json({ message: "Etutor Id is required" });
   }
   const user = await User.findOne({ etutor_id });
-  console.log("User Doc", user);
   try {
     if (user) {
       return res.status(200).json({ message: "User Exists" });
@@ -368,17 +368,15 @@ export const etutorLogin = async (req, res) => {
       const newUser = new User({
         etutor_id,
       });
-      console.log(newUser);
       if (newUser) {
         await newUser.save();
-        console.log("New User Created", newUser);
         res.status(201).json({ message: "New User Created" });
       } else {
         return res.status(500).send("Failed to create user.");
       }
     }
   } catch (error) {
-    console.log("Error in etutorLogin controller", error);
+    log.error("Error in etutorLogin controller", JSON.stringify(error));
     return res.status(500).send("Internal server error");
   }
 };
@@ -399,7 +397,7 @@ export const makeUserPremium = async (req, res) => {
     await user.save();
     return res.status(200).json({ message: "User is now premium" });
   } catch (error) {
-    console.log("Error in makeUserPremium", error);
+    log.error("Error in makeUserPremium", JSON.stringify(error));
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -420,7 +418,7 @@ export const makeUserNonPremium = async (req, res) => {
     await user.save();
     return res.status(200).json({ message: "User is now Non-Premium" });
   } catch (error) {
-    console.log("Error in makeUserPremium", error);
+    log.error("Error in makeUserPremium", JSON.stringify(error));
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -444,7 +442,7 @@ export const addCoins = async (req, res) => {
     await user.save();
     return res.status(200).json({ message: "Coins added successfully" });
   } catch (error) {
-    console.log("Error in addCoins", error);
+    log.error("Error in addCoins", JSON.stringify(error));
     return res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -1,4 +1,7 @@
 import { Exam, ExamSold, UserExam } from "../../api/index.js";
+import logger from "../../logger.js";
+
+const log = logger("examController.js");
 
 export const getAllExams = async (req, res) => {
   try {
@@ -8,8 +11,8 @@ export const getAllExams = async (req, res) => {
     }
 
     return res.status(200).json(exams);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error Getting All Exams:", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -55,15 +58,14 @@ export const getUsersExams = async (req, res) => {
     });
 
     return res.status(200).json(examsWithUserData);
-  } catch (err) {
-    console.error("Error fetching exams or user exam data:", err);
+  } catch (error) {
+    log.error("Error fetching user's exam data:", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const addExam = async (req, res) => {
   try {
-    console.log(req.body);
     const { exam_id, title, price, discount, subTitle, courses } = req.body;
 
     if (!exam_id || !title || !price) {
@@ -89,8 +91,8 @@ export const addExam = async (req, res) => {
     });
     await newExam.save();
     res.status(201).json(newExam);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error Adding Exam", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -106,8 +108,8 @@ export const deleteExam = async (req, res) => {
       return res.status(404).json({ message: "Exam not found" });
     }
     res.status(200).json({ message: "Exam deleted successfully" });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error Deleting Exam", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -134,8 +136,8 @@ export const editExam = async (req, res) => {
     await examDoc.save();
 
     res.status(200).json(examDoc);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    log.error("Error Editing Exam", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -156,7 +158,7 @@ export const getExamDetails = async (req, res) => {
 
     return res.status(200).json(exam);
   } catch (error) {
-    console.error("Error fetching exam details:", error);
+    log.error("Error fetching exam details:", JSON.stringify(error));
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

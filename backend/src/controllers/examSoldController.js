@@ -1,4 +1,7 @@
 import { User, Exam, ExamSold } from "../../api/index.js";
+import logger from "../../logger.js";
+
+const log = logger("examSoldController.js");
 
 export const addExamSold = async (req, res) => {
   try {
@@ -38,7 +41,7 @@ export const addExamSold = async (req, res) => {
 
     return res.status(201).json(savedExamSold);
   } catch (error) {
-    console.error("Error creating exam sold record:", error);
+    log.error("Error creating exam sold record:", JSON.stringify(error));
     return res.status(500).json({ message: "Internal Server Error." });
   }
 };
@@ -90,7 +93,7 @@ export const updateExamSold = async (req, res) => {
 
     return res.status(200).json(updatedExamSold);
   } catch (error) {
-    console.error("Error updating exam sold record:", error);
+    log.error("Error updating exam sold record:", JSON.stringify(error));
     return res.status(500).json({ message: "Internal Server Error." });
   }
 };

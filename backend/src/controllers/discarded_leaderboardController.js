@@ -1,5 +1,6 @@
 import { Score } from "../../api/index.js";
 import jwt from "jsonwebtoken";
+import logger from "../../logger.js";
 
 export const getOverallLeaderboard = async (req, res) => {
   try {

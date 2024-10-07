@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import { Exam, UserExam } from "../../api/index.js";
+import logger from "../../logger.js";
+
+const log = logger("userExamController.js");
 
 export const addUserExamData = async (req, res) => {
   try {
@@ -49,7 +52,7 @@ export const addUserExamData = async (req, res) => {
 
     res.status(201).json(savedUserExam);
   } catch (error) {
-    console.error("Error adding user exam data:", error);
+    log.error("Error adding user exam data:", JSON.stringify(error));
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -92,7 +95,7 @@ export const unlockExam = async (req, res) => {
 
     res.status(200).json({ message: "Exam unlocked successfully", userExam });
   } catch (error) {
-    console.error("Error unlocking exam:", error);
+    log.error("Error unlocking exam:", JSON.stringify(error));
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 };

@@ -1,0 +1,9 @@
+2024-10-07 13:34:09 [INFO]: Logger is now writisdfsdfng to the file!
+2024-10-07 13:34:12 [INFO]: Logger is now writisdfsdfng to the file!
+2024-10-07 13:34:13 [INFO]: Logger is now writisdfsdfng to the file!
+2024-10-07 13:34:54 [INFO]: Logger is now writisdfsdfng to the file!
+2024-10-07 13:34:54 [ERROR]: Error message
+2024-10-07 13:35:43 [ERROR] [logger.js]: Error message
+2024-10-07 13:38:25 [ERROR] [logger.js]: Error message
+2024-10-07 13:41:37 [ERROR] [customFieldController.js]: Error Getting custom Field:
+2024-10-07 13:42:13 [ERROR] [customFieldController.js]: Error Getting custom Field: cf_id is not defined
