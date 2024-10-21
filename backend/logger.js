@@ -14,10 +14,10 @@ function getLogFileName() {
   return `${dayOfWeek}-${formattedDate}.log`;
 }
 
-const logDirectory = path.join(process.cwd(), "logs");
+const logDirectory = "/tmp/logs";
 
 if (!fs.existsSync(logDirectory)) {
-  fs.mkdirSync(logDirectory);
+  fs.mkdirSync(logDirectory, { recursive: true });
 }
 
 const logger = (filename) => {
@@ -32,7 +32,7 @@ const logger = (filename) => {
     transports: [
       new winston.transports.Console(),
       new winston.transports.File({
-        filename: path.join(logDirectory, getLogFileName()),
+        filename: path.join(logDirectory, getLogFileName()),  // Log file in /tmp/logs
       }),
     ],
   });
