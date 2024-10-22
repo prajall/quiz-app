@@ -32,7 +32,7 @@ const logger = (filename) => {
     transports: [
       new winston.transports.Console(),
       new winston.transports.File({
-        filename: path.join(logDirectory, getLogFileName()),  // Log file in /tmp/logs
+        filename: path.join(logDirectory, getLogFileName()),
       }),
     ],
   });
