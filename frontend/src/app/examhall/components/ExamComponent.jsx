@@ -88,16 +88,16 @@ export default function ExamComponent({ exam }) {
             </div>
           </div>
         </div>
-        <div className=" flex flex-col justify-between gap-2 ">
+        <div className=" flex flex-col justify-between gap-3 ">
           <button
             variant="outline"
-            className="w-28 rounded-lg text-sm border py-2 border-[#7e9e62] text-[#7e9e62] hover:bg-[#7e9e62]/10 hover:text-[#7e9e62]"
+            className="w-28 rounded-lg text-sm border py-[0.35rem] border-[#7e9e62] text-[#7e9e62] hover:bg-[#7e9e62]/10 hover:text-[#7e9e62]"
           >
             Play Free
           </button>
           <button
             variant="outline"
-            className="w-28 rounded-lg text-sm border py-2 border-[#da674e] text-[#da674e] hover:bg-[#da674e]/10 hover:text-[#da674e]"
+            className="w-28 rounded-lg text-sm border py-[0.35rem] border-[#da674e] text-[#da674e] hover:bg-[#da674e]/10 hover:text-[#da674e]"
           >
             Buy Plan
           </button>
