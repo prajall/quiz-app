@@ -14,17 +14,20 @@ import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
-
 app.use(
   cors({
-    origin: ["https://etutorquiz.vercel.app", "http://localhost:3000","https://exams.etutorclass.com"],
+    origin: [
+      "https://etutorquiz.vercel.app",
+      "http://localhost:3000",
+      "https://exams.etutorclass.com",
+    ],
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
     credentials: true,
   })
 );
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 // SETUP ROUTES
 // app.use("/api/v1");

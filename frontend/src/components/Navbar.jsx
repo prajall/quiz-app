@@ -68,7 +68,7 @@ const Navbar = () => {
     },
     {
       name: "Play",
-      link: "/",
+      link: "/examhall",
     },
     {
       name: "Leaderboard",

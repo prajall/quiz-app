@@ -16,7 +16,7 @@ export default function ExamComponent({ exam }) {
               </h3>
             )}
           </div>
-          <div className="space-y-1 ">
+          <div className="space-y-2 ">
             <div className="flex items-center">
               <svg
                 className="w-5 h-5 text-green-500 mr-2"
@@ -89,18 +89,18 @@ export default function ExamComponent({ exam }) {
           </div>
         </div>
         <div className=" flex flex-col justify-between gap-2 ">
-          <Button
+          <button
             variant="outline"
-            className="w-32 rounded-xl text-sm border-[#7e9e62] text-[#7e9e62] hover:bg-[#7e9e62]/10 hover:text-[#7e9e62]"
+            className="w-28 rounded-lg text-sm border py-2 border-[#7e9e62] text-[#7e9e62] hover:bg-[#7e9e62]/10 hover:text-[#7e9e62]"
           >
             Play Free
-          </Button>
-          <Button
+          </button>
+          <button
             variant="outline"
-            className="w-32 rounded-xl text-sm border-[#da674e] text-[#da674e] hover:bg-[#da674e]/10 hover:text-[#da674e]"
+            className="w-28 rounded-lg text-sm border py-2 border-[#da674e] text-[#da674e] hover:bg-[#da674e]/10 hover:text-[#da674e]"
           >
             Buy Plan
-          </Button>
+          </button>
         </div>
       </CardContent>
     </Card>
