@@ -83,7 +83,11 @@ export default function Home() {
 
       <section className=" flex flex-col md:flex-row mt-10 border md:border-0 rounded-lg md:rounded-none  gap-8 p-8 ">
         <div className="w-full md:w-1/2 h-auto md:h-[400px] mx-auto aspect-square rounded-md flex items-center justify-center p-4 ">
-          <Image src={leaderboard} className="m-auto h-full w-full md:w-auto" />
+          <Image
+            src={leaderboard}
+            alt="leaderboard"
+            className="m-auto h-full w-full md:w-auto"
+          />
         </div>
         <div className="md:w-1/2 lg:px-10 flex flex-col justify-center">
           <h2 className="text-2xl text-primary md:text-4xl font-bold mb-2 md:mb-4 lg:mb-6">

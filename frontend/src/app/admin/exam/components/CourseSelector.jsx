@@ -19,8 +19,7 @@ export default function CourseSelector({ onChangeCourses, selectedCourses }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState(null);
-  const [localSelectedCourses, setLocalSelectedCourses] =
-    useState(selectedCourses);
+  const [localSelectedCourses, setLocalSelectedCourses] = useState([]);
 
   const fetchCategories = async () => {
     try {

@@ -108,7 +108,7 @@ const Navbar = () => {
                 <ul className="space-y-3">
                   {navLinks.map((navlink, index) => (
                     <motion.li
-                      key={index}
+                      key={navlink.name}
                       initial={{ x: -50, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: index / 10 }}
@@ -133,7 +133,7 @@ const Navbar = () => {
           <div className="ml-6 hidden md:flex gap-4 ">
             {navLinks.map((navLink) => (
               <Link
-                key={navLink.link}
+                key={navLink.name}
                 href={navLink.link}
                 className=" text-sm mt-2 text-white  hover:text-white"
               >

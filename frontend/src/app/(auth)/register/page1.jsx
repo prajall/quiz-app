@@ -354,7 +354,7 @@ const Register = () => {
                       <div className="relative w-fit group mx-auto">
                         <img
                           src={croppedImage}
-                          alt=""
+                          alt="Cropped Image"
                           className="w-32 h-32 border  rounded-full mx-auto"
                         />
                         <DialogTrigger className=" border border-primary  rounded-full p-2 duration-300 bg-white  absolute bottom-0 left-3/4 ">
