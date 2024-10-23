@@ -10,7 +10,6 @@ import gameDataRoute from "../src/routes/gameDataRoute.js";
 import userExamRoute from "../src/routes/userExamRoute.js";
 import examSoldRoute from "../src/routes/examsoldRoute.js";
 import customFieldRoute from "../src/routes/customFieldRoute.js";
-import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
 
 const app = express();
 
@@ -25,16 +24,16 @@ app.use(
     credentials: true,
   })
 );
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://exams.etutorclass.com");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, PUT");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, x-api-key"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://exams.etutorclass.com");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, PUT");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Content-Type, Authorization, x-api-key"
+//   );
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   next();
+// });
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

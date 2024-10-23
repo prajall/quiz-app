@@ -21,6 +21,7 @@ if (!fs.existsSync(logDirectory)) {
 }
 
 const logger = (filename) => {
+  console.log("Logger is called");
   return winston.createLogger({
     level: "info",
     format: winston.format.combine(
