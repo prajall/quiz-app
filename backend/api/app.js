@@ -55,4 +55,12 @@ app.get("/", (req, res) => {
   res.send("Server is working");
 });
 
+app.post("/api/v1", (req, res) => {
+  console.log("Cookies:", req.cookies);
+  const cookies = req.cookies;
+
+  // console.log("Request:", req);
+  res.send("Check cookies");
+});
+
 export default app;
