@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -48,7 +47,11 @@ const AppProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Failed to fetch Exams");
+      if (error.message && error.message === "Network Error") {
+        toast.error("Failed to connect to the server");
+      } else {
+        toast.error("Failed to fetch Exams");
+      }
     } finally {
       setAppData((prev) => ({ ...prev, isLoading: false }));
     }

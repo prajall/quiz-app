@@ -7,6 +7,7 @@ import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import QuizProvider from "@/contexts/QuizContext";
+import { cn } from "@/lib/utils";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 
@@ -18,7 +19,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={font.className}>
+      <body className={cn("bg-blue-50", font.className)}>
         <ToastContainer
           position="top-center"
           autoClose={3000}

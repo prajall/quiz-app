@@ -100,7 +100,7 @@ export default function EditExamForm({ params }) {
 
   return (
     <div className="mx-auto py-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-white p-4 rounded-lg overflow-hidden">
         <div className=" py-6">
           <h2 className="text-3xl font-bold ">Edit Exam</h2>
         </div>
