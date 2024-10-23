@@ -60,8 +60,8 @@ const LevelComponent = ({ level }) => {
             alt="quiz icon"
           />
         </div>
-        <div className="flex flex-col justify-center">
-          <div className="flex items-center mb-3">
+        <div className="flex flex-col  justify-center">
+          <div className="flex items-center mb-1">
             <h2 className="text-lg font-semibold">Level {levelNumber}</h2>
           </div>
           <div>

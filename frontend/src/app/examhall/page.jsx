@@ -52,7 +52,7 @@ const ExamHallPage = () => {
       <h2 className="font-semibold">Exams:</h2>
       <div className="grid py-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {exams.map((exam) => (
-          <ExamComponent exam={exam} />
+          <ExamComponent exam={exam} key={exam._id} />
         ))}
       </div>
     </div>

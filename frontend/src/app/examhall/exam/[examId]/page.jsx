@@ -29,7 +29,7 @@ export default function ExamPage({ params }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
       {levels.map((level) => (
-        <LevelComponent level={level} />
+        <LevelComponent level={level} key={level._id} />
       ))}
     </div>
   );
