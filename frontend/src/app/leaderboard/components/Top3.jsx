@@ -1,6 +1,29 @@
 import { motion } from "framer-motion";
 
-const Top3 = ({ leaderboard }) => {
+const Top3 = () => {
+  const leaderboard = [
+    {
+      user: "user1",
+      score: 3200,
+      userInfo: {
+        name: "Alice",
+      },
+    },
+    {
+      user: "user2",
+      score: 0,
+      userInfo: {
+        name: "Bob",
+      },
+    },
+    {
+      user: "user3",
+      score: 0,
+      userInfo: {
+        name: "Charlie",
+      },
+    },
+  ];
   if (!leaderboard || leaderboard.length < 3) {
     return;
   }
@@ -45,7 +68,6 @@ const Top3 = ({ leaderboard }) => {
           </p>
         </motion.div>
         <motion.div
-          // Adding a key prop here
           className="rounded-t-3xl gradient-bg-1 w-full flex flex-col items-center justify-start pt-4"
           initial={{ height: 0 }}
           animate={{ height: `${height2}px` }}

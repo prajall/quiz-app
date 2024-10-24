@@ -75,15 +75,18 @@
 }
 
 .gradient-bg-1 {
-  background: linear-gradient(to bottom, #19528a, #1c61a69a, white);
+  /* background: linear-gradient(to bottom, #EAA021, #1c61a69a, white); */
+  background: #a2a2a678;
 }
 
 .gradient-bg-2 {
-  background: linear-gradient(to bottom, #4298ed, #4298ed9a, white);
+  /* background: linear-gradient(to bottom, #4298ed, #4298ed9a, white); */
+  background: #eaa021;
 }
 
 .gradient-bg-3 {
-  background: linear-gradient(to bottom, #043669, #0436699a, white);
+  /* background: linear-gradient(to bottom, #043669, #0436699a, white); */
+  background: #d4733c8f;
 }
 
 ol,
