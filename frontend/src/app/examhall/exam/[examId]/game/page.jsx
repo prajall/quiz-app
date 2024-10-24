@@ -116,7 +116,7 @@ export default function Component({
   },
 }) {
   const [selectedOption, setSelectedOption] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(60); // 60 seconds
+  const [timeLeft, setTimeLeft] = useState(60);
   const [isAnswered, setIsAnswered] = useState(false);
 
   useEffect(() => {

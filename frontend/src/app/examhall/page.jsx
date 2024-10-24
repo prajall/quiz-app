@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import ExamComponent from "./components/ExamComponent";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Spinner from "@/components/Spinner";
 
 const ExamHallPage = () => {
   const [exams, setExams] = useState([]);
+  const [loading, setLoading] = useState(true);
   const exam = {
     _id: "66f68e69e8d137eb28cc72fd",
     exam_id: "1001",
@@ -32,12 +34,22 @@ const ExamHallPage = () => {
     } catch (error) {
       console.log(error);
       toast.error("Failed to fetch exams");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchExams();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size={30} />
+      </div>
+    );
+  }
 
   return (
     <div>

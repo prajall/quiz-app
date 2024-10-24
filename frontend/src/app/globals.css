@@ -75,11 +75,11 @@
 }
 
 .gradient-bg-1 {
-  background: linear-gradient(to bottom, #19528A, #1c61a69a, white);
+  background: linear-gradient(to bottom, #19528a, #1c61a69a, white);
 }
 
 .gradient-bg-2 {
-  background: linear-gradient(to bottom, #4298ED, #4298ED9a, white);
+  background: linear-gradient(to bottom, #4298ed, #4298ed9a, white);
 }
 
 .gradient-bg-3 {
@@ -89,4 +89,30 @@
 ol,
 ul {
   list-style: none;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  animation: spin 1s linear infinite;
+  stroke: rgba(107, 114, 128, 1);
+}
+
+.loading-text {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: rgba(107, 114, 128, 1);
+  margin-left: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
