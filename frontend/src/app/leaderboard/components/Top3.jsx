@@ -46,26 +46,25 @@ const Top3 = () => {
       key={uniqueKey}
       className="flex justify-center items-end mx-auto mt-2 h-full background"
     >
-      <div className=" w-24 sm:w-28 lg:w-32 flex flex-col items-center ">
+      <div className="relative w-24 sm:w-28 lg:w-32 flex flex-col items-center ">
         <motion.div
-          // To trigger reanimation
-          className="flex flex-col items-center"
+          className="flex flex-col items-center absolute -top-14"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1, duration: 0.3 }}
         >
           <p className="font-semibold">#2</p>
           <img
-            className="rounded-full w-3/4 ring-4 border border-white mt-1 ring-[#4298ED9a] "
+            className="rounded-full w-1/2 ring border border-white mt-1 ring-zinc-600 "
             src={
               top3[1].userInfo.image
                 ? top3[1].userInfo.image
                 : "http://res.cloudinary.com/dwjhsf65j/image/upload/v1722151225/profile_pictures/lvak9mh0vrp4kgr6loca.jpg"
             }
           />
-          <p className="text-xs m-2 text-[#19528A] font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
+          {/* <p className="text-xs m-2 text-[#19528A] font-semibold overflow-hidden whitespace-nowrap text-ellipsis">
             {top3[1].userInfo.name ? top3[1].userInfo.name : "Quiz Player"}
-          </p>
+          </p> */}
         </motion.div>
         <motion.div
           className="rounded-t-3xl gradient-bg-1 w-full flex flex-col items-center justify-start pt-4"

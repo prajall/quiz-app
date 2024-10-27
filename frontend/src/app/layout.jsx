@@ -1,4 +1,6 @@
 import Navbar from "@/components/Navbar";
+import NavbarEtutor from "@/components/NavbarEtutor";
+import FooterEtutor from "@/components/FooterEtutor";
 import AppProvider from "@/contexts/AppContext";
 import ScoreProvider from "@/contexts/ScoreContext";
 import { TimerProvider } from "@/contexts/TimerContext";
@@ -37,11 +39,14 @@ export default function RootLayout({ children }) {
           <TimerProvider>
             <ScoreProvider>
               <QuizProvider>
-                <Navbar />
+                {/* <Navbar /> */}
+                <NavbarEtutor />
 
-                <div className=" w-11/12 max-w-screen-xl md:px-0 mx-auto text-black">
+                <div className=" max-w-[1200px] min-h-[90dvh] px-6 md:px-10 lg:px-12 xl:px-0 w-full mx-auto  text-black">
                   {children}
                 </div>
+
+                <FooterEtutor />
               </QuizProvider>
             </ScoreProvider>
           </TimerProvider>
