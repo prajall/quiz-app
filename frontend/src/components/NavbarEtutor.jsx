@@ -10,9 +10,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const router = useRouter();
+
+  const submitSearch = (e) => {
+    e.preventDefault();
+    console.log("Search submitted", e.target.search.value);
+    router.push(
+      `https://etutorclass.com/search?query=${e.target.search.value}`
+    );
+  };
 
   return (
     <nav className="bg-[#1C252E]  text-white pt-2" style={{ fontSize: "15px" }}>
@@ -37,9 +48,13 @@ const Navbar = () => {
           </div>
 
           {/* Search Bar */}
-          <form className="max-w-full md:max-w-[480px] flex items-center">
+          <form
+            className="max-w-full md:max-w-[480px] flex items-center"
+            onSubmit={submitSearch}
+          >
             <input
               type="text"
+              name="search"
               placeholder="Search (courses, tutors)"
               className="rounded-l-sm w-full bg-[#ffffff0d] h-[40px] px-4 text-white placeholder-gray-400 focus:outline-none"
             />
