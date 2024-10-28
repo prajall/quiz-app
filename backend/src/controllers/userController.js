@@ -423,26 +423,31 @@ export const makeUserNonPremium = async (req, res) => {
   }
 };
 
-export const addCoins = async (req, res) => {
+export const updateCoins = async (req, res) => {
   try {
     const user = req.user;
-    const { coins } = req.body;
+    const { coins, subtract } = req.body;
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     if (!coins) {
       return res.status(404).json({ message: "Coins not found" });
     }
+
     if (typeof coins !== "number" || coins < 0) {
       return res
         .status(404)
         .json({ message: "Coins must be a positive number" });
     }
-    user.coins += coins;
+    if (subtract) {
+      user.coins -= coins;
+    } else {
+      user.coins += coins;
+    }
     await user.save();
-    return res.status(200).json({ message: "Coins added successfully" });
+    return res.status(200).json({ message: "Coins updated successfully" });
   } catch (error) {
-    log.error("Error in addCoins", JSON.stringify(error));
+    log.error("Error in updateCoins", JSON.stringify(error));
     return res.status(500).json({ message: "Internal server error" });
   }
 };

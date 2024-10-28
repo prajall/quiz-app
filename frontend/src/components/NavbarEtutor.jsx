@@ -125,20 +125,20 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="absolute -left-8 w-fit">
                   <DropdownMenuItem>
-                    <Link href="https://etutorclass.com/courses/results">
+                    <Link href="https://etutorclass.com/results">
                       Exam Results
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link
-                      href="https://etutorclass.com/courses/study-materials"
+                      href="https://etutorclass.com/study-materials"
                       className="w-28"
                     >
                       Study Materials
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href="https://etutorclass.com/courses/syllabus">
+                    <Link href="https://etutorclass.com/syllabus">
                       Syllabus
                     </Link>
                   </DropdownMenuItem>

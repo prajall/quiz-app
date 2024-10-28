@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  addCoins,
   emailChecker,
   etutorLogin,
   getCookies,
@@ -12,6 +11,7 @@ import {
   registerVerificationCode,
   resetPassword,
   signupUser,
+  updateCoins,
   verifyCode,
 } from "../controllers/userController.js";
 import { etutorUserAuth } from "../middlewares/authMiddleware.js";
@@ -33,6 +33,6 @@ router.post("/etutor-login", etutorLogin);
 router.get("/info", etutorUserAuth, getUserInfo);
 router.patch("/make-premium", etutorUserAuth, makeUserPremium);
 router.patch("/make-non-premium", etutorUserAuth, makeUserNonPremium);
-router.post("/add-coins", etutorUserAuth, addCoins);
+router.patch("/update-coins", etutorUserAuth, updateCoins);
 
 export default router;
