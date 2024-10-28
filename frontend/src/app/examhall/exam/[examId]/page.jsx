@@ -11,11 +11,12 @@ export default function ExamPage({ params }) {
   const [levels, setLevels] = useState([]);
   const getLevels = async () => {
     try {
+      console.log("User:", appData.user);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/gamedata/levels?examId=${examId}`,
-        { headers: { etutor_id: appData.user?.etutor_id } }
+        { withCredentials: true, headers: { etutor_id: appData.user?.id } }
       );
-      console.log(response);
+      console.log("Exam Levels:", response);
       if (response.status === 200) {
         setLevels(response.data);
       }
@@ -23,6 +24,12 @@ export default function ExamPage({ params }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (appData.user) {
+      getLevels();
+    }
+  }, [appData.user]);
 
   useEffect(() => {
     getLevels();

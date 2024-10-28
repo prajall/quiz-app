@@ -84,9 +84,11 @@ const Navbar = () => {
               <span>{appData.user.name}</span>
             </div>
             <div className="flex gap-2">
-              <button className="bg-[#3490dc] hover:bg-blue-600 text-white font-semibold py-2 px-4 w-36 md:w-auto">
-                Dashboard
-              </button>
+              <Link href="https://etutorclass.com/student/home">
+                <button className="bg-[#3490dc] hover:bg-blue-600 text-white font-semibold py-2 px-4 w-36 md:w-auto">
+                  Dashboard
+                </button>
+              </Link>
               <button className="bg-transparent border-2 border-[#3490dc] text-[#3490dc] font-semibold py-[6px] px-4 w-36 md:w-auto">
                 Logout
               </button>

@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import ExamComponent from "./components/ExamComponent";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Spinner from "@/components/Spinner";
 import MyLoader from "@/components/Skeleton";
+import { AppContext } from "@/contexts/AppContext";
 const ExamHallPage = () => {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);

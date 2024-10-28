@@ -444,10 +444,13 @@ export const updateCoins = async (req, res) => {
     } else {
       user.coins += coins;
     }
+    if (user.coins < 0) {
+      user.coins = 0;
+    }
     await user.save();
     return res.status(200).json({ message: "Coins updated successfully" });
   } catch (error) {
-    log.error("Error in updateCoins", JSON.stringify(error));
+    log.error("Error in addCoins", JSON.stringify(error));
     return res.status(500).json({ message: "Internal server error" });
   }
 };

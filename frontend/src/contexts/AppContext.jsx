@@ -22,7 +22,7 @@ const AppProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-
+      console.log(response.data);
       if (response.data && response.data.success) {
         setAppData((prev) => ({ ...prev, user: response.data.data }));
       }
