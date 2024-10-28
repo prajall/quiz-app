@@ -5,22 +5,10 @@ import ExamComponent from "./components/ExamComponent";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Spinner from "@/components/Spinner";
-
+import MyLoader from "@/components/Skeleton";
 const ExamHallPage = () => {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
-  const exam = {
-    _id: "66f68e69e8d137eb28cc72fd",
-    exam_id: "1001",
-    totalQuestions: 13548,
-    totalLevels: 271,
-    title: "शिक्षा सेवा आयोग",
-    price: 1299,
-    discount: 5,
-    subTitle: "General Knowledge",
-    isActive: true,
-    __v: 0,
-  };
 
   const fetchExams = async () => {
     try {
@@ -43,14 +31,6 @@ const ExamHallPage = () => {
     fetchExams();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size={30} />
-      </div>
-    );
-  }
-
   return (
     <div>
       <div className="col-span-full  bg-blue-100 border-l-4 text-sm border-blue-500 p-4 my-4 rounded-sm">
@@ -62,11 +42,22 @@ const ExamHallPage = () => {
         </p>
       </div>
       <h2 className="font-semibold">Exams:</h2>
-      <div className="grid py-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {exams.map((exam) => (
-          <ExamComponent exam={exam} key={exam._id} />
-        ))}
-      </div>
+      {!loading && exams.length > 0 && (
+        <div className="grid py-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {exams.map((exam) => (
+            <>
+              <ExamComponent exam={exam} key={exam._id} />
+            </>
+          ))}
+        </div>
+      )}
+      {loading && (
+        <div className="grid py-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <MyLoader key={index} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

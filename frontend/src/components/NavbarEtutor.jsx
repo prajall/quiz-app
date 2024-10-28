@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { FaSearch, FaUserAlt, FaBars } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +10,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { AppContext } from "@/contexts/AppContext";
 
 const Navbar = () => {
+  const { appData } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const submitSearch = (e) => {
     e.preventDefault();
@@ -26,19 +32,19 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-[#1C252E]  text-white pt-2" style={{ fontSize: "15px" }}>
+    <nav className="bg-[#1C252E] text-white pt-2" style={{ fontSize: "15px" }}>
       {/* Top Section with Logo, Search, and User Info */}
-      <div className=" max-w-[1200px] px-6 md:px-10 lg:px-12 xl:px-0 w-full mx-auto flex flex-col lg:flex-row items-center justify-between">
+      <div className="max-w-[1200px] px-6 md:px-10 lg:px-12 xl:px-0 w-full mx-auto flex flex-col lg:flex-row items-center justify-between">
         {/* Left Section: Logo and Search */}
         <div className="flex flex-col justify-between md:flex-row gap-4 md:gap-14 w-full lg:w-fit mb-4 md:mb-0">
-          <div className="flex items-center justify-between w-full md:w-auto ">
-            <a href="https://etutorclass.com/">
+          <div className="flex items-center justify-between w-full md:w-auto">
+            <Link href="https://etutorclass.com/">
               <img
                 src="https://etutorclass.com/images/logo.png"
                 alt="Logo"
                 className="w-[150px]"
               />
-            </a>
+            </Link>
             <button
               className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -67,25 +73,61 @@ const Navbar = () => {
           </form>
         </div>
 
-        {/* Right Section: User Info */}
-        <div
-          className={`flex  gap-2 w-full lg:w-auto items-center justify-between lg:justify-end ${
-            isMenuOpen ? "block" : "hidden md:flex"
-          }`}
-        >
-          <div className="flex gap-1 items-center ">
-            <FaUserAlt />
-            <span className="">Roshan Bhusal</span>
+        {isMounted && appData.user ? (
+          <div
+            className={`flex gap-2 w-full lg:w-auto items-center justify-between lg:justify-end ${
+              isMenuOpen ? "block" : "hidden md:flex"
+            }`}
+          >
+            <div className="flex gap-1 items-center">
+              <FaUserAlt />
+              <span>{appData.user.name}</span>
+            </div>
+            <div className="flex gap-2">
+              <button className="bg-[#3490dc] hover:bg-blue-600 text-white font-semibold py-2 px-4 w-36 md:w-auto">
+                Dashboard
+              </button>
+              <button className="bg-transparent border-2 border-[#3490dc] text-[#3490dc] font-semibold py-[6px] px-4 w-36 md:w-auto">
+                Logout
+              </button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <button className="bg-[#3490dc] hover:bg-blue-600 text-white font-semibold py-2 px-4 w-36 md:w-auto">
-              Dashboard
-            </button>
-            <button className="bg-transparent border-2 border-[#3490dc] text-[#3490dc] font-semibold py-[6px] px-4 w-36 md:w-auto">
-              Logout
-            </button>
-          </div>
-        </div>
+        ) : (
+          isMounted && (
+            <div className="flex gap-2 w-full lg:w-auto items-center justify-end pb-4 md:pb-0">
+              <Link href="https://etutorclass.com/login">
+                <button className="bg-[#3490dc] hover:bg-blue-600 text-white font-semibold py-2 px-6 md:w-auto">
+                  Login
+                </button>
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <button className="flex gap-1 items-center bg-transparent border-2 border-[#3490dc] text-[#3490dc] font-semibold py-[6px] px-4 md:w-auto">
+                    Register
+                    <IoMdArrowDropdown size={14} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="absolute -left-8 w-fit">
+                  <DropdownMenuItem>
+                    <Link href="https://etutorclass.com/register">
+                      As Student
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="https://etutorclass.com/register-tutor">
+                      As Tutor/Author
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="https://etutorclass.com/register-merchant">
+                      As Merchant
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )
+        )}
       </div>
 
       {/* Links Section */}
@@ -95,9 +137,7 @@ const Navbar = () => {
         }`}
       >
         <div className="max-w-[1200px] w-full mx-auto px-6 md:px-10 lg:px-12 xl:px-0">
-          <ul
-            className={`flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-white`}
-          >
+          <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-white">
             <li>
               <a
                 href="https://etutorclass.com/"
@@ -130,13 +170,12 @@ const Navbar = () => {
                 Pustak Sewa
               </a>
             </li>
-
             {/* Dropdown for Notice */}
             <li>
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex gap-1 items-center">
                   Notice
-                  <IoMdArrowDropdown size={14} />{" "}
+                  <IoMdArrowDropdown size={14} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="absolute -left-8 w-fit">
                   <DropdownMenuItem>
@@ -145,10 +184,7 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link
-                      href="https://etutorclass.com/study-materials"
-                      className="w-28"
-                    >
+                    <Link href="https://etutorclass.com/study-materials">
                       Study Materials
                     </Link>
                   </DropdownMenuItem>

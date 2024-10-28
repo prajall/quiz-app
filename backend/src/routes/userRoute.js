@@ -34,5 +34,20 @@ router.get("/info", etutorUserAuth, getUserInfo);
 router.patch("/make-premium", etutorUserAuth, makeUserPremium);
 router.patch("/make-non-premium", etutorUserAuth, makeUserNonPremium);
 router.patch("/update-coins", etutorUserAuth, updateCoins);
+router.get("/auth", (req, res) => {
+  const cookies = req.cookies;
+  console.log("Cookies: ", cookies);
+  res.json({
+    success: true,
+    message: "Auth Cookie Validated Successfully",
+    data: {
+      id: 70892,
+      name: "Roshan Bhusal",
+      email: "bhusalroshan2058@gmail.com",
+      contact: "9843223774",
+    },
+    cookies,
+  });
+});
 
 export default router;

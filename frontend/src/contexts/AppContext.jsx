@@ -17,13 +17,14 @@ const AppProvider = ({ children }) => {
   const fetchUser = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/getuser`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/auth`,
         {
           withCredentials: true,
         }
       );
-      if (response.status === 200) {
-        setAppData((prev) => ({ ...prev, user: response.data }));
+
+      if (response.data && response.data.success) {
+        setAppData((prev) => ({ ...prev, user: response.data.data }));
       }
     } catch (error) {
       if (error.message == "Network Error") {
@@ -58,7 +59,7 @@ const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // fetchUser();
+    fetchUser();
     fetchExams();
   }, []);
 

@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LevelComponent from "./components/LevelComponent";
 import axios from "axios";
+import { AppContext } from "@/contexts/AppContext";
 
 export default function ExamPage({ params }) {
+  const { appData } = useContext(AppContext);
   const { examId } = params;
   const [levels, setLevels] = useState([]);
   const getLevels = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/gamedata/levels?examId=${examId}`,
-        { headers: { etutor_id: "96712" } }
+        { headers: { etutor_id: appData.user?.etutor_id } }
       );
       console.log(response);
       if (response.status === 200) {
