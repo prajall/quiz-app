@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import GreenButton from "@/app/examhall/components/GreenButton";
 import OrangeButton from "@/app/examhall/components/OrangeButton";
 import { FaUnlock } from "react-icons/fa";
@@ -6,16 +6,23 @@ import { Rubik_Doodle_Shadow } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Lock } from "lucide-react";
 
+import { ExamContext } from "@/contexts/ExamContext";
+import { useRouter, useParams } from "next/navigation";
+
 const rubikDoodleShadow = Rubik_Doodle_Shadow({
   subsets: ["latin"],
   weight: ["400"],
 });
 
-const LevelComponent = ({ level }) => {
+const LevelComponent = ({ level, examTitle }) => {
+  const { examData, setExamData } = useContext(ExamContext);
+  const { examId } = useParams();
   const { level: levelNumber, unlocked, totalSolved, totalCorrect } = level;
-
+  const [loading, setLoading] = useState(false);
   const accuracy =
     totalSolved > 0 ? Math.round((totalCorrect / totalSolved) * 100) : 0;
+
+  const router = useRouter();
 
   if (!unlocked) {
     return (
@@ -82,7 +89,14 @@ const LevelComponent = ({ level }) => {
       </div>
       <div className="flex justify-center flex-col gap-2 w-fit items-end">
         {totalSolved > 0 && <GreenButton text="Completed" />}
-        <OrangeButton text="Play Again" />
+        <OrangeButton
+          text="Play Again"
+          onClick={() => {
+            setExamData((prev) => ({ ...prev, level: levelNumber }));
+            router.push(`/examhall/exam/${examId}/play?exam=${examTitle}`);
+          }}
+          loading={loading}
+        />
       </div>
     </div>
   );

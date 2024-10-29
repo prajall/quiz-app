@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const defaultAppData = {
   user: null,
   isLoading: true,
-  exams: null,
+  examhallUser: null,
 };
 
 export const AppContext = createContext();
@@ -37,31 +37,35 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchExams = async () => {
+  const fetchExamhallUser = async () => {
     try {
+      console.log("AppData:", appData);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/exam/admin`
+        `${process.env.NEXT_PUBLIC_API_URL}/user/info`,
+        {
+          headers: {
+            etutor_id: appData.user.id,
+          },
+          withCredentials: true,
+        }
       );
-
       if (response.status == 200) {
-        setAppData((prev) => ({ ...prev, exams: response.data }));
+        setAppData((prev) => ({ ...prev, examhallUser: response.data }));
       }
     } catch (error) {
       console.log(error);
-      if (error.message && error.message === "Network Error") {
-        toast.error("Failed to connect to the server");
-      } else {
-        toast.error("Failed to fetch Exams");
-      }
-    } finally {
-      setAppData((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
   useEffect(() => {
     fetchUser();
-    fetchExams();
   }, []);
+
+  useEffect(() => {
+    if (appData.user) {
+      fetchExamhallUser();
+    }
+  }, [appData.user]);
 
   useEffect(() => {
     console.log("Appdata updated:", appData);

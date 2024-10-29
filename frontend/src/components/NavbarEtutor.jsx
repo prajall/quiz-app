@@ -75,7 +75,7 @@ const Navbar = () => {
 
         {isMounted && appData.user ? (
           <div
-            className={`flex gap-2 w-full lg:w-auto items-center justify-between lg:justify-end ${
+            className={`flex gap-2 w-full lg:w-auto items-center justify-end ${
               isMenuOpen ? "block" : "hidden md:flex"
             }`}
           >

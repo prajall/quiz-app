@@ -1,25 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import QuestionDisplay from "./components/QuestionDisplay";
 import Timer from "./components/Timer";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import Spinner from "@/components/Spinner";
+import { ExamContext } from "@/contexts/ExamContext";
+import { toast } from "react-toastify";
 
 export default function Component() {
+  const { examData, setExamData } = useContext(ExamContext);
   const params = useParams();
   const examId = params?.examId;
   const level = params?.level || 1;
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(examData.questions);
   const [loading, setLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(examData.time || 60);
   const [isAnswered, setIsAnswered] = useState(false);
   const [userProgress, setUserProgress] = useState({
     totalCorrect: 0,
     totalAttempts: 0,
   });
+
+  if (questions.length === 0) {
+    redirect(`/examhall/exam/${examId}/play`);
+  }
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -49,19 +56,23 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
-    if (timeLeft > 0 && !isAnswered) {
+    if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
+    } else {
+      toast.error("Time's up!");
+      redirect(`/examhall/exam/${examId}/result`);
     }
-  }, [timeLeft, isAnswered]);
+  }, [timeLeft]);
 
   const handleAnswer = (isCorrect) => {
     setIsAnswered(true);
-    setUserProgress((prev) => ({
-      totalCorrect: isCorrect ? prev.totalCorrect + 1 : prev.totalCorrect,
-      totalAttempts: prev.totalAttempts + 1,
-    }));
 
+    setExamData((prev) => ({
+      ...prev,
+      correct: isCorrect ? prev.correct + 1 : prev.correct,
+      attempts: prev.attempts + 1,
+    }));
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex((prev) => prev + 1);
@@ -93,7 +104,7 @@ export default function Component() {
       </div>
       <div className="relative bg-white h-10 ">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Timer timeLeft={timeLeft} totalTime={60} />
+          <Timer timeLeft={timeLeft} totalTime={examData.time || 60} />
         </div>
       </div>
       <QuestionDisplay
@@ -101,10 +112,10 @@ export default function Component() {
         setAnsweredTrue={handleAnswer}
         isAnswered={isAnswered}
       />
-      <div className="mt-4">
+      {/* <div className="mt-4">
         Correct: {userProgress.totalCorrect} / Attempts:{" "}
         {userProgress.totalAttempts}
-      </div>
+      </div> */}
     </div>
   );
 }

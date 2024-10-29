@@ -6,8 +6,11 @@ import { HiOutlineCash } from "react-icons/hi";
 import GreenButton from "./GreenButton";
 import OrangeButton from "./OrangeButton";
 import Link from "next/link";
+import { ExamContext } from "@/contexts/ExamContext";
+import { useContext } from "react";
 
 export default function ExamComponent({ exam }) {
+  const { examData, setExamData } = useContext(ExamContext);
   const discountedPrice = exam.price - (exam.price * exam.discount) / 100;
 
   return (
@@ -57,8 +60,13 @@ export default function ExamComponent({ exam }) {
           </div>
         </div>
         <div className=" flex flex-col justify-between gap-3 ">
-          <Link href={`/examhall/exam/${exam._id}`}>
-            <GreenButton text="Play Free" />
+          <Link href={`/examhall/exam/${exam._id}?exam=${exam.title}`}>
+            <GreenButton
+              text="Play Free"
+              onClick={() =>
+                setExamData((prev) => ({ ...prev, examTitle: exam.title }))
+              }
+            />
           </Link>
           <OrangeButton text="Buy Plan" />
         </div>
