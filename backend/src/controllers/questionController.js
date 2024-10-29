@@ -31,9 +31,6 @@ export const getExamQuestions = async (req, res) => {
       { $sample: { size: limit } },
     ]).exec();
 
-    user.coins = user.coins - 50;
-    await user.save();
-
     return res.json(questions).status(200);
   } catch (error) {
     log.error("Error Getting Exam Question:", JSON.stringify(error));
