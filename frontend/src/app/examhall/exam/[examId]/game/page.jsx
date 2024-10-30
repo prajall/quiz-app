@@ -4,10 +4,12 @@ import React, { useState, useEffect, useContext } from "react";
 import QuestionDisplay from "./components/QuestionDisplay";
 import Timer from "./components/Timer";
 import axios from "axios";
-import { redirect, useParams } from "next/navigation";
+import { redirect, useParams, useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
 import { ExamContext } from "@/contexts/ExamContext";
 import { toast } from "react-toastify";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Component() {
   const { examData, setExamData } = useContext(ExamContext);
@@ -19,14 +21,20 @@ export default function Component() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(examData.time || 60);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [userProgress, setUserProgress] = useState({
-    totalCorrect: 0,
-    totalAttempts: 0,
-  });
 
-  if (questions.length === 0) {
-    redirect(`/examhall/exam/${examId}/play`);
-  }
+  const router = useRouter();
+
+  useEffect(() => {
+    if (examData.isPlaying === false) {
+      router.push(`/examhall/exam/${examId}/result`);
+    }
+  }, [examData.isPlaying, examId, router]);
+
+  useEffect(() => {
+    if (questions.length === 0) {
+      router.push(`/examhall/exam/${examId}/play`);
+    }
+  }, [questions, examId, router]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -61,9 +69,9 @@ export default function Component() {
       return () => clearTimeout(timer);
     } else {
       toast.error("Time's up!");
-      redirect(`/examhall/exam/${examId}/result`);
+      router.push(`/examhall/exam/${examId}/result`);
     }
-  }, [timeLeft]);
+  }, [timeLeft, examId, router]);
 
   const handleAnswer = (isCorrect) => {
     setIsAnswered(true);
@@ -77,10 +85,8 @@ export default function Component() {
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex((prev) => prev + 1);
         setIsAnswered(false);
-      } else {
-        console.log("Exam completed!", userProgress);
       }
-    }, 1000);
+    }, 300);
   };
 
   if (loading) {
@@ -112,10 +118,14 @@ export default function Component() {
         setAnsweredTrue={handleAnswer}
         isAnswered={isAnswered}
       />
-      {/* <div className="mt-4">
-        Correct: {userProgress.totalCorrect} / Attempts:{" "}
-        {userProgress.totalAttempts}
-      </div> */}
+      <Link
+        href={`/examhall/exam/${examId}/result`}
+        className="flex justify-end py-4"
+      >
+        <Button className="bg-red-500 hover:bg-red-400 active:bg-red-500 text-white w-32 font-semibold">
+          Finish
+        </Button>
+      </Link>
     </div>
   );
 }

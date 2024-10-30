@@ -26,9 +26,12 @@ export default function Component() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const examTitle = searchParams.get("exam");
-  if (!examData.level) {
-    setExamData((prev) => ({ ...prev, level: 1 }));
-  }
+
+  useEffect(() => {
+    if (!examData.level) {
+      setExamData((prev) => ({ ...prev, level: 1 }));
+    }
+  }, [examData.level, setExamData]);
 
   const [time, setTime] = useState(60);
   const [gameMode, setGameMode] = useState("normal");
@@ -49,7 +52,7 @@ export default function Component() {
 
   const fetchQuestions = async () => {
     console.log("AppData:", appData.user);
-    const cacheKey = `questions-${examId}-level-${appData.level || 1}`;
+    // const cacheKey = `questions-${examId}-level-${appData.level || 1}`;
 
     try {
       setLoading(true);

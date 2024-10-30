@@ -103,11 +103,9 @@ const Navbar = () => {
                 </button>
               </Link>
               <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <button className="flex gap-1 items-center bg-transparent border-2 border-[#3490dc] text-[#3490dc] font-semibold py-[6px] px-4 md:w-auto">
-                    Register
-                    <IoMdArrowDropdown size={14} />
-                  </button>
+                <DropdownMenuTrigger className="flex gap-1 items-center bg-transparent border-2 border-[#3490dc] text-[#3490dc] font-semibold py-[6px] px-4 md:w-auto">
+                  Register
+                  <IoMdArrowDropdown size={14} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="absolute -left-8 w-fit">
                   <DropdownMenuItem>

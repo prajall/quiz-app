@@ -56,9 +56,6 @@ export const getExamQuestionsAdmin = async (req, res) => {
       { $limit: limit },
     ]).exec();
 
-    // user.coins = user.coins - 5;
-    // await user.save();
-
     return res.json(questions).status(200);
   } catch (error) {
     log.error("Error getting Exam Question for admin", JSON.stringify(error));
