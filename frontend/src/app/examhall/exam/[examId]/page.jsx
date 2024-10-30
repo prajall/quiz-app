@@ -28,6 +28,7 @@ export default function ExamPage({ params }) {
       );
       console.log("Exam Levels:", response);
       if (response.status === 200) {
+        console.log("Levels:", response.data);
         setLevels(response.data);
       }
     } catch (error) {
@@ -48,6 +49,10 @@ export default function ExamPage({ params }) {
     setExamData((prev) => ({ ...prev, level: null }));
   }, []);
 
+  useEffect(() => {
+    console.log("Levels:", levels);
+  }, [levels]);
+
   return (
     <>
       <div className="mt-4">
@@ -61,11 +66,19 @@ export default function ExamPage({ params }) {
           ? Array.from({ length: 15 }).map((_, index) => (
               <LevelSkeleton key={index} />
             ))
-          : levels.map((level) => (
+          : levels.map((level, index) => (
               <LevelComponent
                 level={level}
                 key={level._id}
                 examTitle={examTitle}
+                unlockable={index == 0 ? true : levels[index - 1].unlocked}
+                onLevelUnlocked={() => {
+                  setLevels((prev) => {
+                    const newLevels = [...prev];
+                    newLevels[index] = { ...newLevels[index], unlocked: true };
+                    return newLevels;
+                  });
+                }}
               />
             ))}
       </div>

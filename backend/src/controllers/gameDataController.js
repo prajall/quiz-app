@@ -26,9 +26,11 @@ export const addGameData = async (req, res) => {
       playedFrom,
       location,
     } = req.body;
-
+    console.log("Body: ", req.body);
     if (
       !level ||
+      typeof level != "number" ||
+      level < 0 ||
       !userId ||
       !exam ||
       totalSolved == null ||
@@ -84,11 +86,15 @@ export const addGameData = async (req, res) => {
     }
 
     const calculateScore = (totalCorrect, totalSolved, level) => {
+      console.log("totalCorrect: ", totalCorrect);
+      console.log("totalSolved: ", totalSolved);
+      console.log("level: ", level);
       const levelMultiplier = 1 + level * 0.0015;
       return Math.round((totalCorrect + totalSolved * 0.01) * levelMultiplier);
     };
 
     const score = calculateScore(totalCorrect, totalSolved, level);
+    console.log("Score: ", score);
 
     let accuracy = 0;
     if (totalSolved > 0) {
@@ -145,7 +151,7 @@ export const addGameData = async (req, res) => {
     console.log("Saved Game document:", savedGame);
     res.status(201).json(savedGame);
   } catch (error) {
-    log.error("Error saving gamePlayed document:", JSON.stringify(error));
+    log.error("Error saving gamePlayed document:", error);
     res.status(500).json({ message: "Failed to save game data" });
   }
 };
