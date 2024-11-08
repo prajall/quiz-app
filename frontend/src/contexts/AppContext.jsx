@@ -39,7 +39,7 @@ const AppProvider = ({ children }) => {
 
   const fetchExamhallUser = async () => {
     try {
-      console.log("AppData:", appData);
+    
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/user/info`,
         {

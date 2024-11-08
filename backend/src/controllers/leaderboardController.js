@@ -1,4 +1,4 @@
-import User from "../../api/index.js";
+import { User, Exam, UserExam } from "../../api/index.js";
 
 export const getOverallLeaderboard = async (req, res) => {
   try {
@@ -24,7 +24,7 @@ export const getOverallLeaderboard = async (req, res) => {
 
 export const getExamLeaderboard = async (req, res) => {
   try {
-    const { examId } = req.query;
+    const { examId } = req.params;
 
     if (!examId) {
       return res.status(400).json({ message: "Exam ID is required" });
@@ -55,6 +55,85 @@ export const getExamLeaderboard = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching exam leaderboard:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getUserOverallRanking = async (req, res) => {
+  try {
+    const userData = req.user;
+
+    const user = await User.findById(userData._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const higherScores = await User.countDocuments({
+      totalScore: { $gt: user.totalScore },
+    });
+
+    const totalUsers = await User.countDocuments();
+
+    return res.status(200).json({
+      ranking: higherScores + 1,
+      totalUsers,
+      userData: {
+        etutor_id: user.etutor_id,
+        totalScore: user.totalScore,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching user ranking:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getUserExamRanking = async (req, res) => {
+  try {
+    const { examId } = req.params;
+    const userData = req.user;
+
+    if (!examId) {
+      return res.status(400).json({ message: "Exam ID is required" });
+    }
+
+    // Verify exam exists
+    const examExists = await Exam.findById(examId);
+    if (!examExists) {
+      return res.status(404).json({ message: "Exam not found" });
+    }
+
+    // Get user's exam attempt
+    const userExam = await UserExam.findOne({
+      user: userData._id,
+      exam: examId,
+    });
+
+    if (!userExam) {
+      return res
+        .status(404)
+        .json({ message: "User has not attempted this exam" });
+    }
+
+    // Count number of users with higher scores
+    const higherScores = await UserExam.countDocuments({
+      exam: examId,
+      score: { $gt: userExam.score },
+    });
+
+    const totalParticipants = await UserExam.countDocuments({ exam: examId });
+
+    return res.status(200).json({
+      ranking: higherScores + 1,
+      totalParticipants,
+      examData: {
+        score: userExam.score,
+        totalCorrect: userExam.totalCorrect,
+        totalAttempts: userExam.totalAttempts,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching user exam ranking:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

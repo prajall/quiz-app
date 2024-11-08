@@ -24,7 +24,7 @@ const ExamHallPage = () => {
       console.log(error);
       toast.error("Failed to fetch exams");
     } finally {
-      setLoading(false);
+    setLoading(false);
     }
   };
 
@@ -34,6 +34,7 @@ const ExamHallPage = () => {
 
   return (
     <div>
+
       <div className="col-span-full  bg-blue-100 border-l-4 text-sm border-blue-500 p-4 my-4 rounded-sm">
         <p>
           <span className="font-semibold text-green-500">Notice: </span>A free
