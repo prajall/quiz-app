@@ -39,12 +39,11 @@ const AppProvider = ({ children }) => {
 
   const fetchExamhallUser = async () => {
     try {
-    
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/info`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/exam-auth`,
         {
           headers: {
-            etutor_id: appData.user.id,
+            etutor_id: appData.user.etutor_id,
           },
           withCredentials: true,
         }
@@ -62,7 +61,7 @@ const AppProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (appData.user) {
+    if (appData.user && appData.user.etutor_id) {
       fetchExamhallUser();
     }
   }, [appData.user]);

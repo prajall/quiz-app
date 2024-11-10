@@ -172,7 +172,7 @@ export const getUserInfo = async (req, res) => {
 
   try {
     const userDoc = await User.findById(user._id).select(
-      "-createdAt -updatedAt"
+      "-createdAt -updatedAt -verificationCode"
     );
     if (!user) {
       return res.status(404).send("User not found");
@@ -360,17 +360,20 @@ export const etutorLogin = async (req, res) => {
   if (!etutor_id) {
     return res.status(400).json({ message: "Etutor Id is required" });
   }
-  const user = await User.findOne({ etutor_id });
+
+  const user = await User.findOne({ etutor_id }).select(
+    "-createdAt -updatedAt -verificationCode"
+  );
   try {
     if (user) {
-      return res.status(200).json({ message: "User Exists" });
+      return res.status(200).json({ message: "User Exists", data: user });
     } else {
       const newUser = new User({
         etutor_id,
       });
       if (newUser) {
         await newUser.save();
-        res.status(201).json({ message: "New User Created" });
+        res.status(201).json({ message: "New User Created", data: newUser });
       } else {
         return res.status(500).send("Failed to create user.");
       }

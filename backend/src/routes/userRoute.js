@@ -29,11 +29,12 @@ router.post("/register-code", registerVerificationCode);
 router.post("/verify-code", verifyCode);
 router.post("/reset-password", resetPassword);
 
-router.post("/etutor-login", etutorLogin);
+router.post("/exam-auth", etutorLogin);
 router.get("/info", etutorUserAuth, getUserInfo);
 router.patch("/make-premium", etutorUserAuth, makeUserPremium);
 router.patch("/make-non-premium", etutorUserAuth, makeUserNonPremium);
 router.patch("/update-coins", etutorUserAuth, updateCoins);
+
 router.get("/auth", (req, res) => {
   const cookies = req.cookies;
   console.log("Cookies: ", cookies);

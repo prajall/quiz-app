@@ -1,14 +1,12 @@
-import Navbar from "@/components/Navbar";
-import NavbarEtutor from "@/components/NavbarEtutor";
 import FooterEtutor from "@/components/FooterEtutor";
+import NavbarEtutor from "@/components/NavbarEtutor";
 import AppProvider from "@/contexts/AppContext";
 import ExamProvider from "@/contexts/ExamContext";
+import { cn } from "@/lib/utils";
 import { Poppins } from "next/font/google";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
-import QuizProvider from "@/contexts/QuizContext";
-import { cn } from "@/lib/utils";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 
