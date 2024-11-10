@@ -14,7 +14,7 @@ function getLogFileName() {
   return `${dayOfWeek}-${formattedDate}.log`;
 }
 
-const logDirectory = "/tmp/logs";
+const logDirectory = "./tmp/logs";
 
 if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory, { recursive: true });
