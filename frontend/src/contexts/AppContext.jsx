@@ -16,8 +16,9 @@ const AppProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/user/auth`,
+
         {
           withCredentials: true,
         }
@@ -42,14 +43,15 @@ const AppProvider = ({ children }) => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/user/exam-auth`,
         {
-          headers: {
-            etutor_id: appData.user.etutor_id,
-          },
           withCredentials: true,
+          headers: {
+            etutor_id: appData.user.id,
+          },
         }
       );
+      console.log("Examhall User:", response.data);
       if (response.status == 200) {
-        setAppData((prev) => ({ ...prev, examhallUser: response.data }));
+        setAppData((prev) => ({ ...prev, examhallUser: response.data.data }));
       }
     } catch (error) {
       console.log(error);
@@ -61,7 +63,8 @@ const AppProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (appData.user && appData.user.etutor_id) {
+    if (appData.user && appData.user.id) {
+      console.log("Fetching Examhall User");
       fetchExamhallUser();
     }
   }, [appData.user]);

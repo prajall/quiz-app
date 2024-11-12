@@ -356,7 +356,7 @@ export const resetPassword = async (req, res) => {
 };
 
 export const etutorLogin = async (req, res) => {
-  const { etutor_id } = req.body;
+  const { etutor_id } = req.headers;
   if (!etutor_id) {
     return res.status(400).json({ message: "Etutor Id is required" });
   }
@@ -379,7 +379,7 @@ export const etutorLogin = async (req, res) => {
       }
     }
   } catch (error) {
-    log.error("Error in etutorLogin controller", JSON.stringify(error));
+    log.error("Error in etutorLogin controller");
     return res.status(500).send("Internal server error");
   }
 };
