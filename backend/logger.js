@@ -14,14 +14,14 @@ function getLogFileName() {
   return `${dayOfWeek}-${formattedDate}.log`;
 }
 
-const logDirectory = "./tmp/logs";
+const logDirectory = path.join(__dirname, "tmp", "logs");
 
 if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory, { recursive: true });
 }
 
 const logger = (filename) => {
-  console.log("Logger is called");
+  console.log("Logger is called by ", filename);
   return winston.createLogger({
     level: "info",
     format: winston.format.combine(
