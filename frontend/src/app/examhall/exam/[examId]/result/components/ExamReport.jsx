@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/chart";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export default function Component({
   result = {
@@ -29,11 +31,23 @@ export default function Component({
     level: 1,
   },
 }) {
-  const examId = useParams().examId;
+  const [exam, setExam] = useState("");
+
+  const examId = useParams().examId || "";
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const queryObject = {};
+    for (const [key, value] of params.entries()) {
+      queryObject[key] = value;
+    }
+    console.log("queryObject", queryObject);
+    setExam(queryObject.exam);
+  }, []);
 
   const totalQuestions = 50;
-  const unattempted = totalQuestions - result.attempts;
   const incorrect = result.attempts - result.correct;
+  const unattempted = totalQuestions - result.attempts;
 
   const correctPercentage = (result.correct / totalQuestions) * 100;
   const incorrectPercentage = (incorrect / totalQuestions) * 100;
@@ -71,6 +85,7 @@ export default function Component({
             <PieChart
               cx="50%"
               cy="50%"
+              data={chartData}
               innerRadius={60}
               outerRadius={80}
               paddingAngle={2}
@@ -145,34 +160,38 @@ export default function Component({
             <div className="flex justify-between text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-[#9ca3af]" />
-                <span>Unattempted Questions</span>
+                <span>Attempted Questions</span>
               </div>
               <span className="font-medium">
-                {unattempted} / {totalQuestions}
+                {result.attempts} / {totalQuestions}
               </span>
             </div>
-            <Progress
-              value={unattemptedPercentage}
-              className="bg-gray-100 h-2"
-            />
+            <Progress value={result.attempts} className="bg-gray-100 h-2" />
           </div>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4 w-full">
-          <Button
-            variant="outline"
-            className="border-2 text-blue-500 font-semibold hover:bg-blue-50 hover:text-blue-500  border-blue-500"
+          <Link
+            href={`/examhall/exam/${examId}/play?exam=${exam}`}
+            className="w-full"
           >
-            Play again
-          </Button>
-          <Button
-            variant="outline"
-            className="border-2 text-orange-400 font-semibold border-orange-400 hover:bg-orange-50 hover:text-orange-500"
-          >
-            {" "}
-            Exit
-          </Button>
+            <Button
+              variant="outline"
+              className="border-2 w-full text-blue-500 font-semibold hover:bg-blue-50 hover:text-blue-500  border-blue-500"
+            >
+              Play again
+            </Button>
+          </Link>
+          <Link href={`/examhall`} className="w-full">
+            <Button
+              variant="outline"
+              className="border-2 w-full text-orange-400 font-semibold border-orange-400 hover:bg-orange-50 hover:text-orange-500"
+            >
+              {" "}
+              Exit
+            </Button>
+          </Link>
         </div>
         <Link
           className="w-full"

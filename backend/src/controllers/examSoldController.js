@@ -12,7 +12,7 @@ export const addExamSold = async (req, res) => {
     const userId = user._id;
     const { examId, basePrice, boughtPrice, discount } = req.body;
 
-    if (!examId || !userId || basePrice == null || boughtPrice == null) {
+    if (!examId || !basePrice || !boughtPrice) {
       return res
         .status(400)
         .json({ message: "All required fields must be provided." });
@@ -32,9 +32,9 @@ export const addExamSold = async (req, res) => {
       user: user._id,
       exam: examId,
       userId,
-      basePrice,
-      boughtPrice,
-      discount: discount || 0,
+      basePrice: Number(basePrice),
+      boughtPrice: Number(boughtPrice),
+      discount: Number(discount) || 0,
     });
 
     const savedExamSold = await newExamSold.save();

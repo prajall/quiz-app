@@ -26,7 +26,7 @@ export default function Home() {
             Track your scores and compete with others on the leaderboard.
           </p>
           <Link
-            href={"/quiz"}
+            href={"/examhall"}
             className="mt-8 px-6 py-3 w-fit bg-primary text-white rounded-lg shadow-lg hover:bg-opacity-90 transition duration-300"
           >
             Play Now

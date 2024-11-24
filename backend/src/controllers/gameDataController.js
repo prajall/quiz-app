@@ -1,4 +1,4 @@
-import { User, UserExam } from "../../api/index.js";
+import { ExamSold, User, UserExam } from "../../api/index.js";
 import { Exam } from "../../api/index.js";
 import { GameData } from "../../api/index.js";
 import mongoose from "mongoose";
@@ -188,7 +188,18 @@ export const getLevels = async (req, res) => {
       exam: examObjectId,
     });
 
-    const levelsUnlocked = userExamData ? userExamData.levelsUnlocked : 1;
+    const examSold = await ExamSold.findOne({
+      user: userObjectId,
+      exam: examObjectId,
+    });
+
+    let levelsUnlocked = 1;
+
+    if (examSold) {
+      levelsUnlocked = totalLevels;
+    } else {
+      levelsUnlocked = userExamData ? userExamData.levelsUnlocked : 1;
+    }
 
     const levelsData = await GameData.aggregate([
       {
@@ -221,7 +232,6 @@ export const getLevels = async (req, res) => {
       },
     ]);
 
-    // Initialize an array with totalLevels and default values
     const levelsArray = Array.from({ length: totalLevels }, (_, index) => ({
       level: index + 1,
       unlocked: index + 1 <= levelsUnlocked,
@@ -234,9 +244,9 @@ export const getLevels = async (req, res) => {
       levelsArray[0].unlocked = true;
     }
 
-    // Update levelsArray with data from levelsData
     levelsData.forEach((levelData) => {
       const levelIndex = levelData.level - 1;
+
       if (levelsArray[levelIndex]) {
         levelsArray[levelIndex] = {
           ...levelsArray[levelIndex],

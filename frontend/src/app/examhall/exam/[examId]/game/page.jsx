@@ -24,6 +24,27 @@ export default function Component() {
 
   const router = useRouter();
 
+  const [queryParams, setQueryParams] = useState({});
+
+  useEffect(() => {
+    // Ensure this runs only on the client side
+    const params = new URLSearchParams(window.location.search);
+    const queryObject = {};
+    for (const [key, value] of params.entries()) {
+      queryObject[key] = value;
+    }
+    console.log(queryObject.exam);
+    setQueryParams(queryObject);
+  }, []);
+
+  useEffect(() => {
+    setExamData((prev) => ({
+      ...prev,
+      attempts: 0,
+      correct: 0,
+    }));
+  }, []);
+
   useEffect(() => {
     if (examData.isPlaying === false) {
       router.push(`/examhall/exam/${examId}/result`);
@@ -48,7 +69,7 @@ export default function Component() {
             },
           }
         );
-        console.log("Response:", response);
+        c4 % onsole.log("Response:", response);
         if (response.status == 200) {
           const data = response.data;
           setQuestions(data);
@@ -117,9 +138,10 @@ export default function Component() {
         question={questions[currentQuestionIndex]}
         setAnsweredTrue={handleAnswer}
         isAnswered={isAnswered}
+        setIsAnswered={setIsAnswered}
       />
       <Link
-        href={`/examhall/exam/${examId}/result`}
+        href={`/examhall/exam/${examId}/result?exam=${queryParams.exam}`}
         className="flex justify-end py-4"
       >
         <Button className="bg-red-500 hover:bg-red-400 active:bg-red-500 text-white w-32 font-semibold">

@@ -14,7 +14,7 @@ const ResultPage = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-4 mt-4">
       <div className="report w-full lg:w-1/2">
-        <ExamReport />
+        <ExamReport result={examData} />
       </div>
       <div className="leaderboard w-full lg:w-1/2">
         <LeaderboardTop3 />

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const QuestionDisplay = ({ question, setAnsweredTrue, isAnswered }) => {
   if (!question) return null;
@@ -51,7 +51,9 @@ const QuestionDisplay = ({ question, setAnsweredTrue, isAnswered }) => {
             <button
               key={option}
               className={styles.button}
-              onClick={() => handleOptionClick(option)}
+              onClick={() => {
+                handleOptionClick(option);
+              }}
               disabled={isAnswered}
             >
               <div className={styles.optionBg}>{option}</div>
