@@ -10,6 +10,10 @@ import gameDataRoute from "../src/routes/gameDataRoute.js";
 import userExamRoute from "../src/routes/userExamRoute.js";
 import examSoldRoute from "../src/routes/examsoldRoute.js";
 import customFieldRoute from "../src/routes/customFieldRoute.js";
+import {
+  getBatch,
+  getbatchMembers,
+} from "../src/controllers/bookCallController.js";
 
 const app = express();
 
@@ -62,5 +66,9 @@ app.post("/api/v1", (req, res) => {
   // console.log("Request:", req);
   res.send("Check cookies");
 });
+
+//Get Batch Members
+app.get("/batch", getBatch);
+app.get("/batch-member", getbatchMembers);
 
 export default app;

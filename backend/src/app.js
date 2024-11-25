@@ -8,6 +8,7 @@ import leaderboardRoute from "../src/routes/leaderboardRoute.js";
 import examRoute from "../src/routes/examRoute.js";
 import gameDataRoute from "../src/routes/gameDataRoute.js";
 import { apiKeyValidation } from "../src/middlewares/apiKeyMiddleware.js";
+import { getBatch, getbatchMembers } from "./controllers/bookCallController.js";
 
 const app = express();
 
@@ -24,14 +25,21 @@ app.use(
 );
 
 // SETUP ROUTES
-app.get("/", (req, res) => {
-  res.send("Server is working");
+app.get("/batch", (req, res) => {
+  res.send("Server isss working");
 });
 app.use("/user", userRoute);
 app.use("/question", questionRoute);
 app.use("/score", scoreRoute);
 app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
 app.use("/exam", examRoute);
+
+//Get Batch Members
+app.get("/batch", (req, res) => {
+  res.status(200).json({ success: true });
+});
+app.get("/batch-member", getbatchMembers);
+
 // app.use("/gamedata", gameDataRoute);
 
 export default app;
