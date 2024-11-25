@@ -279,7 +279,7 @@ export const getBatch = async (req, res) => {
 };
 
 export const getbatchMembers = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.query;
 
   const filteredMembers = batchMembers.find((batch) => batch.id == id);
 
