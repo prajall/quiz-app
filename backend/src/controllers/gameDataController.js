@@ -201,6 +201,37 @@ export const getLevels = async (req, res) => {
       levelsUnlocked = userExamData ? userExamData.levelsUnlocked : 1;
     }
 
+    // const levelsData = await GameData.aggregate([
+    //   {
+    //     $match: {
+    //       user: userObjectId,
+    //       exam: examObjectId,
+    //     },
+    //   },
+    //   {
+    //     $group: {
+    //       _id: "$level",
+    //       totalCorrect: { $max: "$totalCorrect" },
+    //       doc: { $first: "$$ROOT" },
+    //       attempts: { $sum: 1 },
+    //     },
+    //   },
+    //   {
+    //     $sort: {
+    //       _id: 1,
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       level: "$_id",
+    //       totalSolved: "$doc.totalSolved",
+    //       totalCorrect: "$doc.totalCorrect",
+    //       attempts: 1,
+    //     },
+    //   },
+    // ]);
+
     const levelsData = await GameData.aggregate([
       {
         $match: {
@@ -211,9 +242,26 @@ export const getLevels = async (req, res) => {
       {
         $group: {
           _id: "$level",
-          totalCorrect: { $max: "$totalCorrect" },
-          doc: { $first: "$$ROOT" },
+          totalSolved: { $sum: "$totalSolved" },
+          totalCorrect: { $sum: "$totalCorrect" },
           attempts: { $sum: 1 },
+          totalScore: { $sum: "$score" },
+        },
+      },
+      {
+        $addFields: {
+          accuracy: {
+            $cond: [
+              { $eq: ["$totalSolved", 0] },
+              0,
+              {
+                $multiply: [
+                  { $divide: ["$totalCorrect", "$totalSolved"] },
+                  100,
+                ],
+              },
+            ],
+          },
         },
       },
       {
@@ -225,9 +273,11 @@ export const getLevels = async (req, res) => {
         $project: {
           _id: 0,
           level: "$_id",
-          totalSolved: "$doc.totalSolved",
-          totalCorrect: "$doc.totalCorrect",
+          totalSolved: 1,
+          totalCorrect: 1,
           attempts: 1,
+          totalScore: 1,
+          accuracy: 1,
         },
       },
     ]);

@@ -36,10 +36,10 @@ export const getExamLeaderboard = async (req, res) => {
     }
 
     const examLeaderboard = await UserExam.find({ exam: examId })
-      .populate("user", "etutor_id isPremium")
+      .populate("user", "etutor_id isPremium name")
       .sort({ score: -1 })
       .limit(10)
-      .select("user score totalCorrect totalAttempts")
+      .select("user score totalCorrect totalAttempts name")
       .exec();
 
     if (!examLeaderboard || examLeaderboard.length === 0) {
