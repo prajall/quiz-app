@@ -288,6 +288,8 @@ export const getLevels = async (req, res) => {
       totalSolved: 0,
       totalCorrect: 0,
       attempts: 0,
+      accuracy: 0,
+      totalScore: 0,
     }));
 
     if (levelsArray.length > 0) {

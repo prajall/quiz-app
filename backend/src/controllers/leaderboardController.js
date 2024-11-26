@@ -97,13 +97,11 @@ export const getUserExamRanking = async (req, res) => {
       return res.status(400).json({ message: "Exam ID is required" });
     }
 
-    // Verify exam exists
     const examExists = await Exam.findById(examId);
     if (!examExists) {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    // Get user's exam attempt
     const userExam = await UserExam.findOne({
       user: userData._id,
       exam: examId,
