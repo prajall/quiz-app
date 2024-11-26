@@ -5,7 +5,7 @@ export const getOverallLeaderboard = async (req, res) => {
     const overallLeaderboard = await User.find()
       .sort({ totalScore: -1 })
       .limit(10)
-      .select("etutor_id totalScore isPremium")
+      .select("etutor_id totalScore name")
       .exec();
 
     if (!overallLeaderboard || overallLeaderboard.length === 0) {

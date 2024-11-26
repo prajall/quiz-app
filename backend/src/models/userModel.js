@@ -8,14 +8,21 @@ export const userSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
     phoneNumber: {
       type: String,
       lowercase: true,
       index: true,
     },
+    image: {
+      type: String,
+    },
     coins: {
       type: Number,
-      default: 150,
+      default: 1000,
       required: true,
     },
     isPremium: {

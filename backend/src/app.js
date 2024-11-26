@@ -25,8 +25,8 @@ app.use(
 );
 
 // SETUP ROUTES
-app.get("/batch", (req, res) => {
-  res.send("Server isss working");
+app.get("/batchh", (req, res) => {
+  res.send("Server is working");
 });
 app.use("/user", userRoute);
 app.use("/question", questionRoute);
@@ -35,9 +35,7 @@ app.use("/leaderboard", apiKeyValidation, leaderboardRoute);
 app.use("/exam", examRoute);
 
 //Get Batch Members
-app.get("/batch", (req, res) => {
-  res.status(200).json({ success: true });
-});
+app.get("/batch", getBatch);
 app.get("/batch-member", getbatchMembers);
 
 // app.use("/gamedata", gameDataRoute);

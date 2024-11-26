@@ -356,9 +356,9 @@ export const resetPassword = async (req, res) => {
 };
 
 export const etutorLogin = async (req, res) => {
-  const { etutor_id } = req.headers;
-  if (!etutor_id) {
-    return res.status(400).json({ message: "Etutor Id is required" });
+  const { etutor_id, name } = req.headers;
+  if (!etutor_id || !name) {
+    return res.status(400).json({ message: "Etutor Id and Name is required" });
   }
 
   const user = await User.findOne({ etutor_id }).select(
@@ -370,6 +370,8 @@ export const etutorLogin = async (req, res) => {
     } else {
       const newUser = new User({
         etutor_id,
+        name,
+        image: null,
       });
       if (newUser) {
         await newUser.save();
