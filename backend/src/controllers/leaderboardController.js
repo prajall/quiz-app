@@ -67,8 +67,14 @@ export const getExamLeaderboard = async (req, res) => {
 
     const examLeaderboardWithRank = examLeaderboard.map((entry, index) => ({
       ...entry.toObject(),
+      name: entry.user.name,
+      etutor_id: entry.user.etutor_id,
       rank: index + 1,
     }));
+
+    examLeaderboardWithRank.forEach((entry) => {
+      delete entry.user;
+    });
 
     const userExam = await UserExam.findOne({
       user: user._id,
