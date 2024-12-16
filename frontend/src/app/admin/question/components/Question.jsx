@@ -35,9 +35,14 @@ const Question = ({ question }) => {
                 const opt = question[option];
                 const isCorrect =
                   question.opt_correct === String.fromCharCode(65 + index);
+                const optionLabel = String.fromCharCode(65 + index); // Generate A, B, C, D
+
                 return (
                   <li
-                    className={cn("mb-4", isCorrect ? "text-blue-500" : "")}
+                    className={cn(
+                      "mb-4 list-none",
+                      isCorrect ? "text-blue-500" : ""
+                    )}
                     key={option}
                   >
                     <div className="flex items-center gap-2">
@@ -47,14 +52,14 @@ const Question = ({ question }) => {
                           isCorrect ? "text-blue-400" : ""
                         )}
                       >
-                        {String.fromCharCode(65 + index)}.
+                        {optionLabel}.
                       </p>
                       <p>{truncateText(opt.name, 1)}</p>
                     </div>
                     {opt.image && (
                       <img
                         src={opt.image}
-                        alt={`Option ${String.fromCharCode(65 + index)}`}
+                        alt={`Option ${optionLabel}`}
                         className="w-full h-32 object-cover mt-2 rounded"
                       />
                     )}
@@ -62,6 +67,7 @@ const Question = ({ question }) => {
                 );
               })}
             </ol>
+
             {question.description && (
               <p className="text-sm text-muted-foreground mt-4">
                 {truncateText(question.description, 3)}

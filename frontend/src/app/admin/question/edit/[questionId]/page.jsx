@@ -279,7 +279,7 @@ export default function QuestionEditForm({ params }) {
   };
 
   const ImagePreview = ({ src, onRemove, isNew }) => (
-    <div className="mt-2 relative w-fit">
+    <div className="mt-2 relative w-fit ">
       {isNew && (
         <div className="absolute top-0 left-0 bg-blue-500/90 text-white text-xs font-bold px-2 py-1 rounded-br rounded-tl">
           New
@@ -338,7 +338,7 @@ export default function QuestionEditForm({ params }) {
   }
 
   return (
-    <Card className="w-full px-0 mx-auto bg-white text-black border-none">
+    <Card className="w-full p-4 mx-auto bg-white text-black border-none">
       <CardHeader className="px-0">
         <CardTitle className="text-2xl font-bold text-primary">
           Edit Question
