@@ -37,6 +37,7 @@ export const getExamQuestions = async (req, res) => {
     res.status(500).send({ message: "Failed to fetch Question" });
   }
 };
+
 export const getExamQuestionsAdmin = async (req, res) => {
   const limit = 50;
   const { examId } = req.params;
@@ -54,6 +55,7 @@ export const getExamQuestionsAdmin = async (req, res) => {
       { $sort: { _id: 1 } },
       { $skip: skipQuestions },
       { $limit: limit },
+      { $sample: { size: limit } },
     ]).exec();
 
     return res.json(questions).status(200);

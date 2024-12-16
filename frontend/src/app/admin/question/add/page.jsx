@@ -265,7 +265,7 @@ export default function QuestionAddForm({ params }) {
   };
 
   return (
-    <Card className="w-full px-0 mx-auto bg-white text-black border-none">
+    <Card className="w-full p-4 mx-auto bg-white text-black border-none">
       <CardHeader className="px-0">
         <CardTitle className="text-2xl font-bold text-primary">
           Add New Question

@@ -8,13 +8,13 @@ const Page = () => {
     <div>
       <div className="mt-4 space-y-4">
         {/* {appData?.exams[0]?._id && ( */}
-        <Link href={`/adminclfa4ec7d/question/exam/66f68e69e8d137eb28cc72fd`}>
+        <Link href={`/admin/question/exam/66f68e69e8d137eb28cc72fd`}>
           <Button variant="link" className="text-black">
             Questions
           </Button>
         </Link>
         {/* )} */}
-        <Link href={"/adminclfa4ec7d/exam"}>
+        <Link href={"/admin/exam"}>
           <Button variant="link" className="text-black">
             Exams
           </Button>

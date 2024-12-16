@@ -7,6 +7,7 @@ const defaultAppData = {
   user: null,
   isLoading: true,
   examhallUser: null,
+  exams: [],
 };
 
 export const AppContext = createContext();
@@ -58,8 +59,26 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const fetchExams = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/exam/admin`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Exams:", response.data);
+      if (response.status == 200) {
+        setAppData((prev) => ({ ...prev, exams: response.data }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
+    fetchExams();
   }, []);
 
   useEffect(() => {
