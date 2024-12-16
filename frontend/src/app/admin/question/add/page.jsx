@@ -201,7 +201,7 @@ export default function QuestionAddForm({ params }) {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         console.log("Update Response: ", response.data);
         reset();
         window.location.reload();
