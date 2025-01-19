@@ -41,10 +41,11 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-
-// SETUP ROUTES
-// app.use("/api/v1");
-app.use("/api/v1/user", userRoute);
+-(
+  // SETUP ROUTES
+  // app.use("/api/v1");
+  app.use("/api/v1/user", userRoute)
+);
 app.use("/api/v1/question", questionRoute);
 app.use("/api/v1/score", scoreRoute);
 app.use("/api/v1/gamedata", gameDataRoute);

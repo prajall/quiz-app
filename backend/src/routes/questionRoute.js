@@ -2,6 +2,7 @@ import express from "express";
 import {
   addQuestion,
   changeQuestionFormat,
+  deleteQuestion,
   getExamQuestions,
   getExamQuestionsAdmin,
   getQuestionById,
@@ -21,5 +22,6 @@ router.get("/", (req, res) => res.send("Question Route"));
 router.put("/change-format", changeQuestionFormat);
 router.patch("/edit/:questionId", updateQuestion);
 router.post("/add", addQuestion);
+router.delete("/:questionId", deleteQuestion);
 
 export default router;

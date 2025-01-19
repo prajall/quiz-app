@@ -18,7 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ["https://quiz-frontend-work.vercel.app", "http://localhost:3000"],
+    // origin: ["https://quiz-frontend-work.vercel.app", "http://localhost:3000"],
+    origin: "http://localhost:3002",
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
     credentials: true,
   })

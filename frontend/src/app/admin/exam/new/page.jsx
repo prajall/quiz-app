@@ -69,7 +69,7 @@ export default function ExamForm() {
 
   return (
     <div className="mx-auto py-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg overflow-hidden p-4">
         <div className=" py-6">
           <h2 className="text-3xl font-bold ">Add New Exam</h2>
         </div>
@@ -90,7 +90,7 @@ export default function ExamForm() {
                 </FormItem>
               )}
             />
-            <div className="flex flex-col md:flex-row gap-6 w-full">
+            <div className="flex flex-col md:flex-row gap-4 w-full">
               <FormField
                 className="w-full md:w-1/2"
                 control={form.control}
@@ -121,7 +121,7 @@ export default function ExamForm() {
                 )}
               />
             </div>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="price"

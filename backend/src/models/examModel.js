@@ -8,13 +8,6 @@ export const examSchema = new mongoose.Schema({
     unique: true,
     index: true,
   },
-  // courses: [
-  //   {
-  //     type: mongoose.Types.ObjectId,
-  //     ref: "Course",
-  //     required: true,
-  //   },
-  // ],
   courses: [
     {
       type: String,

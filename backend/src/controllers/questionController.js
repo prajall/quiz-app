@@ -3,6 +3,7 @@ import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 import { Exam } from "../../api/index.js";
 import logger from "../../logger.js";
+import mongoose from "mongoose";
 
 const log = logger("questionController.js");
 
@@ -40,8 +41,8 @@ export const getExamQuestions = async (req, res) => {
 
 export const getExamQuestionsAdmin = async (req, res) => {
   const limit = 50;
-  const { examId } = req.params;
-  const level = req.query.level || 1;
+  const { examId } = req.params; // examId comes as a string
+  const level = parseInt(req.query.level, 10) || 1;
 
   try {
     if (!examId) {
@@ -51,19 +52,20 @@ export const getExamQuestionsAdmin = async (req, res) => {
     const skipQuestions = (level - 1) * limit;
 
     const questions = await Question.aggregate([
-      { $match: { exam: examId } },
+      { $match: { exam: new mongoose.Types.ObjectId(examId) } }, // Use "new" for ObjectId
       { $sort: { _id: 1 } },
       { $skip: skipQuestions },
       { $limit: limit },
       { $sample: { size: limit } },
-    ]).exec();
+    ]);
 
-    return res.json(questions).status(200);
+    return res.status(200).json(questions);
   } catch (error) {
-    log.error("Error getting Exam Question for admin", JSON.stringify(error));
-    res.status(500).send({ message: "Failed to fetch Question" });
+    console.error("Error getting Exam Questions for admin:", error);
+    return res.status(500).json({ message: "Failed to fetch Questions" });
   }
 };
+
 export const getRandomQuestions = async (req, res) => {
   try {
     const limit = 50;
@@ -211,7 +213,7 @@ export const addQuestion = async (req, res) => {
       return res.status(400).json({ message: "Invalid opt_correct value" });
     }
 
-    const newQuestion = new Question({
+    const newQuestion = await Question.create({
       exam_id: examDoc.exam_id,
       exam: examId,
       description,
@@ -223,14 +225,13 @@ export const addQuestion = async (req, res) => {
       opt_correct,
     });
 
-    const savedQuestion = await newQuestion.save();
-    if (savedQuestion) {
+    if (newQuestion) {
       examDoc.totalQuestions = examDoc.totalQuestions + 1;
       examDoc.totalLevels = Math.ceil(examDoc.totalQuestions / 50);
       await examDoc.save();
     }
-
-    return res.status(201).json(savedQuestion);
+    console.log("New Question added:", newQuestion);
+    return res.status(201).json(newQuestion);
   } catch (error) {
     log.error("Error adding question:", JSON.stringify(error));
     res.status(500).json({ message: "Failed to add question" });
@@ -312,6 +313,7 @@ export const updateQuestion = async (req, res) => {
       questionDoc.question.image &&
       question.image !== questionDoc.question.image
     ) {
+      console.log("Image:", questionDoc.question.image);
       const publicId = questionDoc.question.image
         ? questionDoc.question.image.split("/").pop().split(".")[0]
         : "";
@@ -330,14 +332,21 @@ export const updateQuestion = async (req, res) => {
         image: option.image,
       };
 
-      if (option.image && option.image !== questionDoc[key].image) {
+      if (
+        questionDoc[key]?.image &&
+        option.image &&
+        option.image !== questionDoc[key].image
+      ) {
+        console.log("I(mage: ", key);
         const publicId = questionDoc[key].image
           ? questionDoc[key].image.split("/").pop().split(".")[0]
           : "";
+        console.log("Public", publicId);
         await cloudinary.uploader.destroy(publicId);
         processedOptions[key].image = option.image;
       }
     }
+    console.log("here 2");
 
     // Update the question document
     questionDoc.exam_id = examDoc.exam_id;
@@ -350,13 +359,73 @@ export const updateQuestion = async (req, res) => {
     questionDoc.opt_D = processedOptions.opt_D;
     questionDoc.opt_correct = opt_correct;
 
+    console.log("Updated question: ", questionDoc);
+
     const updatedQuestion = await questionDoc.save();
     return res.status(200).json(updatedQuestion);
   } catch (error) {
     log.error("Error updating question:", JSON.stringify(error));
+    console.log(error);
     res.status(500).json({ message: "Failed to update question" });
   }
 };
+
+export const deleteQuestion = async (req, res) => {
+  const { questionId } = req.params;
+
+  try {
+    // Validate questionId
+    if (!questionId) {
+      return res.status(400).json({ message: "questionId is required" });
+    }
+
+    // Find the question to retrieve image information
+    const question = await Question.findById(questionId);
+
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    // Helper function to delete an image from Cloudinary
+    const deleteImageFromCloudinary = async (imageUrl) => {
+      if (imageUrl) {
+        try {
+          const publicId = imageUrl.split("/").pop().split(".")[0]; // Extract public ID
+          await cloudinary.v2.uploader.destroy(publicId); // Delete image
+        } catch (error) {
+          console.error(`Failed to delete image: ${imageUrl}`, error);
+        }
+      }
+    };
+
+    // Delete the main question image
+    if (question.question?.image) {
+      await deleteImageFromCloudinary(question.question.image);
+    }
+
+    // Delete images from each option
+    const options = ["opt_A", "opt_B", "opt_C", "opt_D"];
+    for (const option of options) {
+      if (question[option]?.image) {
+        await deleteImageFromCloudinary(question[option].image);
+      }
+    }
+
+    // Delete the question from the database
+    await Question.findByIdAndDelete(questionId);
+
+    return res
+      .status(200)
+      .json({
+        message: "Question and associated images deleted successfully",
+        data: question,
+      });
+  } catch (error) {
+    console.error("Error deleting question:", error);
+    return res.status(500).json({ message: "Failed to delete question" });
+  }
+};
+
 // export const addQuestion2 = async (req, res) => {
 //   console.log("files", req.files);
 //   console.log("body", req.body);

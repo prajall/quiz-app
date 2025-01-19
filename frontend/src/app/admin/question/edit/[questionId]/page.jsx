@@ -103,9 +103,14 @@ export default function QuestionEditForm({ params }) {
     console.log("prevData", prevData);
     reset(prevData);
   }, [prevData]);
+
   useEffect(() => {
     fetchQuestion();
   }, []);
+
+  useEffect(() => {
+    console.log("imagePreviews", imagePreviews);
+  }, [imagePreviews, setImagePreviews]);
 
   const onSubmit = async (data) => {
     console.log("Data: ", data);
@@ -276,6 +281,43 @@ export default function QuestionEditForm({ params }) {
     }
     const newImageUrl = URL.createObjectURL(image);
     setImagePreviews((prev) => ({ ...prev, [key]: newImageUrl }));
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await toast.promise(
+        axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/question/${questionId}`,
+          {
+            withCredentials: true,
+          }
+        ),
+        {
+          pending: "Deleting question...",
+          success: "Question deleted successfully",
+          error: {
+            render({ data }) {
+              if (data.message === "Network Error") {
+                return "Error connecting to the server";
+              } else if (data.response?.data) {
+                return data.response.data.message;
+              } else if (data.response.statusCode >= 500) {
+                return "Internal Server Error";
+              } else {
+                return "Something went wrong";
+              }
+            },
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log("Delete Response: ", response.data);
+        toast.success("Question deleted successfully");
+        window.history.back();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
   };
 
   const ImagePreview = ({ src, onRemove, isNew }) => (
@@ -462,6 +504,7 @@ export default function QuestionEditForm({ params }) {
                   className="bg-white text-black hidden"
                   onChange={(e) => {
                     const file = e.target.files[0];
+                    createImageUrl(file, `opt_${option}`);
                     setImages((prev) => ({ ...prev, [`opt_${option}`]: file }));
                   }}
                 />
@@ -526,7 +569,6 @@ export default function QuestionEditForm({ params }) {
                   );
                 }}
               />
-
               {errors.examId && (
                 <p className="text-red-500">{errors.examId.message}</p>
               )}
@@ -564,129 +606,163 @@ export default function QuestionEditForm({ params }) {
               )}
             </div>
           </div>
-
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant="default"
-                disabled={isSubmitting}
-                className="w-full flex items-center gap-1"
-              >
-                {isSubmitting && <Spinner />}
-                Submit
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-6xl overflow-auto w-full max-h-[90vh] flex flex-col">
-              <DialogHeader>
-                <DialogTitle className=" ">
-                  Confirm Submit Question ?
-                </DialogTitle>
+          <div className="flex gap-4 justify-end">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="link"
+                  disabled={isSubmitting}
+                  className="text-red-500 flex items-center gap-1"
+                >
+                  Delete
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogDescription>
-                  Please review the question before submitting.
+                  Are you sure you want to delete this question?
                 </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-6 p-4">
-                <div className="space-y-4">
-                  <h3 className=" font-semibold border-b border-gray-300 pb-2 text-primary">
-                    Question:
-                  </h3>
-                  <p className="text-sm">{watch("question.name")}</p>
-                  {images.question && (
-                    <div className="w-fit relative">
-                      <div className="absolute top-0 left-0 bg-blue-500/90 text-white text-xs font-bold px-2 py-1 rounded-br rounded-tl">
-                        New
+                <div className="mt-4 flex justify-end gap-3">
+                  <DialogClose>
+                    <Button variant="ghost">Cancel</Button>
+                  </DialogClose>
+                  <DialogClose>
+                    <Button
+                      variant="danger"
+                      onClick={handleDelete} // Confirm deletion
+                      disabled={isSubmitting}
+                      className="text-white bg-red-500 hover:bg-red-600"
+                    >
+                      Delete
+                    </Button>
+                  </DialogClose>
+                </div>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="default"
+                  disabled={isSubmitting}
+                  className="w-32 flex items-center gap-1"
+                >
+                  {isSubmitting && <Spinner />}
+                  Submit
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-6xl overflow-auto w-full max-h-[90vh] flex flex-col">
+                <DialogHeader>
+                  <DialogTitle className=" ">
+                    Confirm Submit Question ?
+                  </DialogTitle>
+                  <DialogDescription>
+                    Please review the question before submitting.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-6 p-4">
+                  <div className="space-y-4">
+                    <h3 className=" font-semibold border-b border-gray-300 pb-2 text-primary">
+                      Question:
+                    </h3>
+                    <p className="text-sm">{watch("question.name")}</p>
+                    {images.question && (
+                      <div className="w-fit relative">
+                        <div className="absolute top-0 left-0 bg-blue-500/90 text-white text-xs font-bold px-2 py-1 rounded-br rounded-tl">
+                          New
+                        </div>
+                        <img
+                          src={URL.createObjectURL(images.question)}
+                          alt="Question"
+                          className=" max-w-full max-h-40 h-auto object-cover rounded-md shadow-md"
+                        />
                       </div>
+                    )}
+                    {prevData?.question?.image && (
                       <img
-                        src={URL.createObjectURL(images.question)}
+                        src={prevData?.question?.image}
                         alt="Question"
                         className=" max-w-full max-h-40 h-auto object-cover rounded-md shadow-md"
                       />
-                    </div>
-                  )}
-                  {prevData?.question?.image && (
-                    <img
-                      src={prevData?.question?.image}
-                      alt="Question"
-                      className=" max-w-full max-h-40 h-auto object-cover rounded-md shadow-md"
-                    />
-                  )}
-                </div>
-                <div className="space-y-4">
-                  <h3 className=" font-semibold border-b border-gray-300 pb-2 text-primary">
-                    Description:
-                  </h3>
-                  <p className="text-sm max-h-40 overflow-y-auto whitespace-pre-wrap">
-                    {watch("description")}
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {["A", "B", "C", "D"].map((option) => (
-                    <div
-                      key={option}
-                      className="space-y-3 bg-gray-50 p-4 rounded-lg"
-                    >
-                      <h4 className="text-md font-semibold border-b border-gray-300 pb-2 text-primary">
-                        Option {option}:
-                      </h4>
-                      <p className="text-sm">{watch(`opt_${option}.name`)}</p>
-                      {images[`opt_${option}`] && (
-                        <div className="w-fit relative">
-                          <div className="absolute top-0 left-0 bg-blue-500/90 text-white text-xs font-bold px-2 py-1 rounded-br rounded-tl">
-                            New
+                    )}
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className=" font-semibold border-b border-gray-300 pb-2 text-primary">
+                      Description:
+                    </h3>
+                    <p className="text-sm max-h-40 overflow-y-auto whitespace-pre-wrap">
+                      {watch("description")}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {["A", "B", "C", "D"].map((option) => (
+                      <div
+                        key={option}
+                        className="space-y-3 bg-gray-50 p-4 rounded-lg"
+                      >
+                        <h4 className="text-md font-semibold border-b border-gray-300 pb-2 text-primary">
+                          Option {option}:
+                        </h4>
+                        <p className="text-sm">{watch(`opt_${option}.name`)}</p>
+                        {images[`opt_${option}`] && (
+                          <div className="w-fit relative">
+                            <div className="absolute top-0 left-0 bg-blue-500/90 text-white text-xs font-bold px-2 py-1 rounded-br rounded-tl">
+                              New
+                            </div>
+                            <img
+                              src={URL.createObjectURL(images[`opt_${option}`])}
+                              alt={`Option ${option}`}
+                              className="max-w-full h-auto max-h-40 object-cover rounded-md shadow-sm"
+                            />
                           </div>
+                        )}
+                        {prevData?.[`opt_${option}`]?.image && (
                           <img
-                            src={URL.createObjectURL(images[`opt_${option}`])}
+                            src={prevData?.[`opt_${option}`]?.image}
                             alt={`Option ${option}`}
                             className="max-w-full h-auto max-h-40 object-cover rounded-md shadow-sm"
                           />
-                        </div>
-                      )}
-                      {prevData?.[`opt_${option}`]?.image && (
-                        <img
-                          src={prevData?.[`opt_${option}`]?.image}
-                          alt={`Option ${option}`}
-                          className="max-w-full h-auto max-h-40 object-cover rounded-md shadow-sm"
-                        />
-                      )}
-                    </div>
-                  ))}
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className=" p-4 rounded-lg flex gap-1">
+                    <h4 className="text-md font-semibold  text-primary">
+                      Correct Option:
+                    </h4>
+                    <p className="text-md ">{watch("opt_correct")}</p>
+                  </div>
+                  <div className=" p-4 rounded-lg flex gap-1">
+                    <h4 className="text-md font-semibold  text-primary">
+                      Exam Category:
+                    </h4>
+                    <p className="text-md ">
+                      {exams.find((exam) => exam._id === watch("examId"))
+                        ?.title || ""}
+                    </p>
+                  </div>
                 </div>
-                <div className=" p-4 rounded-lg flex gap-1">
-                  <h4 className="text-md font-semibold  text-primary">
-                    Correct Option:
-                  </h4>
-                  <p className="text-md ">{watch("opt_correct")}</p>
-                </div>
-                <div className=" p-4 rounded-lg flex gap-1">
-                  <h4 className="text-md font-semibold  text-primary">
-                    Exam Category:
-                  </h4>
-                  <p className="text-md ">
-                    {exams.find((exam) => exam._id === watch("examId"))
-                      ?.title || ""}
-                  </p>
-                </div>
-              </div>
-              <DialogFooter className="mt-4 justify-end flex flex-row gap-2">
-                <DialogClose asChild>
-                  <Button type="button" variant="outline">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button
-                    type="submit"
-                    form="question-form"
-                    className="bg-primary text-white flex items-center gap-1"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting && <Spinner />}
-                    Submit
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                <DialogFooter className="mt-4 justify-end flex flex-row gap-2">
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    <Button
+                      type="submit"
+                      form="question-form"
+                      className="bg-primary text-white flex items-center gap-1"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting && <Spinner />}
+                      Submit
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </form>
       </CardContent>
     </Card>

@@ -27,7 +27,7 @@ const Question = ({ question }) => {
               <img
                 src={question.question.image}
                 alt="Question"
-                className="w-full h-40 object-cover mb-2 rounded"
+                className="mx-auto h-40 object-contain mb-2 rounded"
               />
             )}
             <ol type="A" className="list-decimal pl-5">
@@ -60,7 +60,7 @@ const Question = ({ question }) => {
                       <img
                         src={opt.image}
                         alt={`Option ${optionLabel}`}
-                        className="w-full h-32 object-cover mt-2 rounded"
+                        className=" h-32 object-contain mt-2 rounded "
                       />
                     )}
                   </li>
