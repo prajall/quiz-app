@@ -17,7 +17,7 @@ export default function Component() {
   const examId = params?.examId;
   const level = params?.level || 1;
   const [questions, setQuestions] = useState(examData.questions);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(examData.time || 60);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -46,50 +46,51 @@ export default function Component() {
   }, []);
 
   useEffect(() => {
-    if (examData.isPlaying === false) {
+    if (!examData.isPlaying ) {
       router.push(`/examhall/exam/${examId}/result`);
     }
   }, [examData.isPlaying, examId, router]);
 
   useEffect(() => {
     if (questions.length === 0) {
+      toast.error("No Questions")
       router.push(`/examhall/exam/${examId}/play`);
     }
   }, [questions, examId, router]);
 
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        console.log("Exam ID:", examId, "Level:", level);
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?level=${level}`,
-          {
-            headers: {
-              etutor_id: 96712,
-            },
-          }
-        );
-        c4 % onsole.log("Response:", response);
-        if (response.status == 200) {
-          const data = response.data;
-          setQuestions(data);
-        }
-      } catch (error) {
-        console.error("Error fetching questions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchQuestions = async () => {
+  //     try {
+  //       console.log("Exam ID:", examId, "Level:", level);
+  //       const response = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_API_URL}/question/exam/${examId}?level=${level}`,
+  //         {
+  //           headers: {
+  //             etutor_id: 96712,
+  //           },
+  //         }
+  //       );
+  //       console.log("Response:", response);
+  //       if (response.status == 200) {
+  //         const data = response.data;
+  //         setQuestions(data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching questions:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchQuestions();
-  }, []);
+  //   fetchQuestions();
+  // }, []);
 
   useEffect(() => {
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      toast.error("Time's up!");
+      toast.info("Time's up!");
       router.push(`/examhall/exam/${examId}/result`);
     }
   }, [timeLeft, examId, router]);
@@ -107,7 +108,7 @@ export default function Component() {
         setCurrentQuestionIndex((prev) => prev + 1);
         setIsAnswered(false);
       }
-    }, 300);
+    }, 600);
   };
 
   if (loading) {

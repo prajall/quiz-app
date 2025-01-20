@@ -52,10 +52,11 @@ export default function Component() {
 
   const fetchQuestions = async () => {
     console.log("AppData:", appData.user);
-    // const cacheKey = `questions-${examId}-level-${appData.level || 1}`;
+    const cacheKey = `questions-${examId}-level-${appData.level || 1}`;
 
     try {
       setLoading(true);
+      console.log("here")
 
       // const cache = await caches.open("exams-questions-cache");
       // const cachedResponse = await cache.match(cacheKey);
@@ -83,6 +84,7 @@ export default function Component() {
           withCredentials: true,
         }
       );
+      console.log("Questions:",response.data)
       if (response.status === 200) {
         setExamData((prev) => ({
           ...prev,
